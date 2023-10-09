@@ -1,0 +1,2 @@
+{"subject": "biolink:part_of", "object": "biolink:has_part", "predicate": "biolink:inverse_of", "id": 9708692, "biolink:primary_knowledge_source": "infores:rtx-kg2"}
+{"subject": "biolink:has_part", "object": "biolink:part_of", "predicate": "biolink:inverse_of", "id": 9708693, "biolink:primary_knowledge_source": "infores:rtx-kg2"}

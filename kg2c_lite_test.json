@@ -1,0 +1,76 @@
+{
+	"nodes": [
+		{
+			"all_categories": ["biolink:Drug", "biolink:ChemicalEntity"],
+			"name": "Acetaminophen",
+			"category": "biolink:Drug",
+			"id": "CHEMBL.COMPOUND:CHEMBL112"
+		},
+		{
+			"all_categories": ["biolink:Drug", "biolink:ChemicalEntity"],
+			"name": "Insulin",
+			"category": "biolink:Drug",
+			"id": "CHEBI:XXXXINS"
+		},
+		{
+			"all_categories": ["biolink:Drug"],
+			"name": "Insulin Glargine",
+			"category": "biolink:Drug",
+			"id": "CHEBI:XXXXINSGLAR"
+		},
+		{
+			"all_categories": ["biolink:Disease", "biolink:PhenotypicFeature"],
+			"name": "Diabetes",
+			"category": "biolink:Disease",
+			"id": "MONDO:0005015"
+		},
+		{
+			"all_categories": ["biolink:Disease", "biolink:PhenotypicFeature"],
+			"name": "Type 1 Diabetes",
+			"category": "biolink:Disease",
+			"id": "MONDO:0005147"
+		},
+		{
+			"all_categories": ["biolink:Drug", "biolink:Protein", "biolink:SmallMolecule", "biolink:ChemicalEntity", "biolink:ChemicalMixture", "biolink:MolecularEntity"],
+			"name": "Type 2 Diabetes",
+			"category": "biolink:Disease",
+			"id": "MONDO:0005148"
+		},
+		{
+			"all_categories": ["biolink:BiologicalProcess"],
+			"name": "mitochondrial depolarization",
+			"category": "biolink:BiologicalProcess",
+			"id": "GO:0051882"
+		},
+		{
+			"all_categories": ["biolink:BiologicalProcess"],
+			"name": "positive regulation of mitochondrial depolarization",
+			"category": "biolink:BiologicalProcess",
+			"id": "GO:0051901"
+		}
+	],
+	"edges": [
+		{
+			"subject": "GO:0051901",
+			"object": "GO:0051901",
+			"predicate": "biolink:regulates",
+			"primary_knowledge_source": "infores:go-plus",
+			"qualified_predicate": "biolink:causes",
+			"qualified_object_direction": "increased",
+			"qualified_object_aspect": "activity_or_abundance",
+			"id": 5
+		},
+		{
+			"subject": "GO:0051901",
+			"object": "GO:0051882",
+			"predicate": "biolink:regulates",
+			"primary_knowledge_source": "infores:go-plus",
+			"qualified_predicate": "biolink:causes",
+			"qualified_object_direction": "upregulated",
+			"qualified_object_aspect": "activity_or_abundance",
+			"id": 7
+		}
+	],
+	"kg2_version": "2.8.0",
+	"biolink_version": "3.0.3"
+}

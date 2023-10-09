@@ -1,0 +1,4 @@
+{"id": "biolink:decreases_localization_of", "name": "decreases localization of", "category": ["biolink:OntologyClass"], "equivalent_identifiers": ["biolink:decreases_localization_of"]}
+{"id": "RTX:KG2", "name": "KG2.5.2c", "category": ["biolink:InformationContentEntity", "biolink:NamedThing"], "equivalent_identifiers": []}
+{"id": "biolink:part_of", "name": "part of", "category": ["biolink:Association"], "equivalent_identifiers": ["biolink:part_of"]}
+{"id": "biolink:has_part", "name": "has part", "category": ["biolink:Association"], "equivalent_identifiers": ["biolink:has_part"]}
