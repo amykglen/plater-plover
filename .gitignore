@@ -1,5 +1,4 @@
 *.idea
 *.DS_Store
 
-kg2c-nodes.jsonl
-kg2c-edges.jsonl
+kg2c*.jsonl*
