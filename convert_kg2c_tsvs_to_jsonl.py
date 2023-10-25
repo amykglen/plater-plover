@@ -28,16 +28,6 @@ logging.basicConfig(level=logging.INFO,
                               logging.StreamHandler()])
 
 
-def download_kg2c_tsvs():
-    # Only works if you have the aws CLI set up, of course
-    logging.info(f"Downloading KG2pre TSV source files..")
-    kg2c_tarball_name = "kg2c-tsv.tar.gz"
-    logging.info(f"Downloading {kg2c_tarball_name} from the rtx-kg2 S3 bucket")
-    os.system(f"aws s3 cp --no-progress --region us-west-2 s3://rtx-kg2/{kg2c_tarball_name} .")
-    logging.info(f"Unpacking {kg2c_tarball_name}..")
-    os.system(f"tar -xvzf {kg2c_tarball_name}")
-
-
 def parse_value(value: any, col_name: str):
     if col_name in ARRAY_COL_NAMES:
         if value:
@@ -54,7 +44,7 @@ def convert_tsv_to_jsonl(tsv_path: str, header_tsv_path: str):
     """
     This method assumes the input TSV file names are in KG2c format (e.g., like nodes_c.tsv and nodes_c_header.tsv)
     """
-    logging.info(f"**** Starting to process file {tsv_path} (header file is: {header_tsv_path}) ****")
+    logging.info(f"\n**** Starting to process file {tsv_path} (header file is: {header_tsv_path}) ****")
 
     jsonl_output_file_path = tsv_path.replace('.tsv', '.jsonl')
     logging.info(f"Output file path will be: {jsonl_output_file_path}")
@@ -75,6 +65,8 @@ def convert_tsv_to_jsonl(tsv_path: str, header_tsv_path: str):
 
         with jsonlines.open(jsonl_output_file_path, mode="w") as jsonl_writer:
 
+            batch = []
+            num_rows_processed = 0
             tsv_reader = csv.reader(input_tsv_file, delimiter="\t")
             for line in tsv_reader:
                 row_obj = dict()
@@ -84,7 +76,16 @@ def convert_tsv_to_jsonl(tsv_path: str, header_tsv_path: str):
                         kgx_col_name = KGX_COL_NAME_REMAPPINGS.get(col_name, col_name)
                         row_obj[kgx_col_name] = parse_value(raw_value, col_name)
 
-                jsonl_writer.write(row_obj)
+                batch.append(row_obj)
+                if len(batch) == 1000000:
+                    jsonl_writer.write_all(batch)
+                    num_rows_processed += len(batch)
+                    batch = []
+                    logging.info(f"Have processed {num_rows_processed} rows...")
+
+            # Take care of writing the (potential) final partial batch
+            if batch:
+                jsonl_writer.write_all(batch)
 
     logging.info(f"Done converting rows in {tsv_path} to json lines.")
 
@@ -100,6 +101,8 @@ def main():
 
     convert_tsv_to_jsonl(args.nodes_tsv_path, args.nodes_header_tsv_path)
     convert_tsv_to_jsonl(args.edges_tsv_path, args.edges_header_tsv_path)
+
+    logging.info(f"Done converting KG2c nodes/edges TSVs to KGX JSON lines format.")
 
 
 if __name__ == "__main__":
