@@ -1,3 +1,9 @@
+"""
+This script converts the KG2c TSV files into KGX-compliant JSON lines files, ready for import into Plater.
+
+Usage: python convert_kg2c_tsvs_to_jsonl.py <nodes TSV file path> <edges TSV file path> \
+                                                <nodes header TSV file path> <edges header TSV file path>
+"""
 import argparse
 import ast
 import csv
@@ -44,14 +50,17 @@ def parse_value(value: any, col_name: str):
         return value
 
 
-def convert_tsv_to_jsonl(tsv_filename: str, header_tsv_filename: str):
-    logging.info(f"**** Starting to process file {tsv_filename} (header file is: {header_tsv_filename}) ****")
+def convert_tsv_to_jsonl(tsv_path: str, header_tsv_path: str):
+    """
+    This method assumes the input TSV file names are in KG2c format (e.g., like nodes_c.tsv and nodes_c_header.tsv)
+    """
+    logging.info(f"**** Starting to process file {tsv_path} (header file is: {header_tsv_path}) ****")
 
-    jsonl_output_file_name = tsv_filename.replace('.tsv', '.jsonl')
-    logging.info(f"Output filename will be: {jsonl_output_file_name}")
+    jsonl_output_file_path = tsv_path.replace('.tsv', '.jsonl')
+    logging.info(f"Output file path will be: {jsonl_output_file_path}")
 
     # First load column names and remove the ':type' suffixes neo4j requires on column names
-    header_df = pd.read_table(f"{SCRIPT_DIR}/{header_tsv_filename}")
+    header_df = pd.read_table(header_tsv_path)
     column_names = [col_name.split(":")[0] if not col_name.startswith(":") else col_name
                     for col_name in header_df.columns]
     node_column_indeces = {col_name: index for index, col_name in enumerate(column_names)}
@@ -61,10 +70,10 @@ def convert_tsv_to_jsonl(tsv_filename: str, header_tsv_filename: str):
     logging.info(f"We'll use this subset of ({len(columns_to_keep)}) columns:\n "
                  f"{json.dumps(columns_to_keep, indent=2)}")
 
-    logging.info(f"Starting to convert rows in {tsv_filename} to json lines..")
-    with open(f"{SCRIPT_DIR}/{tsv_filename}", "r") as input_tsv_file:
+    logging.info(f"Starting to convert rows in {tsv_path} to json lines..")
+    with open(tsv_path, "r") as input_tsv_file:
 
-        with jsonlines.open(f"{SCRIPT_DIR}/{jsonl_output_file_name}", mode="w") as jsonl_writer:
+        with jsonlines.open(jsonl_output_file_path, mode="w") as jsonl_writer:
 
             tsv_reader = csv.reader(input_tsv_file, delimiter="\t")
             for line in tsv_reader:
@@ -77,20 +86,20 @@ def convert_tsv_to_jsonl(tsv_filename: str, header_tsv_filename: str):
 
                 jsonl_writer.write(row_obj)
 
-    logging.info(f"Done converting rows in {tsv_filename} to json lines.")
+    logging.info(f"Done converting rows in {tsv_path} to json lines.")
 
 
 def main():
     arg_parser = argparse.ArgumentParser()
-    arg_parser.add_argument("nodes_tsv_filename", help="Name of the nodes TSV file you want to transform")
-    arg_parser.add_argument("edges_tsv_filename", help="Name of the edges TSV file you want to transform")
-    arg_parser.add_argument("nodes_header_tsv_filename", help="Name of the header TSV file for your nodes file")
-    arg_parser.add_argument("edges_header_tsv_filename", help="Name of the header TSV file for your edges file")
+    arg_parser.add_argument("nodes_tsv_path", help="Path to the nodes TSV file you want to transform")
+    arg_parser.add_argument("edges_tsv_path", help="Path to the edges TSV file you want to transform")
+    arg_parser.add_argument("nodes_header_tsv_path", help="Path to the header TSV file for your nodes file")
+    arg_parser.add_argument("edges_header_tsv_path", help="Path to the header TSV file for your edges file")
     args = arg_parser.parse_args()
     logging.info(f"Input args are:\n {args}")
 
-    convert_tsv_to_jsonl(args.nodes_tsv_filename, args.nodes_header_tsv_filename)
-    convert_tsv_to_jsonl(args.edges_tsv_filename, args.edges_header_tsv_filename)
+    convert_tsv_to_jsonl(args.nodes_tsv_path, args.nodes_header_tsv_path)
+    convert_tsv_to_jsonl(args.edges_tsv_path, args.edges_header_tsv_path)
 
 
 if __name__ == "__main__":
