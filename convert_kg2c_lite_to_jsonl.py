@@ -2,9 +2,9 @@ import argparse
 import json
 import os
 
-import jsonlines as jsonlines
+import jsonlines
 
-SCRIPT_DIR = f"{os.path.dirname(os.path.abspath(__file__))}"
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
 def main():

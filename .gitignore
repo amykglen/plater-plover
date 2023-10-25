@@ -1,4 +1,9 @@
 *.idea
 *.DS_Store
 
-kg2c*.jsonl*
+*nodes*.jsonl*
+*edges*.jsonl*
+*nodes*.tsv*
+*edges*.tsv*
+
+build.log
