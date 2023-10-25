@@ -44,7 +44,7 @@ def convert_tsv_to_jsonl(tsv_path: str, header_tsv_path: str):
     """
     This method assumes the input TSV file names are in KG2c format (e.g., like nodes_c.tsv and nodes_c_header.tsv)
     """
-    logging.info(f"\n**** Starting to process file {tsv_path} (header file is: {header_tsv_path}) ****")
+    logging.info(f"\n\n**** Starting to process file {tsv_path} (header file is: {header_tsv_path}) ****")
 
     jsonl_output_file_path = tsv_path.replace('.tsv', '.jsonl')
     logging.info(f"Output file path will be: {jsonl_output_file_path}")
@@ -102,7 +102,7 @@ def main():
     convert_tsv_to_jsonl(args.nodes_tsv_path, args.nodes_header_tsv_path)
     convert_tsv_to_jsonl(args.edges_tsv_path, args.edges_header_tsv_path)
 
-    logging.info(f"Done converting KG2c nodes/edges TSVs to KGX JSON lines format.")
+    logging.info(f"\n\nDone converting KG2c nodes/edges TSVs to KGX JSON lines format.")
 
 
 if __name__ == "__main__":
