@@ -10,6 +10,7 @@ import csv
 import json
 import logging
 import os
+import sys
 
 import jsonlines
 import pandas as pd
@@ -21,6 +22,7 @@ KGX_COL_NAME_REMAPPINGS = {
     "all_categories": "category",
     "category": "preferred_category"
 }
+csv.field_size_limit(sys.maxsize)  # Required because some KG2c fields are massive
 
 logging.basicConfig(level=logging.INFO,
                     format='%(asctime)s %(levelname)s: %(message)s',
