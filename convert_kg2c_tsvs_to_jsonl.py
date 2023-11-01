@@ -22,6 +22,10 @@ KGX_COL_NAME_REMAPPINGS = {
     "all_categories": "category",
     "category": "preferred_category"
 }
+LITE_PROPERTIES = {"id", "name", "category", "all_categories",
+                   "subject", "object", "predicate", "primary_knowledge_source",
+                   "qualified_predicate", "qualified_object_aspect", "qualified_object_direction",
+                   "domain_range_exclusion"}
 csv.field_size_limit(sys.maxsize)  # Required because some KG2c fields are massive
 
 logging.basicConfig(level=logging.INFO,
@@ -48,8 +52,10 @@ def convert_tsv_to_jsonl(tsv_path: str, header_tsv_path: str):
     """
     logging.info(f"\n\n**** Starting to process file {tsv_path} (header file is: {header_tsv_path}) ****")
 
+    jsonl_output_file_path_lite = tsv_path.replace('.tsv', '-lite.jsonl')
     jsonl_output_file_path = tsv_path.replace('.tsv', '.jsonl')
-    logging.info(f"Output file path will be: {jsonl_output_file_path}")
+    logging.info(f"Output file path for lite version will be: {jsonl_output_file_path_lite}")
+    logging.info(f"Output file path for full version will be: {jsonl_output_file_path}")
 
     # First load column names and remove the ':type' suffixes neo4j requires on column names
     header_df = pd.read_table(header_tsv_path)
@@ -66,28 +72,34 @@ def convert_tsv_to_jsonl(tsv_path: str, header_tsv_path: str):
     with open(tsv_path, "r") as input_tsv_file:
 
         with jsonlines.open(jsonl_output_file_path, mode="w") as jsonl_writer:
+            with jsonlines.open(jsonl_output_file_path_lite, mode="w") as jsonl_writer_lite:
+                batch = []
+                batch_lite = []
+                num_rows_processed = 0
+                tsv_reader = csv.reader(input_tsv_file, delimiter="\t")
+                for line in tsv_reader:
+                    row_obj = dict()
+                    for col_name in columns_to_keep:
+                        raw_value = line[node_column_indeces[col_name]]
+                        if raw_value not in {"", "{}", "[]", None}:  # Only skip empty values, not false ones
+                            kgx_col_name = KGX_COL_NAME_REMAPPINGS.get(col_name, col_name)
+                            row_obj[kgx_col_name] = parse_value(raw_value, col_name)
+                    # Create both the 'lite' and 'full' files at the same time
+                    batch.append(row_obj)
+                    batch_lite.append({property_name: value for property_name, value in row_obj.items()
+                                       if property_name in LITE_PROPERTIES})
+                    if len(batch) == 1000000:
+                        jsonl_writer.write_all(batch)
+                        jsonl_writer_lite.write_all(batch_lite)
+                        num_rows_processed += len(batch)
+                        batch = []
+                        batch_lite = []
+                        logging.info(f"Have processed {num_rows_processed} rows...")
 
-            batch = []
-            num_rows_processed = 0
-            tsv_reader = csv.reader(input_tsv_file, delimiter="\t")
-            for line in tsv_reader:
-                row_obj = dict()
-                for col_name in columns_to_keep:
-                    raw_value = line[node_column_indeces[col_name]]
-                    if raw_value not in {"", "{}", "[]", None}:  # Only skip empty values, not false ones
-                        kgx_col_name = KGX_COL_NAME_REMAPPINGS.get(col_name, col_name)
-                        row_obj[kgx_col_name] = parse_value(raw_value, col_name)
-
-                batch.append(row_obj)
-                if len(batch) == 1000000:
+                # Take care of writing the (potential) final partial batch
+                if batch:
                     jsonl_writer.write_all(batch)
-                    num_rows_processed += len(batch)
-                    batch = []
-                    logging.info(f"Have processed {num_rows_processed} rows...")
-
-            # Take care of writing the (potential) final partial batch
-            if batch:
-                jsonl_writer.write_all(batch)
+                    jsonl_writer_lite.write_all(batch_lite)
 
     logging.info(f"Done converting rows in {tsv_path} to json lines.")
 
