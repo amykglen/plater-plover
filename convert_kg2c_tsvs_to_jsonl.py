@@ -40,8 +40,6 @@ def parse_value(value: any, col_name: str):
             return value.split(ARRAY_DELIMITER)
         else:
             return []
-    elif value in {"True", "False", "true", "false"}:
-        return ast.literal_eval(value)
     else:
         return value
 
