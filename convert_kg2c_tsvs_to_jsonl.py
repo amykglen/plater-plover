@@ -5,7 +5,6 @@ Usage: python convert_kg2c_tsvs_to_jsonl.py <nodes TSV file path> <edges TSV fil
                                                 <nodes header TSV file path> <edges header TSV file path>
 """
 import argparse
-import ast
 import csv
 import json
 import logging
