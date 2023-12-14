@@ -1,11 +1,16 @@
-
+"""
+This script loads a given KG2c version into Plater (and also Neo4j, which Plater uses). It downloads
+the KG2c TSV files from arax-databases.rtx.ai.
+For now this script should be run on the kg2cplover2.rtx.ai instance (see markdown in this repo
+about setting up an instance for this script). Activate the 'plater-plover' pyenv before running
+this script.
+Usage: bash -x run-kg2-plater.sh <kg2_version, e.g., 2.8.4>
+"""
 
 kg2_version="$1"
 orion_kg2_subdir_name=rtx-kg${kg2_version}c
 orion_kg2_subdir_path=~/ORION_parent_dir/Data_services_graphs/${orion_kg2_subdir_name}
 neo4j_container_name=neo4j-kg${kg2_version}c
-
-pyenv activate plater-plover
 
 # Download the proper KG2c TSVs
 cd ~/plater-plover  # This should be the directory containing this script
