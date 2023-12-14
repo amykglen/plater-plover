@@ -43,7 +43,7 @@ def main():
     os.system(f"python convert_kg2c_tsvs_to_jsonl.py nodes_c.tsv edges_c.tsv "
               f"nodes_c_header.tsv edges_c_header.tsv")
 
-    # Move our JSON lines files into the ORION directory
+    # Move our JSON lines files into the ORION parent directory
     logging.info(f"Moving JSON lines files into ORION graphs dir..")
     orion_kg2_subdir_name = f"rtx-kg{args.kg2_version}c"
     orion_kg2_subdir_path = f"{ORION_GRAPHS_DIR}/{orion_kg2_subdir_name}"
@@ -72,8 +72,8 @@ def main():
               f"/Data_services_graphs/{orion_kg2_subdir_name}/ "
               f"nodes_c.jsonl edges_c.jsonl")
 
-    # Load the ORION neo4j dump into a neo4j database (data goes into /home/ubuntu/neo4j/data area..)
-    # WARNING: If you don't want /home/ubuntu/neo4j/data, move it before running this part..
+    # Load the ORION neo4j dump into a neo4j database (goes into /home/ubuntu/neo4j/data area..)
+    # WARNING: If you don't want /home/ubuntu/neo4j/data to be overwritten, move it before running this part..
     logging.info(f"Loading the ORION neo4j dump into a neo4j database..")
     os.system(f"sudo docker run --interactive --tty --rm \
                 --volume=$HOME/neo4j/data:/data \
