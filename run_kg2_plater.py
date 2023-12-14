@@ -1,7 +1,8 @@
 """
-This script loads a given KG2c version into Plater (and also Neo4j, which Plater uses).
-For now this script should be run on the kg2cplover2.rtx.ai instance (until we get a
-setup script written).
+This script loads a given KG2c version into Plater (and also Neo4j, which Plater uses). It downloads
+the KG2c TSV files from arax-databases.rtx.ai.
+For now this script should be run on the kg2cplover2.rtx.ai instance (see markdown in this repo
+about setting up an instance for this script).
 Usage: python <kg2_version, e.g., 2.8.4>
 """
 
@@ -44,13 +45,16 @@ def main():
 
     # Move our JSON lines files into the ORION directory
     logging.info(f"Moving JSON lines files into ORION graphs dir..")
-    os.system(f"mv {SCRIPT_DIR}/nodes_c.jsonl {ORION_GRAPHS_DIR}")
-    os.system(f"mv {SCRIPT_DIR}/edges_c.jsonl {ORION_GRAPHS_DIR}")
+    orion_kg2_subdir_name = f"rtx-kg{args.kg2_version}c"
+    orion_kg2_subdir_path = f"{ORION_GRAPHS_DIR}/{orion_kg2_subdir_name}"
+    os.system(f"mkdir -m 777 {orion_kg2_subdir_path}")
+    os.system(f"mv {SCRIPT_DIR}/nodes_c.jsonl {orion_kg2_subdir_path}")
+    os.system(f"mv {SCRIPT_DIR}/edges_c.jsonl {orion_kg2_subdir_path}")
 
     second_start = time.time()
 
-    # Use ORION to create a neo4j dump based on our JSON lines files
-    logging.info(f"Using ORION to create a neo4j dump based on our JSON lines files..")
+    # Make sure environmental variables are set for ORION
+    logging.info(f"Making sure environmental variables are set properly for ORION..")
     os.system(f"cd {ORION_DIR}")
     os.system(f'export DATA_SERVICES_STORAGE="$PWD/../Data_services_storage/"')
     os.system(f'export DATA_SERVICES_GRAPHS="$PWD/../Data_services_graphs/"')
@@ -60,25 +64,31 @@ def main():
     os.system(f'export DATA_SERVICES_OUTPUT_URL=https://localhost/')
     os.system(f'export PYTHONPATH="$PYTHONPATH:$PWD"')
     os.system(f"printenv")
+
+    # Use ORION to create a neo4j dump based on our JSON lines files
+    logging.info(f"Using ORION to create a neo4j dump based on our JSON lines files..")
     os.system(f"sudo -E docker-compose run --rm data_services "
               f"python /Data_services/cli/neo4j_dump.py "
-              f"/Data_services_graphs/rtx-kg2.8.6c/ "
-              f"nodes.jsonl edges.jsonl")
+              f"/Data_services_graphs/{orion_kg2_subdir_name}/ "
+              f"nodes_c.jsonl edges_c.jsonl")
 
-    # Load the ORION neo4j dump into a neo4j database
+    # Load the ORION neo4j dump into a neo4j database (data goes into /home/ubuntu/neo4j/data area..)
+    # WARNING: If you don't want /home/ubuntu/neo4j/data, move it before running this part..
     logging.info(f"Loading the ORION neo4j dump into a neo4j database..")
     os.system(f"sudo docker run --interactive --tty --rm \
                 --volume=$HOME/neo4j/data:/data \
-                --volume=$HOME/neo4j_dumps:/backups \
+                --volume=$HOME/ORION_parent_dir/Data_services_graphs/{orion_kg2_subdir_name}:/backups \
                 --env NEO4J_AUTH=neo4j/test \
                 neo4j/neo4j-admin:4.4.10 \
                 neo4j-admin load --database=neo4j --from=/backups/graph_.db.dump")
 
     # Start up the neo4j database
     logging.info(f"Starting up the neo4j database..")
+    container_name = f"neo4j-kg{args.kg2_version}c"
+    os.system(f"sudo docker rm {container_name}")  # Get rid of any potential pre-existing container
     os.system(f'sudo docker run -d \
                     -p 7474:7474 -p 7687:7687 \
-                    --name neo4j-kg{args.kg2_version}c \
+                    --name {container_name} \
                     --volume=$HOME/neo4j/data:/data \
                     --env NEO4J_AUTH=neo4j/test \
                     -e NEO4J_apoc_export_file_enabled=true \
