@@ -15,6 +15,7 @@ mkdir -m 777 Data_services_storage
 git clone https://github.com/RobokopU24/ORION.git
 
 # Set up for Plater
+cd ~
 git clone https://github.com/TranslatorSRI/Plater
 cd Plater
 cp .env-template .env
