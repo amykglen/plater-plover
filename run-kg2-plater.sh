@@ -57,8 +57,12 @@ sudo docker run --interactive --tty --rm \
                 renciorg/neo4j-4.4.10-apoc-gds:0.0.1 \
                 neo4j-admin load --database=neo4j --from=/backups/graph_.db.dump
 
-# Start up the Neo4j database
+# Delete any pre-existing container
+set +e  # Temporarily don't exit on errors, in case a container doesn't already exist by this name
+sudo docker stop ${neo4j_container_name}
 sudo docker rm ${neo4j_container_name}
+set -e  # Switch back to exiting on error
+# Start up the neo4j database
 sudo docker run -d \
                 -p 7474:7474 -p 7687:7687 \
                 --name ${neo4j_container_name} \
