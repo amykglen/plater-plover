@@ -72,6 +72,5 @@ sudo docker run -d \
 
 # Start up Plater
 cd ~/Plater
-# TODO: Fix this! Doesn't work... Suppose we could always extract it as a manual step (it's fast anyway)
 . ${HOME}/.pyenv/versions/platerenv/bin/activate
 ./main.sh
