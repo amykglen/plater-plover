@@ -8,8 +8,8 @@ r5a.4xlarge EC2 instance (128GiB RAM) running Ubuntu 18.04.
 
 We assume your instance has the following installed:
 * Docker; we used version 24.0.2
-* docker-compose; we installed version 1.29.2 using `sudo apt-get`
-* pyenv and virtualenv
+* docker-compose; we installed version 1.29.2 using `sudo apt-get install docker-compose`
+* pyenv and virtualenv; we installed using [this guide](https://akrabat.com/creating-virtual-environments-with-pyenv/)
 
 In addition, your instance's public RSA key will need to be added to the `authorized_keys` on the
 `arax-databases.rtx.ai` instance.

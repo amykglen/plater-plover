@@ -2,6 +2,7 @@
 neo4j_password="$1"
 
 # General setup
+pyenv install 3.10.6
 pyenv virtualenv 3.10.6 plater-ploverenv
 cd "$(dirname "$0")"  # This is the directory containing this script ('plater-plover')
 . ${HOME}/.pyenv/versions/plater-ploverenv/bin/activate pip install -r requirements.txt
