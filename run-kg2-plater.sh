@@ -48,7 +48,7 @@ sudo -E docker-compose run --rm data_services \
 
 # Load the ORION Neo4j dump into a Neo4j database (goes into /home/ubuntu/neo4j/data area..)
 # WARNING: If you don't want /home/ubuntu/neo4j/data to be deleted, move it before running this part..
-sudo docker rm -rf /home/ubuntu/neo4j/data
+sudo rm -rf /home/ubuntu/neo4j/data
 sudo docker pull renciorg/neo4j-4.4.10-apoc-gds:0.0.1
 sudo docker run --interactive --tty --rm \
                 --volume=$HOME/neo4j/data:/data \
