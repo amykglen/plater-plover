@@ -8,7 +8,12 @@ r5a.4xlarge EC2 instance (128GiB RAM) running Ubuntu 18.04.
 
 We assume your instance has the following installed:
 * Docker; we used version 24.0.2
-* docker-compose; we installed version 1.29.2 using `sudo apt-get install docker-compose`
+* docker-compose; we installed version 1.29.2 using curl:
+  ```
+  sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+  sudo chmod +x /usr/local/bin/docker-compose
+  sudo mv /usr/local/bin/docker-compose /usr/bin
+  ```
 * pyenv and virtualenv, with python 3.10.6 installed; we used these commands (from [this guide](https://akrabat.com/creating-virtual-environments-with-pyenv/)):
   ```
   sudo apt-get install -y make build-essential libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev xz-utils tk-dev libffi-dev liblzma-dev python-openssl git

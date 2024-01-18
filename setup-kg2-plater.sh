@@ -1,5 +1,6 @@
 
 neo4j_password="$1"
+set -e  # Stop on error
 
 # General setup
 pyenv virtualenv 3.10.6 plater-ploverenv
