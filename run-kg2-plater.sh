@@ -1,9 +1,8 @@
-"""
-This script loads a given KG2c version into Plater (and also Neo4j, which Plater uses). It downloads
+: ' This script loads a given KG2c version into Plater (and also Neo4j, which Plater uses). It downloads
 the KG2c TSV files from arax-databases.rtx.ai, so your RSA key must already be on that instance. Prior to running
-this script you need to run the 'setup-kg2-plater.sh' script to get your environment ready (only needs to be done once).
+this script you need to run the setup-kg2-plater.sh script to get your environment ready (only needs to be done once).
 Usage: bash -x run-kg2-plater.sh <kg2_version, e.g., 2.8.4> <neo4j_password>
-"""
+'
 
 kg2_version="$1"
 neo4j_password="$2"
@@ -68,5 +67,6 @@ sudo docker run -d \
 
 # Start up Plater
 cd ~/Plater
+# TODO: Fix this! Doesn't work... Suppose we could always extract it as a manual step (it's fast anyway)
 . ${HOME}/.pyenv/versions/platerenv/bin/activate
 ./main.sh
