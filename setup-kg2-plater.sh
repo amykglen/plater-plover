@@ -8,11 +8,11 @@ cd "$(dirname "$0")"  # This is the directory containing this script ('plater-pl
 "${HOME}/.pyenv/versions/plater-ploverenv/bin/pip" install -r requirements.txt
 
 # Set up for ORION
-mkdir -m 777 ~/ORION_parent_dir
+mkdir -p -m 777 ~/ORION_parent_dir
 cd ~/ORION_parent_dir
-mkdir -m 777 Data_services_graphs
-mkdir -m 777 Data_services_logs
-mkdir -m 777 Data_services_storage
+mkdir -p -m 777 Data_services_graphs
+mkdir -p -m 777 Data_services_logs
+mkdir -p -m 777 Data_services_storage
 git clone https://github.com/RobokopU24/ORION.git
 
 # Set up for Plater

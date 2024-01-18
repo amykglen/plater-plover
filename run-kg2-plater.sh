@@ -26,7 +26,7 @@ tar -xvzf ${local_kg2c_tarball_name}
                                                                   edges_c_header.tsv
 
 # Move the JSON lines files into the ORION directory
-mkdir -m 777 ${orion_kg2_subdir_path}
+mkdir -p -m 777 ${orion_kg2_subdir_path}
 mv nodes_c.jsonl ${orion_kg2_subdir_path}
 mv edges_c.jsonl ${orion_kg2_subdir_path}
 
