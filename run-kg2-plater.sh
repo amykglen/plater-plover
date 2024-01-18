@@ -1,9 +1,7 @@
 """
 This script loads a given KG2c version into Plater (and also Neo4j, which Plater uses). It downloads
-the KG2c TSV files from arax-databases.rtx.ai.
-For now this script should be run on the kg2cplover2.rtx.ai instance (see README in this repo
-about setting up an instance for this script). Activate the 'plater-plover' pyenv before running
-this script.
+the KG2c TSV files from arax-databases.rtx.ai, so your RSA key must already be on that instance. Prior to running
+this script you need to run the 'setup-kg2-plater.sh' script to get your environment ready (only needs to be done once).
 Usage: bash -x run-kg2-plater.sh <kg2_version, e.g., 2.8.4> <neo4j_password>
 """
 
@@ -21,7 +19,11 @@ scp rtxconfig@arax-databases.rtx.ai:/home/rtxconfig/KG${kg2_version}/extra_files
 tar -xvzf ${local_kg2c_tarball_name}
 
 # Convert the TSVs to JSON lines format
-python convert_kg2c_tsvs_to_jsonl.py nodes_c.tsv edges_c.tsv nodes_c_header.tsv edges_c_header.tsv
+. ${HOME}/.pyenv/versions/plater-ploverenv/bin/activate python convert_kg2c_tsvs_to_jsonl.py \
+                                                                  nodes_c.tsv \
+                                                                  edges_c.tsv \
+                                                                  nodes_c_header.tsv \
+                                                                  edges_c_header.tsv
 
 # Move the JSON lines files into the ORION directory
 mkdir -m 777 ${orion_kg2_subdir_path}
@@ -45,7 +47,8 @@ sudo -E docker-compose run --rm data_services \
          /Data_services_graphs/${orion_kg2_subdir_name}/ nodes_c.jsonl edges_c.jsonl
 
 # Load the ORION Neo4j dump into a Neo4j database (goes into /home/ubuntu/neo4j/data area..)
-# WARNING: If you don't want /home/ubuntu/neo4j/data to be overwritten, move it before running this part..
+# WARNING: If you don't want /home/ubuntu/neo4j/data to be deleted, move it before running this part..
+sudo docker rm -rf /home/ubuntu/neo4j/data
 sudo docker pull renciorg/neo4j-4.4.10-apoc-gds:0.0.1
 sudo docker run --interactive --tty --rm \
                 --volume=$HOME/neo4j/data:/data \
@@ -65,4 +68,5 @@ sudo docker run -d \
 
 # Start up Plater
 cd ~/Plater
+. ${HOME}/.pyenv/versions/platerenv/bin/activate
 ./main.sh
