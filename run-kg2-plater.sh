@@ -19,7 +19,7 @@ scp rtxconfig@arax-databases.rtx.ai:/home/rtxconfig/KG${kg2_version}/extra_files
 tar -xvzf ${local_kg2c_tarball_name}
 
 # Convert the TSVs to JSON lines format
-. ${HOME}/.pyenv/versions/plater-ploverenv/bin/activate python convert_kg2c_tsvs_to_jsonl.py \
+"${HOME}/.pyenv/versions/plater-ploverenv/bin/python" convert_kg2c_tsvs_to_jsonl.py \
                                                                   nodes_c.tsv \
                                                                   edges_c.tsv \
                                                                   nodes_c_header.tsv \
