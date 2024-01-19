@@ -43,7 +43,7 @@ export DATA_SERVICES_OUTPUT_URL=https://localhost/
 export PYTHONPATH="$PYTHONPATH:$PWD"
 printenv
 
-# Use ORION to create a fresh Neo4j dump based on our json lines files
+# Use ORION to create a fresh Neo4j dump based on our json lines files  TODO: this first block might not be needed..
 if test -f /Data_services_graphs/${orion_kg2_subdir_name}/graph_.db.dump; then
   sudo rm -rf /Data_services_graphs/${orion_kg2_subdir_name}/graph_.db.dump
 fi
@@ -56,11 +56,9 @@ sudo -E docker-compose run --rm data_services \
 if test -d $HOME/neo4j; then
   sudo rm -rf $HOME/neo4j
 fi
-# TODO: Figure out if this is the problem... need to delete any of its containers though before can delete the image
-# TODO: Confirmed the nodes_c.jsonl file in data services graphs is good, so somewhere old data is getting loaded in..
-set +e
+set +e  # Temporarily don't exit on errors, in case a container doesn't already exist by this name
 sudo docker image rm orion_data_services
-set -e
+set -e  # Switch back to exiting on error
 sudo docker pull renciorg/neo4j-4.4.10-apoc-gds:0.0.1
 sudo docker run --interactive --tty --rm \
                 --volume=$HOME/neo4j/data:/data \
@@ -69,13 +67,11 @@ sudo docker run --interactive --tty --rm \
                 renciorg/neo4j-4.4.10-apoc-gds:0.0.1 \
                 neo4j-admin load --database=neo4j --from=/backups/graph_.db.dump
 
-# Delete any pre-existing containers
-set +e  # Temporarily don't exit on errors, in case a container doesn't already exist by this name
+# Start up the neo4j database (first delete any preexisting neo4j container)
+set +e
 sudo docker stop ${neo4j_container_name}
 sudo docker rm ${neo4j_container_name}
-set -e  # Switch back to exiting on error
-
-# Start up the neo4j database
+set -e
 sudo docker run -d \
                 -p 7474:7474 -p 7687:7687 \
                 --name ${neo4j_container_name} \
