@@ -43,7 +43,10 @@ export DATA_SERVICES_OUTPUT_URL=https://localhost/
 export PYTHONPATH="$PYTHONPATH:$PWD"
 printenv
 
-# Use ORION to create a Neo4j dump based on our json lines files
+# Use ORION to create a fresh Neo4j dump based on our json lines files
+if test -f /Data_services_graphs/${orion_kg2_subdir_name}/graph_.db.dump; then
+  sudo rm -rf /Data_services_graphs/${orion_kg2_subdir_name}/graph_.db.dump
+fi
 sudo -E docker-compose run --rm data_services \
          python /Data_services/cli/neo4j_dump.py \
          /Data_services_graphs/${orion_kg2_subdir_name}/ nodes_c.jsonl edges_c.jsonl
