@@ -16,11 +16,15 @@ cd ~/ORION_parent_dir
 mkdir -p -m 777 Data_services_graphs
 mkdir -p -m 777 Data_services_logs
 mkdir -p -m 777 Data_services_storage
-git clone https://github.com/RobokopU24/ORION.git
+if [ ! -d "ORION" ]; then
+  git clone https://github.com/RobokopU24/ORION.git
+fi
 
 # Set up for Plater
 cd ~
-git clone https://github.com/TranslatorSRI/Plater
+if [ ! -d "Plater" ]; then
+  git clone https://github.com/TranslatorSRI/Plater
+fi
 cd Plater
 cp .env-template .env
 echo "NEO4J_PASSWORD=${neo4j_password}" >> .env
