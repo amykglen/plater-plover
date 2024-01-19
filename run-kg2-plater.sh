@@ -1,11 +1,12 @@
 : ' This script loads a given KG2c version into Plater (and also Neo4j, which Plater uses). It downloads
 the KG2c TSV files from arax-databases.rtx.ai, so your RSA key must already be on that instance. Prior to running
 this script you need to run the setup-kg2-plater.sh script to get your environment ready (only needs to be done once).
-Usage: bash -x run-kg2-plater.sh <kg2_version, e.g., 2.8.4> <neo4j_password>
+Usage: bash -x run-kg2-plater.sh <kg2_version, e.g., 2.8.4> <biolink_version, e.g., 3.5.2> <neo4j_password>
 '
 
 kg2_version="$1"
-neo4j_password="$2"
+biolink_version="$2"
+neo4j_password="$3"
 set -e  # Stop on error
 
 orion_kg2_subdir_name=rtx-kg${kg2_version}c
@@ -23,7 +24,8 @@ tar -xvzf ${local_kg2c_tarball_name}
                                                                   nodes_c.tsv \
                                                                   edges_c.tsv \
                                                                   nodes_c_header.tsv \
-                                                                  edges_c_header.tsv
+                                                                  edges_c_header.tsv \
+                                                                  ${biolink_version}
 
 # Move the JSON lines files into the ORION directory
 mkdir -p -m 777 ${orion_kg2_subdir_path}

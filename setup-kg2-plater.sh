@@ -1,3 +1,4 @@
+# Usage: bash -x setup-kg2-plater.sh <neo4j_password_to_use>
 
 neo4j_password="$1"
 set -e  # Stop on error
