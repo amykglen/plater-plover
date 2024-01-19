@@ -43,7 +43,7 @@ def parse_value(value: any, col_name: str):
         return value
 
 
-def convert_tsv_to_jsonl(tsv_path: str, header_tsv_path: str, bh: BiolinkHelper):
+def convert_tsv_to_jsonl(tsv_path: str, header_tsv_path: str, bh: any):
     """
     This method assumes the input TSV file names are in KG2c format (e.g., like nodes_c.tsv and nodes_c_header.tsv)
     """
