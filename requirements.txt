@@ -2,3 +2,5 @@ jsonlines
 pandas
 pytest
 requests
+pyyaml
+treelib
