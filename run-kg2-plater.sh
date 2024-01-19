@@ -63,7 +63,6 @@ sudo docker image rm orion_data_services
 set -e
 sudo docker pull renciorg/neo4j-4.4.10-apoc-gds:0.0.1
 sudo docker run --interactive --tty --rm \
-                --name temp_orion_neo4j
                 --volume=$HOME/neo4j/data:/data \
                 --volume=$HOME/ORION_parent_dir/Data_services_graphs/${orion_kg2_subdir_name}:/backups \
                 --env NEO4J_AUTH=neo4j/${neo4j_password} \
@@ -72,8 +71,6 @@ sudo docker run --interactive --tty --rm \
 
 # Delete any pre-existing containers
 set +e  # Temporarily don't exit on errors, in case a container doesn't already exist by this name
-sudo docker stop temp_orion_neo4j
-sudo docker rm temp_orion_neo4j
 sudo docker stop ${neo4j_container_name}
 sudo docker rm ${neo4j_container_name}
 set -e  # Switch back to exiting on error
