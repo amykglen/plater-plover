@@ -1,4 +1,4 @@
-# Usage: bash -x setup-kg2-plater.sh <neo4j_password_to_use>
+# Usage: bash -x kg2-plater-setup.sh <neo4j_password_to_use>
 
 neo4j_password="$1"
 set -e  # Stop on error
@@ -17,13 +17,13 @@ mkdir -p -m 777 Data_services_graphs
 mkdir -p -m 777 Data_services_logs
 mkdir -p -m 777 Data_services_storage
 if [ ! -d "ORION" ]; then
-  git clone https://github.com/RobokopU24/ORION.git
+  git clone https://github.com/RobokopU24/ORION.git  # TODO: Maybe pin to specific version that we know works
 fi
 
 # Set up for Plater
 cd ~
 if [ ! -d "Plater" ]; then
-  git clone https://github.com/TranslatorSRI/Plater
+  git clone https://github.com/TranslatorSRI/Plater  # TODO: Maybe pin to specific version that we know works
 fi
 cd Plater
 cp .env-template .env

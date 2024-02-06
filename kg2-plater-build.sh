@@ -1,7 +1,7 @@
-: ' This script loads a given KG2c version into Plater (and also Neo4j, which Plater uses). It downloads
+: ' This script uses ORION to load a given KG2c version into Neo4j, prepped for use by Plater. It downloads
 the KG2c TSV files from arax-databases.rtx.ai, so your RSA key must already be on that instance. Prior to running
-this script you need to run the setup-kg2-plater.sh script to get your environment ready (only needs to be done once).
-Usage: bash -x run-kg2-plater.sh <kg2_version, e.g., 2.8.4> <biolink_version, e.g., 3.5.2> <neo4j_password>
+this script you need to run the kg2-plater-setup.sh script to get your environment ready (only needs to be done once).
+Usage: bash -x kg2-plater-build.sh <kg2_version, e.g., 2.8.4> <biolink_version, e.g., 3.5.2> <neo4j_password>
 '
 
 kg2_version="$1"
@@ -56,7 +56,7 @@ sudo -E docker-compose run --rm data_services \
 if test -d $HOME/neo4j; then
   sudo rm -rf $HOME/neo4j
 fi
-set +e  # Temporarily don't exit on errors, in case a container doesn't already exist by this name
+set +e  # Temporarily don't exit on errors, in case an image doesn't already exist by this name
 sudo docker image rm orion_data_services
 set -e  # Switch back to exiting on error
 sudo docker pull renciorg/neo4j-4.4.10-apoc-gds:0.0.1
@@ -68,7 +68,7 @@ sudo docker run --interactive --tty --rm \
                 renciorg/neo4j-4.4.10-apoc-gds:0.0.1 \
                 neo4j-admin load --database=neo4j --from=/backups/graph_.db.dump
 
-# Start up the neo4j database (first delete any preexisting neo4j container)
+# Start up the final neo4j database/server that Plater will use (but first we delete any preexisting neo4j container)
 set +e
 sudo docker stop ${neo4j_container_name}
 sudo docker rm ${neo4j_container_name}
