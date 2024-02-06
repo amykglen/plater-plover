@@ -61,6 +61,7 @@ sudo docker image rm orion_data_services
 set -e  # Switch back to exiting on error
 sudo docker pull renciorg/neo4j-4.4.10-apoc-gds:0.0.1
 sudo docker run --interactive --tty --rm \
+                --name=orion_neo4j_temp \
                 --volume=$HOME/neo4j/data:/data \
                 --volume=$HOME/ORION_parent_dir/Data_services_graphs/${orion_kg2_subdir_name}:/backups \
                 --env NEO4J_AUTH=neo4j/${neo4j_password} \
