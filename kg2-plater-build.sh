@@ -67,20 +67,3 @@ sudo docker run --interactive --tty --rm \
                 --env NEO4J_AUTH=neo4j/${neo4j_password} \
                 renciorg/neo4j-4.4.10-apoc-gds:0.0.1 \
                 neo4j-admin load --database=neo4j --from=/backups/graph_.db.dump
-
-# Start up the final neo4j database/server that Plater will use (but first we delete any preexisting neo4j container)
-set +e
-sudo docker stop ${neo4j_container_name}
-sudo docker rm ${neo4j_container_name}
-set -e
-sudo docker run -d \
-                -p 7474:7474 -p 7687:7687 \
-                --name ${neo4j_container_name} \
-                --volume=$HOME/neo4j/data:/data \
-                --env NEO4J_AUTH=neo4j/${neo4j_password} \
-                renciorg/neo4j-4.4.10-apoc-gds:0.0.1
-
-# Start up Plater
-cd ~/Plater
-. ${HOME}/.pyenv/versions/platerenv/bin/activate
-./main.sh
