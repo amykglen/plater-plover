@@ -8,3 +8,6 @@
 *edges*.tsv*
 
 build.log
+
+/test/*.tsv
+/test/responses/*
