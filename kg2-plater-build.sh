@@ -1,6 +1,7 @@
 : ' This script uses ORION to load a given KG2c version into Neo4j, prepped for use by Plater. It downloads
 the KG2c TSV files from arax-databases.rtx.ai, so your RSA key must already be on that instance. Prior to running
-this script you need to run the kg2-plater-setup.sh script to get your environment ready (only needs to be done once).
+this script you need to run the kg2-plater-setup.sh script to get your environment ready (only needs
+to be done once).
 Usage: bash -x kg2-plater-build.sh <kg2_version, e.g., 2.8.4> <biolink_version, e.g., 3.5.2> <neo4j_password>
 '
 
