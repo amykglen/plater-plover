@@ -6,7 +6,7 @@ and **2)** the Plover stack.
 We assume you are using an Ubuntu instance; we used `kg2cplover2.rtx.ai`, which is an 
 r5a.4xlarge EC2 instance (128GiB RAM) running Ubuntu 18.04.
 
-We assume your instance has the following installed:
+And we assume your instance has the following installed:
 * Docker; we used version 24.0.2
 * docker-compose; we installed version 1.29.2 using curl:
   ```
@@ -45,9 +45,9 @@ bash -x run-kg2-plater.sh 2.8.4 myneo4jpassword
 ```
 
 At this point you should be able to query KG2 Plater at port 8080. For instance, if you serve Plater on the 
-`kg2cplover2.rtx.ai` AWS EC2 instance, you should be able to query it at:
+`myinstance.rtx.ai` AWS EC2 instance, you should be able to query it at:
 ```
-http://kg2cplover2.rtx.ai:8080/1.4/query
+http://myinstance.rtx.ai:8080/1.4/query
 ```
 
 ## 2. Hosting KG2 in the Plover stack
