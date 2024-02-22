@@ -36,7 +36,7 @@ Note that the setup script only needs to be run once per instance.
 
 Then actually build KG2 Plater, specifying which KG2c and Biolink versions to use (mostly consists of loading KG2c into Neo4j):
 ```
-bash -x kg2-plater-build.sh 2.8.4 3.5.2 myneo4jpassword
+bash -x kg2-plater-build.sh 2.8.4 3.1.2 myneo4jpassword
 ```
 
 Then serve/run Plater, again specifying the KG2c version and your neo4j password:
