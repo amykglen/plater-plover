@@ -23,7 +23,7 @@ fi
 # Set up for Plater
 cd ~
 if [ ! -d "Plater" ]; then
-  git clone https://github.com/TranslatorSRI/Plater  # TODO: Maybe pin to specific version that we know works
+  git clone https://github.com/amykglen/Plater.git  # This is a fork of Plater v1.5.0, with a slight logging addition
 fi
 cd Plater
 cp .env-template .env

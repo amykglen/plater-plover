@@ -66,6 +66,7 @@ def _run_query(trapi_qg: Dict[str, Dict[str, Dict[str, Union[List[str], str, Non
 
         # Grab the size of the response
         response_size = os.path.getsize(response_path)
+        # TODO: Grab the backend database query time from the logs
     else:
         print(f"Response status code was {response.status_code}. Response was: {response.text}")
         num_nodes, num_edges, num_results, response_size = 0, 0, 0, 0
