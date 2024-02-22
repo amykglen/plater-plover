@@ -42,7 +42,7 @@ def _run_query(trapi_qg: Dict[str, Dict[str, Dict[str, Union[List[str], str, Non
     if not os.path.exists(results_file_path):
         with open(results_file_path, "w+") as results_file:
             tsv_writer = csv.writer(results_file, delimiter="\t")
-            tsv_writer.writerow(["query_id", "date_run", "elapsed_time",
+            tsv_writer.writerow(["query_id", "date_run", "time_client",
                                  "num_results", "num_nodes", "num_edges", "response_size"])
 
     # Run the query
