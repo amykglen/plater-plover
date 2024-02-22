@@ -26,17 +26,30 @@ In addition, your instance's public RSA key will need to be added to the `author
 
 ## 1. Hosting KG2 in the Plater stack
 
-First run the setup script, specifying whatever password you want to use for neo4j:
+Before starting, ensure that **port 8080 is open** on the instance you will be serving KG2 Plater from.
+
+Then run the instance setup script, specifying whatever password you want to use for neo4j:
 ```
 bash -x setup-kg2-plater.sh myneo4jpassword
 ```
 Note that the setup script only needs to be run once per instance.
 
-Then actually load KG2 into Plater and serve it, specifying whatever version of KG2 you would like to use as well as your neo4j password:
+Then actually build KG2 Plater, specifying which KG2c and Biolink versions to use (mostly consists of loading KG2c into Neo4j):
+```
+bash -x kg2-plater-build.sh 2.8.4 3.5.2 myneo4jpassword
+```
+
+Then serve/run Plater, again specifying the KG2c version and your neo4j password:
 ```
 bash -x run-kg2-plater.sh 2.8.4 myneo4jpassword
 ```
 
+At this point you should be able to query KG2 Plater at port 8080. For instance, if you serve Plater on the 
+`kg2cplover2.rtx.ai` AWS EC2 instance, you should be able to query it at:
+```
+http://kg2cplover2.rtx.ai:8080/1.4/query
+```
 
 ## 2. Hosting KG2 in the Plover stack
 
+TODO
