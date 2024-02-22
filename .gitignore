@@ -8,6 +8,8 @@
 *edges*.tsv*
 
 build.log
+biolink_lookup_map*
+biolink_helper.py
 
 /test/*.tsv
 /test/responses/*

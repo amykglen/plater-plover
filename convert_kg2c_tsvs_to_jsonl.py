@@ -64,6 +64,7 @@ def convert_tsv_to_jsonl(tsv_path: str, header_tsv_path: str, bh: any):
     columns_to_keep = [col_name for col_name in column_names if not col_name.startswith(":")]
     logging.info(f"We'll use this subset of ({len(columns_to_keep)}) columns:\n "
                  f"{json.dumps(columns_to_keep, indent=2)}")
+    trusted_subclass_sources = {"infores:mondo", "infores:chebi"}  # These are the same as Plover uses for now
 
     logging.info(f"Starting to convert rows in {tsv_path} to json lines..")
     with open(tsv_path, "r") as input_tsv_file:
@@ -73,6 +74,7 @@ def convert_tsv_to_jsonl(tsv_path: str, header_tsv_path: str, bh: any):
                 batch = []
                 batch_lite = []
                 num_rows_processed = 0
+                remapped_subclass_of_edges = 0
                 tsv_reader = csv.reader(input_tsv_file, delimiter="\t")
                 for line in tsv_reader:
                     row_obj = dict()
@@ -92,6 +94,13 @@ def convert_tsv_to_jsonl(tsv_path: str, header_tsv_path: str, bh: any):
                             else:
                                 row_obj[kgx_col_name] = parsed_value
 
+                    # Remap subclass_of edges from sources we don't want used for subclass reasoning
+                    predicate = row_obj.get("predicate")  # Will be None if this is a Node object
+                    primary_knowledge_source = row_obj.get("primary_knowledge_source")
+                    if predicate == "biolink:subclass_of" and primary_knowledge_source not in trusted_subclass_sources:
+                        row_obj["predicate"] = "biolink:related_to_at_concept_level"
+                        remapped_subclass_of_edges += 1
+
                     # Create both the 'lite' and 'full' files at the same time
                     batch.append(row_obj)
                     batch_lite.append({property_name: value for property_name, value in row_obj.items()
@@ -110,6 +119,8 @@ def convert_tsv_to_jsonl(tsv_path: str, header_tsv_path: str, bh: any):
                     jsonl_writer_lite.write_all(batch_lite)
 
     logging.info(f"Done converting rows in {tsv_path} to json lines.")
+    if remapped_subclass_of_edges:
+        logging.info(f"Remapped {remapped_subclass_of_edges} subclass_of edges to related_to_at_concept_level")
 
 
 def main():
