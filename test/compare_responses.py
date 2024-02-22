@@ -31,29 +31,29 @@ def main():
     plater_only_nodes = plater_node_ids.difference(plover_node_ids)
     print(f"\n\nPlater returned {len(plater_only_nodes)} nodes that Plover did not:\n")
     for node_id in plater_only_nodes:
-        print(f"{node_id} {plater_nodes[node_id]['categories']} {plater_nodes[node_id]['name']} ")
+        print(f"{node_id} {plater_nodes[node_id]['categories']} {plater_nodes[node_id].get('name')} ")
 
     plover_only_nodes = plover_node_ids.difference(plater_node_ids)
     print(f"\n\nPlover returned {len(plover_only_nodes)} nodes that Plater did not:\n")
     for node_id in plover_only_nodes:
-        print(f"{node_id} {plover_nodes[node_id]['categories']} {plover_nodes[node_id]['name']}")
+        print(f"{node_id} {plover_nodes[node_id]['categories']} {plover_nodes[node_id].get('name')}")
 
     nodes_shared = plover_node_ids.intersection(plater_node_ids)
     print(f"\n\nThey returned {len(nodes_shared)} nodes in common:\n")
     for node_id in nodes_shared:
-        print(f"{node_id} {plover_nodes[node_id]['categories']} {plover_nodes[node_id]['name']}")
+        print(f"{node_id} {plover_nodes[node_id]['categories']} {plover_nodes[node_id].get('name')}")
 
     # Look at some plater-only nodes to see what edges they came from
     plater_only_node_id = plater_node_ids.pop()
     print(f"\n\nLooking at randomly selected Plater-only node {plater_only_node_id} "
-          f"({plater_nodes[plater_only_node_id]['name']}):\n")
+          f"({plater_nodes[plater_only_node_id].get('name')}):\n")
     for edge_key, edge in plater_kg["edges"].items():
         if edge["subject"] == plater_only_node_id or edge["object"] == plater_only_node_id:
             print(f"\n\n{edge['subject']}--{edge['predicate']}--{edge['object']}\n")
             plater_subject_node = plater_nodes[edge["subject"]]
             plater_object_node = plater_nodes[edge["object"]]
-            print(f"Subject is {plater_subject_node['name']}, {plater_subject_node['categories']}\n")
-            print(f"Object is {plater_object_node['name']}, {plater_object_node['categories']}")
+            print(f"Subject is {plater_subject_node.get('name')}, {plater_subject_node['categories']}\n")
+            print(f"Object is {plater_object_node.get('name')}, {plater_object_node['categories']}")
 
             # Find results that use this edge
             for result in plater_response["message"]["results"]:
@@ -63,12 +63,25 @@ def main():
                     print(f"\nFound result that includes this edge:")
                     print(result)
 
+    # Compare what descendants of the input curie(s) the tools used
+    input_curies = set(plater_response['message']['query_graph']['nodes']['n00']['ids'])
+    print(f"\n\nInput curies in the QG (for n00) were: {input_curies}")
 
-    # Look at subclass_of edges in both responses
-    plover_subclass_of_edges = [edge for edge in plover_kg["edges"].values() if edge["predicate"] == "biolink:subclass_of"]
-    plater_subclass_of_edges = [edge for edge in plater_kg["edges"].values() if edge["predicate"] == "biolink:subclass_of"]
-    print(f"\n\nPlover KG includes {len(plover_subclass_of_edges)} subclass_of edges")
-    print(f"Plater KG includes {len(plater_subclass_of_edges)} subclass_of edges")
+    plater_n00_node_ids = {node_binding["id"]
+                           for result in plater_response["message"]["results"]
+                           for node_binding in result["node_bindings"]["n00"]}
+    print(f"\n\nPlater returned {len(plater_n00_node_ids)} nodes to fulfill n00:")
+    for n00_node_id in plater_n00_node_ids:
+        plater_node = plater_nodes[n00_node_id]
+        print(f"{n00_node_id} {plater_node.get('name')}")
+
+    plover_n00_node_ids = {node_binding["id"]
+                           for result in plover_response["message"]["results"]
+                           for node_binding in result["node_bindings"]["n00"]}
+    print(f"\n\nPlover returned {len(plover_n00_node_ids)} nodes to fulfill n00:")
+    for n00_node_id in plover_n00_node_ids:
+        plover_node = plover_nodes[n00_node_id]
+        print(f"{n00_node_id} {plover_node.get('name')}")
 
 
 
