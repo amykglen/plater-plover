@@ -1,6 +1,7 @@
 import csv
 import json
 import os
+import time
 from datetime import datetime
 
 import pytest
@@ -42,14 +43,16 @@ def _run_query(trapi_qg: Dict[str, Dict[str, Dict[str, Union[List[str], str, Non
     if not os.path.exists(results_file_path):
         with open(results_file_path, "w+") as results_file:
             tsv_writer = csv.writer(results_file, delimiter="\t")
-            tsv_writer.writerow(["query_id", "date_run", "time_client",
+            tsv_writer.writerow(["query_id", "date_run", "duration_client", "duration_server", "duration_db"
                                  "num_results", "num_nodes", "num_edges", "response_size"])
 
     # Run the query
+    client_start = time.time()
     response = requests.post(f"{pytest.endpoint}/query",
                              json={"message": {"query_graph": trapi_qg}, "submitter": "amy-test"},
                              headers={'accept': 'application/json'})
-    print(f"Got response in {response.elapsed.total_seconds()} seconds")
+    client_duration = time.time() - client_start
+    print(f"Request took {response.elapsed.total_seconds()} seconds")
 
     # Process/save results
     if response.status_code == 200:
@@ -73,7 +76,9 @@ def _run_query(trapi_qg: Dict[str, Dict[str, Dict[str, Union[List[str], str, Non
         json_response = dict()
 
     # Save results/data for this query run
-    row = [query_id, datetime.now(), response.elapsed.total_seconds(),
+    row = [query_id, datetime.now(),
+           client_duration, response.elapsed.total_seconds(),
+           json_response.get("query_duration", dict()).get("neo4j" if querier == "plater" else "ploverdb"),
            num_results, num_nodes, num_edges, response_size]
     with open(results_file_path, "a") as results_file_append:
         tsv_appender = csv.writer(results_file_append, delimiter="\t")
