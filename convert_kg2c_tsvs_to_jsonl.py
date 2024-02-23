@@ -43,6 +43,17 @@ def parse_value(value: any, col_name: str):
         return value
 
 
+def should_filter_out(row_obj: dict) -> bool:
+    primary_ks = row_obj.get("primary_knowledge_source")
+    publications = row_obj.get("publications")
+    if primary_ks == "infores:semmeddb" and (not publications or len(publications) < 4):
+        return True
+    elif row_obj.get("domain_range_exclusion") in {True, "True", "true"}:
+        return True
+    else:
+        return False
+
+
 def convert_tsv_to_jsonl(tsv_path: str, header_tsv_path: str, bh: any):
     """
     This method assumes the input TSV file names are in KG2c format (e.g., like nodes_c.tsv and nodes_c_header.tsv)
@@ -74,7 +85,8 @@ def convert_tsv_to_jsonl(tsv_path: str, header_tsv_path: str, bh: any):
                 batch = []
                 batch_lite = []
                 num_rows_processed = 0
-                remapped_subclass_of_edges = 0
+                num_remapped_subclass_of_edges = 0
+                num_edges_filtered_out = 0
                 tsv_reader = csv.reader(input_tsv_file, delimiter="\t")
                 for line in tsv_reader:
                     row_obj = dict()
@@ -99,19 +111,26 @@ def convert_tsv_to_jsonl(tsv_path: str, header_tsv_path: str, bh: any):
                     primary_knowledge_source = row_obj.get("primary_knowledge_source")
                     if predicate == "biolink:subclass_of" and primary_knowledge_source not in trusted_subclass_sources:
                         row_obj["predicate"] = "biolink:related_to_at_concept_level"
-                        remapped_subclass_of_edges += 1
+                        num_remapped_subclass_of_edges += 1
 
-                    # Create both the 'lite' and 'full' files at the same time
-                    batch.append(row_obj)
-                    batch_lite.append({property_name: value for property_name, value in row_obj.items()
-                                       if property_name in LITE_PROPERTIES})
+                    # Save the row as applicable; create both the 'lite' and 'full' files at the same time
+                    if not should_filter_out(row_obj):
+                        batch.append(row_obj)
+                        batch_lite.append({property_name: value for property_name, value in row_obj.items()
+                                           if property_name in LITE_PROPERTIES})
+                    else:
+                        num_edges_filtered_out += 1
+
+                    # Write this batch of rows to the jsonl files if it's time
                     if len(batch) == 1000000:
                         jsonl_writer.write_all(batch)
                         jsonl_writer_lite.write_all(batch_lite)
                         num_rows_processed += len(batch)
                         batch = []
                         batch_lite = []
-                        logging.info(f"Have processed {num_rows_processed} rows...")
+                        logging.info(f"Have processed {num_rows_processed} rows... "
+                                     f"({num_edges_filtered_out} filtered out, {num_remapped_subclass_of_edges} "
+                                     f"subclass_of remapped)")
 
                 # Take care of writing the (potential) final partial batch
                 if batch:
@@ -119,8 +138,9 @@ def convert_tsv_to_jsonl(tsv_path: str, header_tsv_path: str, bh: any):
                     jsonl_writer_lite.write_all(batch_lite)
 
     logging.info(f"Done converting rows in {tsv_path} to json lines.")
-    if remapped_subclass_of_edges:
-        logging.info(f"Remapped {remapped_subclass_of_edges} subclass_of edges to related_to_at_concept_level")
+    if num_remapped_subclass_of_edges or num_edges_filtered_out:
+        logging.info(f"Remapped {num_remapped_subclass_of_edges} subclass_of edges to related_to_at_concept_level")
+        logging.info(f"Filtered out {num_edges_filtered_out} edges (semmed with too few pubs or domain-range-exclusion)")
 
 
 def main():
