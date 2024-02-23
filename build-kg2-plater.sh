@@ -39,6 +39,7 @@ sudo docker stop ${neo4j_container_name}
 sudo docker container prune -f  # Deletes all stopped containers
 sudo docker image rm orion_data_services
 sudo docker image rm renciorg/neo4j-4.4.10-apoc-gds:0.0.1
+sudo rm -f /Data_services_graphs/${orion_kg2_subdir_name}/graph_.db.dump
 set -e  # Switch back to exiting on error
 
 # Make sure environmental variables are set for ORION
@@ -52,10 +53,7 @@ export DATA_SERVICES_OUTPUT_URL=https://localhost/
 export PYTHONPATH="$PYTHONPATH:$PWD"
 printenv
 
-# Use ORION to create a fresh Neo4j dump based on our json lines files  TODO: this first block might not be needed..
-if test -f /Data_services_graphs/${orion_kg2_subdir_name}/graph_.db.dump; then
-  sudo rm -rf /Data_services_graphs/${orion_kg2_subdir_name}/graph_.db.dump
-fi
+# Use ORION to create a fresh Neo4j dump based on our json lines files
 sudo -E docker-compose run --rm data_services \
          python /Data_services/cli/neo4j_dump.py \
          /Data_services_graphs/${orion_kg2_subdir_name}/ nodes_c.jsonl edges_c.jsonl
