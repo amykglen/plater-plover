@@ -23,6 +23,8 @@ sudo docker run -d \
                 --env NEO4J_AUTH=neo4j/${neo4j_password} \
                 renciorg/neo4j-4.4.10-apoc-gds:0.0.1
 
+sleep 1m  # Wait for neo4j to start up
+
 # Start up Plater
 cd ~/Plater
 . ${HOME}/.pyenv/versions/platerenv/bin/activate
