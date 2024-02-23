@@ -17,7 +17,7 @@ mkdir -p -m 777 Data_services_graphs
 mkdir -p -m 777 Data_services_logs
 mkdir -p -m 777 Data_services_storage
 if [ ! -d "ORION" ]; then
-  git clone https://github.com/RobokopU24/ORION.git  # TODO: Maybe pin to specific version that we know works
+  git clone https://github.com/RobokopU24/ORION.git --branch litcoin-test-6  # This is a release from Jan. 2024
 fi
 
 # Set up for Plater
