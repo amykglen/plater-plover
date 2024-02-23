@@ -47,9 +47,8 @@ printenv
 # Clear out old images/containers
 # WARNING: If you don't want /home/ubuntu/neo4j/data to be deleted, move it before running this part..
 set +e  # Temporarily don't exit on errors, in case an image doesn't already exist by this name
-sudo docker image rm orion_data_services
 sudo docker stop ${neo4j_container_name}
-sudo docker image rm renciorg/neo4j-4.4.10-apoc-gds
+sudo docker image rm renciorg/neo4j-4.4.10-apoc-gds:0.0.1
 set -e  # Switch back to exiting on error
 
 # Use ORION to create a fresh Neo4j dump based on our json lines files  TODO: this first block might not be needed..
