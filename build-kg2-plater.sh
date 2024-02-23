@@ -40,6 +40,8 @@ sudo docker container prune -f  # Deletes all stopped containers
 sudo docker image rm orion_data_services
 sudo docker image rm renciorg/neo4j-4.4.10-apoc-gds:0.0.1
 sudo rm -f /Data_services_graphs/${orion_kg2_subdir_name}/graph_.db.dump
+sudo rm -f /Data_services_graphs/${orion_kg2_subdir_name}/edges.temp_csv  # Critical! Otherwise ORION will use old data!
+sudo rm -f /Data_services_graphs/${orion_kg2_subdir_name}/nodes.temp_csv  # Critical! Otherwise ORION will use old data!
 set -e  # Switch back to exiting on error
 
 # Make sure environmental variables are set for ORION
