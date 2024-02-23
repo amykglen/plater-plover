@@ -44,6 +44,14 @@ export DATA_SERVICES_OUTPUT_URL=https://localhost/
 export PYTHONPATH="$PYTHONPATH:$PWD"
 printenv
 
+# Clear out old images/containers
+# WARNING: If you don't want /home/ubuntu/neo4j/data to be deleted, move it before running this part..
+set +e  # Temporarily don't exit on errors, in case an image doesn't already exist by this name
+sudo docker image rm orion_data_services
+sudo docker stop ${neo4j_container_name}
+sudo docker image rm renciorg/neo4j-4.4.10-apoc-gds
+set -e  # Switch back to exiting on error
+
 # Use ORION to create a fresh Neo4j dump based on our json lines files  TODO: this first block might not be needed..
 if test -f /Data_services_graphs/${orion_kg2_subdir_name}/graph_.db.dump; then
   sudo rm -rf /Data_services_graphs/${orion_kg2_subdir_name}/graph_.db.dump
@@ -53,13 +61,9 @@ sudo -E docker-compose run --rm data_services \
          /Data_services_graphs/${orion_kg2_subdir_name}/ nodes_c.jsonl edges_c.jsonl
 
 # Load the ORION Neo4j dump into a Neo4j database (goes into /home/ubuntu/neo4j/data area..)
-# WARNING: If you don't want /home/ubuntu/neo4j/data to be deleted, move it before running this part..
 if test -d $HOME/neo4j; then
   sudo rm -rf $HOME/neo4j
 fi
-set +e  # Temporarily don't exit on errors, in case an image doesn't already exist by this name
-sudo docker image rm orion_data_services
-set -e  # Switch back to exiting on error
 sudo docker pull renciorg/neo4j-4.4.10-apoc-gds:0.0.1
 sudo docker run --interactive --tty --rm \
                 --name=orion_neo4j_temp \
