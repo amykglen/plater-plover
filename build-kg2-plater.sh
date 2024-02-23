@@ -34,10 +34,10 @@ mv nodes_c.jsonl ${orion_kg2_subdir_path}
 mv edges_c.jsonl ${orion_kg2_subdir_path}
 
 # Clear out old images/containers
-# WARNING: If you don't want /home/ubuntu/neo4j/data to be deleted, move it before running this part..
 set +e  # Temporarily don't exit on errors, in case an image doesn't already exist by this name
 sudo docker stop ${neo4j_container_name}
 sudo docker container prune -f  # Deletes all stopped containers
+sudo docker image rm orion_data_services
 sudo docker image rm renciorg/neo4j-4.4.10-apoc-gds:0.0.1
 set -e  # Switch back to exiting on error
 
@@ -61,6 +61,7 @@ sudo -E docker-compose run --rm data_services \
          /Data_services_graphs/${orion_kg2_subdir_name}/ nodes_c.jsonl edges_c.jsonl
 
 # Load the ORION Neo4j dump into a Neo4j database (goes into /home/ubuntu/neo4j/data area..)
+# WARNING: If you don't want /home/ubuntu/neo4j/data to be deleted, move it before running this part..
 if test -d $HOME/neo4j; then
   sudo rm -rf $HOME/neo4j
 fi
