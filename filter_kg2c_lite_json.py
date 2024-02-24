@@ -23,13 +23,9 @@ def main():
 
     print(f"At start, kg2c lite json has {len(kg2c_lite_json['nodes'])} nodes and {len(kg2c_lite_json['edges'])} edges")
 
-    filtered_graph = {
-        "nodes": kg2c_lite_json["nodes"],
-        "edges": [],  # We'll add only those we want to keep, below
-        "kg2_version": kg2c_lite_json["kg2_version"],
-        "biolink_version": kg2c_lite_json["biolink_version"]
-    }
     # Get rid of semmeddb edges with fewer than 4 publications and domain_range_exclusion edges
+    filtered_graph = {key: [] if key == "edges" else value
+                      for key, value in kg2c_lite_json.items()}
     num_edges_filtered = 0
     for edge in kg2c_lite_json['edges']:
         if not should_filter_out(edge):
@@ -40,6 +36,9 @@ def main():
 
     print(f"The filtered kg2c lite graph has {len(filtered_graph['nodes'])} nodes and "
           f"{len(filtered_graph['edges'])} edges")
+
+    with open(f"{args.kg2c_lite_json_path}_filtered", "w+") as filtered_json_file:
+        json.dump(filtered_graph, filtered_json_file, indent=2)
 
 
 if __name__ == "__main__":
