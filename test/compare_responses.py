@@ -53,7 +53,8 @@ def main():
             plater_subject_node = plater_nodes[edge["subject"]]
             plater_object_node = plater_nodes[edge["object"]]
             print(f"Subject is {plater_subject_node.get('name')}, {plater_subject_node['categories']}\n")
-            print(f"Object is {plater_object_node.get('name')}, {plater_object_node['categories']}")
+            print(f"Object is {plater_object_node.get('name')}, {plater_object_node['categories']}\n")
+            print(f"Full edge is {edge}")
 
             # Find results that use this edge
             for result in plater_response["message"]["results"]:
