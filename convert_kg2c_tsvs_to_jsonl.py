@@ -123,18 +123,19 @@ def convert_tsv_to_jsonl(tsv_path: str, header_tsv_path: str, bh: any, kind: str
             batch.append(row_obj)
             batch_lite.append({property_name: value for property_name, value in row_obj.items()
                                if property_name in LITE_PROPERTIES})
-            if kind == "edges" and not should_filter_out(row_obj):
-                batch_filtered.append(row_obj)
-            else:
-                num_edges_filtered_out += 1
+            if kind == "edges":
+                if not should_filter_out(row_obj):
+                    batch_filtered.append(row_obj)
+                else:
+                    num_edges_filtered_out += 1
 
             # Write this batch of rows to the jsonl files if it's time
             if len(batch) == 1000000:
                 write_rows_to_jsonl_file(batch, jsonl_output_file_path)
                 write_rows_to_jsonl_file(batch_lite, jsonl_output_file_path_lite)
                 write_rows_to_jsonl_file(batch_filtered, jsonl_output_file_path_filtered)
-                batch, batch_lite, batch_filtered = [], [], []
                 num_rows_processed += len(batch)
+                batch, batch_lite, batch_filtered = [], [], []
                 logging.info(f"Have processed {num_rows_processed} rows... "
                              f"({num_edges_filtered_out} filtered out, {num_remapped_subclass_of_edges} "
                              f"subclass_of remapped)")
