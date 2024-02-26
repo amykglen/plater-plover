@@ -11,6 +11,7 @@ import json
 import logging
 import os
 import sys
+from typing import Optional
 
 import jsonlines
 import pandas as pd
@@ -54,16 +55,23 @@ def should_filter_out(row_obj: dict) -> bool:
         return False
 
 
-def convert_tsv_to_jsonl(tsv_path: str, header_tsv_path: str, bh: any):
+def write_rows_to_jsonl_file(rows: list, jsonl_file_path: Optional[str]):
+    if rows and jsonl_file_path:
+        with jsonlines.open(jsonl_file_path, mode="w") as jsonl_writer:
+            jsonl_writer.write_all(rows)
+
+
+def convert_tsv_to_jsonl(tsv_path: str, header_tsv_path: str, bh: any, kind: str):
     """
     This method assumes the input TSV file names are in KG2c format (e.g., like nodes_c.tsv and nodes_c_header.tsv)
     """
     logging.info(f"\n\n**** Starting to process file {tsv_path} (header file is: {header_tsv_path}) ****")
-
-    jsonl_output_file_path_lite = tsv_path.replace('.tsv', '-lite.jsonl')
     jsonl_output_file_path = tsv_path.replace('.tsv', '.jsonl')
-    logging.info(f"Output file path for lite version will be: {jsonl_output_file_path_lite}")
+    jsonl_output_file_path_lite = tsv_path.replace('.tsv', '-lite.jsonl')
+    jsonl_output_file_path_filtered = tsv_path.replace('.tsv', '-filtered.jsonl') if kind == "edges" else None
     logging.info(f"Output file path for full version will be: {jsonl_output_file_path}")
+    logging.info(f"Output file path for lite version will be: {jsonl_output_file_path_lite}")
+    logging.info(f"Output file path for filtered version will be: {jsonl_output_file_path_filtered}")
 
     # First load column names and remove the ':type' suffixes neo4j requires on column names
     header_df = pd.read_table(header_tsv_path)
@@ -79,68 +87,69 @@ def convert_tsv_to_jsonl(tsv_path: str, header_tsv_path: str, bh: any):
 
     logging.info(f"Starting to convert rows in {tsv_path} to json lines..")
     with open(tsv_path, "r") as input_tsv_file:
+        batch = []
+        batch_lite = []
+        batch_filtered = []
+        num_rows_processed = 0
+        num_remapped_subclass_of_edges = 0
+        num_edges_filtered_out = 0
+        tsv_reader = csv.reader(input_tsv_file, delimiter="\t")
+        for line in tsv_reader:
+            row_obj = dict()
+            for col_name in columns_to_keep:
+                raw_value = line[node_column_indeces[col_name]]
+                if raw_value not in {"", "{}", "[]", None}:  # Skip empty values, not false ones
+                    kgx_col_name = KGX_COL_NAME_REMAPPINGS.get(col_name, col_name)
+                    parsed_value = parse_value(raw_value, col_name)
 
-        with jsonlines.open(jsonl_output_file_path, mode="w") as jsonl_writer:
-            with jsonlines.open(jsonl_output_file_path_lite, mode="w") as jsonl_writer_lite:
-                batch = []
-                batch_lite = []
-                num_rows_processed = 0
-                num_remapped_subclass_of_edges = 0
-                num_edges_filtered_out = 0
-                tsv_reader = csv.reader(input_tsv_file, delimiter="\t")
-                for line in tsv_reader:
-                    row_obj = dict()
-                    for col_name in columns_to_keep:
-                        raw_value = line[node_column_indeces[col_name]]
-                        if raw_value not in {"", "{}", "[]", None}:  # Skip empty values, not false ones
-                            kgx_col_name = KGX_COL_NAME_REMAPPINGS.get(col_name, col_name)
-                            parsed_value = parse_value(raw_value, col_name)
-
-                            if col_name == "all_categories":
-                                # Expand categories to their ancestors as appropriate (Plater requires this pre-
-                                # expansion), but also retain what the categories were pre-expansion
-                                row_obj[kgx_col_name] = parsed_value
-                                row_obj["category"] = bh.get_ancestors(parsed_value,
-                                                                       include_mixins=False,
-                                                                       include_conflations=False)  # Done at query time
-                            else:
-                                row_obj[kgx_col_name] = parsed_value
-
-                    # Remap subclass_of edges from sources we don't want used for subclass reasoning
-                    predicate = row_obj.get("predicate")  # Will be None if this is a Node object
-                    primary_knowledge_source = row_obj.get("primary_knowledge_source")
-                    if predicate == "biolink:subclass_of" and primary_knowledge_source not in trusted_subclass_sources:
-                        row_obj["predicate"] = "biolink:related_to_at_concept_level"
-                        num_remapped_subclass_of_edges += 1
-
-                    # Save the row as applicable; create both the 'lite' and 'full' files at the same time
-                    if not should_filter_out(row_obj):
-                        batch.append(row_obj)
-                        batch_lite.append({property_name: value for property_name, value in row_obj.items()
-                                           if property_name in LITE_PROPERTIES})
+                    if col_name == "all_categories":
+                        # Expand categories to their ancestors as appropriate (Plater requires this pre-
+                        # expansion), but also retain what the categories were pre-expansion
+                        row_obj[kgx_col_name] = parsed_value
+                        row_obj["category"] = bh.get_ancestors(parsed_value,
+                                                               include_mixins=False,
+                                                               include_conflations=False)  # Done at query time
                     else:
-                        num_edges_filtered_out += 1
+                        row_obj[kgx_col_name] = parsed_value
 
-                    # Write this batch of rows to the jsonl files if it's time
-                    if len(batch) == 1000000:
-                        jsonl_writer.write_all(batch)
-                        jsonl_writer_lite.write_all(batch_lite)
-                        num_rows_processed += len(batch)
-                        batch = []
-                        batch_lite = []
-                        logging.info(f"Have processed {num_rows_processed} rows... "
-                                     f"({num_edges_filtered_out} filtered out, {num_remapped_subclass_of_edges} "
-                                     f"subclass_of remapped)")
+            # Remap subclass_of edges from sources we don't want used for subclass reasoning
+            predicate = row_obj.get("predicate")  # Will be None if this is a Node object
+            primary_knowledge_source = row_obj.get("primary_knowledge_source")
+            if predicate == "biolink:subclass_of" and primary_knowledge_source not in trusted_subclass_sources:
+                row_obj["predicate"] = "biolink:related_to_at_concept_level"
+                num_remapped_subclass_of_edges += 1
 
-                # Take care of writing the (potential) final partial batch
-                if batch:
-                    jsonl_writer.write_all(batch)
-                    jsonl_writer_lite.write_all(batch_lite)
+            # Save the row as applicable; create both the 'lite', 'full', and 'filtered' files at the same time
+            batch.append(row_obj)
+            batch_lite.append({property_name: value for property_name, value in row_obj.items()
+                               if property_name in LITE_PROPERTIES})
+            if kind == "edges" and not should_filter_out(row_obj):
+                batch_filtered.append(row_obj)
+            else:
+                num_edges_filtered_out += 1
+
+            # Write this batch of rows to the jsonl files if it's time
+            if len(batch) == 1000000:
+                write_rows_to_jsonl_file(batch, jsonl_output_file_path)
+                write_rows_to_jsonl_file(batch_lite, jsonl_output_file_path_lite)
+                write_rows_to_jsonl_file(batch_filtered, jsonl_output_file_path_filtered)
+                batch, batch_lite, batch_filtered = [], [], []
+                num_rows_processed += len(batch)
+                logging.info(f"Have processed {num_rows_processed} rows... "
+                             f"({num_edges_filtered_out} filtered out, {num_remapped_subclass_of_edges} "
+                             f"subclass_of remapped)")
+
+        # Take care of writing the (potential) final partial batch
+        write_rows_to_jsonl_file(batch, jsonl_output_file_path)
+        write_rows_to_jsonl_file(batch_lite, jsonl_output_file_path_lite)
+        write_rows_to_jsonl_file(batch_filtered, jsonl_output_file_path_filtered)
 
     logging.info(f"Done converting rows in {tsv_path} to json lines.")
-    if num_remapped_subclass_of_edges or num_edges_filtered_out:
-        logging.info(f"Remapped {num_remapped_subclass_of_edges} subclass_of edges to related_to_at_concept_level")
-        logging.info(f"Filtered out {num_edges_filtered_out} edges (semmed with too few pubs or domain-range-exclusion)")
+    logging.info(f"Line counts of output files:")
+    logging.info(os.system(f"wc -l {jsonl_output_file_path}"))
+    logging.info(os.system(f"wc -l {jsonl_output_file_path_lite}"))
+    if kind == "edges":
+        logging.info(os.system(f"wc -l {jsonl_output_file_path_filtered}"))
 
 
 def main():
@@ -163,8 +172,8 @@ def main():
     bh = BiolinkHelper(biolink_version=args.biolink_version)
 
     # Then actually create the JSON lines files
-    convert_tsv_to_jsonl(args.nodes_tsv_path, args.nodes_header_tsv_path, bh)
-    convert_tsv_to_jsonl(args.edges_tsv_path, args.edges_header_tsv_path, bh)
+    convert_tsv_to_jsonl(args.nodes_tsv_path, args.nodes_header_tsv_path, bh, "nodes")
+    convert_tsv_to_jsonl(args.edges_tsv_path, args.edges_header_tsv_path, bh, "edges")
 
     logging.info(f"\n\nDone converting KG2c nodes/edges TSVs to KGX JSON lines format.")
 
