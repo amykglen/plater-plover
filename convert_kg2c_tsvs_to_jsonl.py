@@ -57,7 +57,7 @@ def should_filter_out(row_obj: dict) -> bool:
 
 def write_rows_to_jsonl_file(rows: list, jsonl_file_path: Optional[str]):
     if rows and jsonl_file_path:
-        with jsonlines.open(jsonl_file_path, mode="w") as jsonl_writer:
+        with jsonlines.open(jsonl_file_path, mode="a") as jsonl_writer:
             jsonl_writer.write_all(rows)
 
 
@@ -72,6 +72,11 @@ def convert_tsv_to_jsonl(tsv_path: str, header_tsv_path: str, bh: any, kind: str
     logging.info(f"Output file path for full version will be: {jsonl_output_file_path}")
     logging.info(f"Output file path for lite version will be: {jsonl_output_file_path_lite}")
     logging.info(f"Output file path for filtered version will be: {jsonl_output_file_path_filtered}")
+
+    # First delete preexisting versions of these files (important since we write in append mode)
+    os.system(f"sudo rm -f {jsonl_output_file_path}")
+    os.system(f"sudo rm -f {jsonl_output_file_path_lite}")
+    os.system(f"sudo rm -f {jsonl_output_file_path_filtered}")
 
     # First load column names and remove the ':type' suffixes neo4j requires on column names
     header_df = pd.read_table(header_tsv_path)
