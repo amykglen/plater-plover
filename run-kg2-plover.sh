@@ -1,4 +1,6 @@
 
+cd ~/RTX_amyfork/RTX
+
 # First delete any potential duplicate containers/images
 set +e  # Temporarily don't stop on error, in case this container doesn't already exist
 sudo docker stop kg2
