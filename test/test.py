@@ -110,6 +110,17 @@ def test_itrb_prod_kg2_sample():
                 response = _run_query(query_obj["input_query_canonicalized"], query_obj["query_id"])
 
 
+def test_any_kg2_sample():
+    print(f"Running ANY kg2 sample queries...")
+    sample_dir = f"{SCRIPT_DIR}/sample_kg2_queries_ANYKG2"
+    for file_name in os.listdir(sample_dir):
+        print(f"On query {file_name}")
+        if file_name.startswith("query") and file_name.endswith(".json"):
+            with open(f"{sample_dir}/{file_name}", "r") as query_file:
+                query_obj = json.load(query_file)
+                response = _run_query(query_obj["input_query_canonicalized"], query_obj["query_id"])
+
+
 def test_1():
     # Simplest one-hop
     query = {
