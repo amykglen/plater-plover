@@ -35,10 +35,13 @@ def _print_kg(kg: Dict[str, Dict[str, Dict[str, Dict[str, Union[List[str], str, 
         print(f"{qedge_key}: {edge_ids}")
 
 
-def _run_query(trapi_qg: Dict[str, Dict[str, Dict[str, Union[List[str], str, None]]]],
+def _run_query(trapi_query: Dict[str, Dict[str, Dict[str, Union[List[str], str, None]]]],
                query_id: str):
+    # Grab the query graph (might be nested under 'message')
+    trapi_qg = trapi_query if "nodes" in trapi_query else trapi_query["message"]["query_graph"]
+
     # Get set up to store query results
-    querier = "plater" if "8080" in pytest.endpoint else "plover"
+    querier = "plover" if "rtxkg2" in pytest.endpoint else "plater"
     results_file_path = f"{SCRIPT_DIR}/{querier}.tsv"
     if not os.path.exists(results_file_path):
         with open(results_file_path, "w+") as results_file:
@@ -50,7 +53,8 @@ def _run_query(trapi_qg: Dict[str, Dict[str, Dict[str, Union[List[str], str, Non
     client_start = time.time()
     response = requests.post(f"{pytest.endpoint}/query",
                              json={"message": {"query_graph": trapi_qg}, "submitter": "amy-test"},
-                             headers={'accept': 'application/json'})
+                             headers={'accept': 'application/json',
+                                      'Cache-Control': 'no-cache'})
     client_duration = time.time() - client_start
     print(f"Request took {response.elapsed.total_seconds()} seconds")
 
@@ -76,15 +80,34 @@ def _run_query(trapi_qg: Dict[str, Dict[str, Dict[str, Union[List[str], str, Non
         json_response = dict()
 
     # Save results/data for this query run
+    db_duration = None
+    if querier == "plater":
+        db_duration = json_response["query_duration"]["neo4j"]
+    else:
+        for log_message_obj in json_response.get("logs", []):
+            log_message = log_message_obj["message"]
+            if log_message.startswith("***ploverdbduration"):
+                db_duration = float(log_message.split(":")[-1])
+
     row = [query_id, datetime.now(),
-           client_duration, response.elapsed.total_seconds(),
-           json_response.get("query_duration", dict()).get("neo4j" if querier == "plater" else "ploverdb"),
+           client_duration, response.elapsed.total_seconds(), db_duration,
            num_results, num_nodes, num_edges, response_size]
     with open(results_file_path, "a") as results_file_append:
         tsv_appender = csv.writer(results_file_append, delimiter="\t")
         tsv_appender.writerow(row)
 
     return json_response
+
+
+def test_itrb_prod_kg2_sample():
+    print(f"Running ITRB PROD kg2 sample queries...")
+    sample_dir = f"{SCRIPT_DIR}/sample_kg2_queries_ITRBPROD"
+    for file_name in os.listdir(sample_dir):
+        print(f"On query {file_name}")
+        if file_name.startswith("query") and file_name.endswith(".json"):
+            with open(f"{sample_dir}/{file_name}", "r") as query_file:
+                query_obj = json.load(query_file)
+                response = _run_query(query_obj["input_query_canonicalized"], query_obj["query_id"])
 
 
 def test_1():
@@ -132,698 +155,62 @@ def test_2():
     response = _run_query(query, "test_2")
     assert response["message"]["results"]
 
-#
-# def test_3():
-#     # No predicate is specified
-#     query = {
-#        "edges": {
-#           "e00": {
-#              "subject": "n00",
-#              "object": "n01"
-#           }
-#        },
-#        "nodes": {
-#           "n00": {
-#              "ids": [ASPIRIN_CURIE],
-#              "categories": ["biolink:ChemicalEntity"]
-#           },
-#           "n01": {
-#               "categories": ["biolink:ChemicalEntity"]
-#           }
-#        }
-#     }
-#     response = _run_query(query)
-#     assert response["message"]["results"]
-#
-#
-# def test_4():
-#     # Multiple output categories
-#     query = {
-#        "edges": {
-#           "e00": {
-#              "subject": "n00",
-#              "object": "n01"
-#           }
-#        },
-#        "nodes": {
-#           "n00": {
-#              "ids": [ASPIRIN_CURIE]
-#           },
-#           "n01": {
-#               "categories": ["biolink:Protein", "biolink:Procedure"]
-#           }
-#        }
-#     }
-#     response = _run_query(query)
-#     assert response["message"]["results"]
-#
-#
-# def test_5():
-#     # Multiple predicates
-#     query = {
-#         "edges": {
-#             "e00": {
-#                 "subject": "n00",
-#                 "object": "n01",
-#                 "predicates": ["biolink:physically_interacts_with", "biolink:related_to"]
-#             }
-#         },
-#         "nodes": {
-#             "n00": {
-#                 "ids": [ASPIRIN_CURIE]
-#             },
-#             "n01": {
-#                 "categories": ["biolink:Protein", "biolink:Gene"]
-#             }
-#         }
-#     }
-#     response = _run_query(query)
-#     assert response["message"]["results"]
-#
-#
-# def test_6():
-#     # Curie-to-curie query
-#     query = {
-#         "edges": {
-#             "e00": {
-#                 "subject": "n00",
-#                 "object": "n01"
-#             }
-#         },
-#         "nodes": {
-#             "n00": {
-#                 "ids": [ASPIRIN_CURIE]
-#             },
-#             "n01": {
-#                 "ids": [TICLOPIDINE_CURIE, ACETAMINOPHEN_CURIE]
-#             }
-#         }
-#     }
-#     response = _run_query(query)
-#     assert response["message"]["results"]
-#
-#
-# def test_7():
-#     # Multiple curie query
-#     query = {
-#         "edges": {
-#             "e00": {
-#                 "subject": "n00",
-#                 "object": "n01"
-#             }
-#         },
-#         "nodes": {
-#             "n00": {
-#                 "ids": [ASPIRIN_CURIE, PROC_CURIE]
-#             },
-#             "n01": {
-#             }
-#         }
-#     }
-#     response = _run_query(query)
-#     assert response["message"]["results"]
-#
-#
-# def test_symmetric():
-#     ids = [ASPIRIN_CURIE, METHYLPREDNISOLONE_CURIE]
-#     # Test predicate symmetry is handled properly
-#     query = {
-#         "edges": {
-#             "e00": {
-#                 "subject": "n00",
-#                 "object": "n01",
-#                 "predicates": ["biolink:interacts_with"]
-#             }
-#         },
-#         "nodes": {
-#             "n00": {
-#                 "ids": ids
-#             },
-#             "n01": {
-#             }
-#         }
-#     }
-#     response_symmetric = _run_query(query)
-#
-#     query = {
-#         "edges": {
-#             "e00": {
-#                 "subject": "n01",
-#                 "object": "n00",
-#                 "predicates": ["biolink:interacts_with"]
-#             }
-#         },
-#         "nodes": {
-#             "n00": {
-#                 "ids": ids
-#             },
-#             "n01": {
-#             }
-#         }
-#     }
-#     response_symmetric_reversed = _run_query(query)
-#
-#     assert response_symmetric["message"]["results"]
-#     assert response_symmetric_reversed["message"]["results"]
-#
-#     assert len(response_symmetric["message"]["results"]) == len(response_symmetric_reversed["message"]["results"])
-#
-#
-# def test_asymmetric():
-#     # Test treats only returns edges with direction matching QG
-#     ids = [ASPIRIN_CURIE, METHYLPREDNISOLONE_CURIE]
-#     query = {
-#         "edges": {
-#             "e00": {
-#                 "subject": "n00",
-#                 "object": "n01",
-#                 "predicates": ["biolink:treats"]
-#             }
-#         },
-#         "nodes": {
-#             "n00": {
-#                 "ids": ids
-#             },
-#             "n01": {
-#                 "categories": ["biolink:Disease"]
-#             }
-#         }
-#     }
-#     response_asymmetric = _run_query(query)
-#     assert response_asymmetric["message"]["results"]
-#
-#     # Test no edges are returned for backwards treats query
-#     query = {
-#         "edges": {
-#             "e00": {
-#                 "subject": "n01",
-#                 "object": "n00",
-#                 "predicates": ["biolink:treats"]
-#             }
-#         },
-#         "nodes": {
-#             "n00": {
-#                 "ids": ids
-#             },
-#             "n01": {
-#                 "categories": ["biolink:Disease"]
-#             }
-#         }
-#     }
-#     response_asymmetric_reversed = _run_query(query)
-#     assert not response_asymmetric_reversed["message"]["results"]
-#
-#
-# def test_13():
-#     # TRAPI 1.1 property names
-#     query = {
-#         "edges": {
-#             "e00": {
-#                 "subject": "n00",
-#                 "object": "n01",
-#                 "predicates": ["biolink:interacts_with"]
-#             }
-#         },
-#         "nodes": {
-#             "n00": {
-#                 "ids": [RHOBTB2_CURIE]
-#             },
-#             "n01": {
-#                 "categories": ["biolink:ChemicalEntity"]
-#             }
-#         }
-#     }
-#     response = _run_query(query)
-#     assert response["message"]["results"]
-#
-#
-# def test_14():
-#     # Test subclass_of reasoning
-#     query_subclass = {
-#         "edges": {
-#         },
-#         "nodes": {
-#             "n00": {
-#                 "ids": [DIABETES_CURIE]
-#             }
-#         }
-#     }
-#     response = _run_query(query_subclass)
-#     assert response["message"]["results"]
-#     # TODO: Check that multiple n00s were actually returned..
-#
-#
-# def test_16():
-#     # Test mixins in the QG
-#     query = {
-#         "edges": {
-#             "e00": {
-#                 "subject": "n00",
-#                 "object": "n01"
-#             }
-#         },
-#         "nodes": {
-#             "n00": {
-#                 "ids": [ACETAMINOPHEN_CURIE]
-#             },
-#             "n01": {
-#                 "categories": ["biolink:PhysicalEssence"]
-#             }
-#         }
-#     }
-#     response = _run_query(query)
-#     assert response["message"]["results"]
-#
-#
-# def test_17():
-#     # Test canonical predicate handling
-#     query_non_canonical = {
-#         "edges": {
-#             "e00": {
-#                 "subject": "n01",
-#                 "object": "n00",
-#                 "predicates": ["biolink:treated_by"]
-#             }
-#         },
-#         "nodes": {
-#             "n00": {
-#                 "ids": [ACETAMINOPHEN_CURIE]
-#             },
-#             "n01": {
-#                 "categories": ["biolink:Disease"]
-#             }
-#         }
-#     }
-#     response_non_canonical = _run_query(query_non_canonical)
-#     assert response_non_canonical["message"]["results"]
-#
-#     query_canonical = {
-#         "edges": {
-#             "e00": {
-#                 "subject": "n00",
-#                 "object": "n01",
-#                 "predicates": ["biolink:treats"]
-#             }
-#         },
-#         "nodes": {
-#             "n00": {
-#                 "ids": [ACETAMINOPHEN_CURIE]
-#             },
-#             "n01": {
-#                 "categories": ["biolink:Disease"]
-#             }
-#         }
-#     }
-#     response_canonical = _run_query(query_canonical)
-#     assert response_canonical["message"]["results"]
-#
-#     assert len(response_canonical["message"]["results"]) == len(response_non_canonical["message"]["results"])
-#
-#
-# def test_18():
-#     # Test hierarchical category reasoning
-#     query = {
-#         "edges": {
-#             "e00": {
-#                 "subject": "n00",
-#                 "object": "n01",
-#                 "predicates": ["biolink:interacts_with"]
-#             }
-#         },
-#         "nodes": {
-#             "n00": {
-#                 "ids": [ACETAMINOPHEN_CURIE]
-#             },
-#             "n01": {
-#                 "categories": ["biolink:NamedThing"]
-#             }
-#         }
-#     }
-#     response = _run_query(query)
-#     assert response["message"]["results"]
-#     # TODO: not actually checking what categories are present in results..
-#
-#
-# def test_19():
-#     # Test hierarchical predicate reasoning
-#     query = {
-#         "edges": {
-#             "e00": {
-#                 "subject": "n00",
-#                 "object": "n01",
-#                 "predicates": ["biolink:related_to"]
-#             }
-#         },
-#         "nodes": {
-#             "n00": {
-#                 "ids": [ACETAMINOPHEN_CURIE]
-#             },
-#             "n01": {
-#                 "categories": ["biolink:Protein"]
-#             }
-#         }
-#     }
-#     response = _run_query(query)
-#     assert response["message"]["results"]
-#     # TODO: not actually checking what predicates are present in results..
-#
-#
-# def test_20():
-#     # Test that the proper 'query_id' mapping (for TRAPI) is returned
-#     query = {
-#         "edges": {
-#             "e00": {
-#                 "subject": "n00",
-#                 "object": "n01"
-#             }
-#         },
-#         "nodes": {
-#             "n00": {
-#                 "ids": [DIABETES_CURIE, DIABETES_T2_CURIE]
-#             },
-#             "n01": {
-#                 "categories": ["biolink:ChemicalEntity"]
-#             }
-#         }
-#     }
-#     response = _run_query(query)
-#     assert response["message"]["results"]
-#     # TODO: Not actually checking query_id contents..
-#
-#
-# def test_21():
-#     # Test qualifiers
-#     query = {
-#         "edges": {
-#             "e00": {
-#                 "subject": "n00",
-#                 "object": "n01",
-#                 "predicates": ["biolink:interacts_with"],  # This is the wrong regular predicate, but it shouldn't matter
-#                 "qualifier_constraints": [
-#                     {"qualifier_set": [
-#                         {"qualifier_type_id": "biolink:qualified_predicate",
-#                          "qualifier_value": "biolink:causes"},
-#                         {"qualifier_type_id": "biolink:object_direction_qualifier",
-#                          "qualifier_value": "increased"}
-#                     ]}
-#                 ]
-#             }
-#         },
-#         "nodes": {
-#             "n00": {
-#                 "ids": [CAUSES_INCREASE_CURIE]
-#             },
-#             "n01": {
-#                 "categories": ["biolink:NamedThing"]
-#             }
-#         }
-#     }
-#     response = _run_query(query)
-#     assert response["message"]["results"]
-#
-#
-# def test_22():
-#     # Test qualifiers
-#     query = {
-#         "edges": {
-#             "e00": {
-#                 "subject": "n00",
-#                 "object": "n01",
-#                 "predicates": ["biolink:interacts_with"],  # This is the wrong regular predicate, but it shouldn't matter
-#                 "qualifier_constraints": [
-#                     {"qualifier_set": [
-#                         {"qualifier_type_id": "biolink:qualified_predicate",
-#                          "qualifier_value": "biolink:causes"},
-#                         {"qualifier_type_id": "biolink:object_aspect_qualifier",
-#                          "qualifier_value": "activity_or_abundance"}
-#                     ]}
-#                 ]
-#             }
-#         },
-#         "nodes": {
-#             "n00": {
-#                 "ids": [CAUSES_INCREASE_CURIE]
-#             },
-#             "n01": {
-#                 "categories": ["biolink:NamedThing"]
-#             }
-#         }
-#     }
-#     response = _run_query(query)
-#     assert response["message"]["results"]
-#
-#
-# def test_23():
-#     # Test qualifiers
-#     query = {
-#         "edges": {
-#             "e00": {
-#                 "subject": "n00",
-#                 "object": "n01",
-#                 "predicates": ["biolink:interacts_with"],  # This is the wrong regular predicate, but it shouldn't matter
-#                 "qualifier_constraints": [
-#                     {"qualifier_set": [
-#                         {"qualifier_type_id": "biolink:qualified_predicate",
-#                          "qualifier_value": "biolink:causes"},
-#                         {"qualifier_type_id": "biolink:object_direction_qualifier",
-#                          "qualifier_value": "increased"}
-#                     ]}
-#                 ]
-#             }
-#         },
-#         "nodes": {
-#             "n00": {
-#                 "ids": [CAUSES_INCREASE_CURIE]
-#             },
-#             "n01": {
-#                 "categories": ["biolink:NamedThing"]
-#             }
-#         }
-#     }
-#     response = _run_query(query)
-#     assert response["message"]["results"]
-#
-#
-# def test_24():
-#     # Test qualifiers
-#     query = {
-#         "edges": {
-#             "e00": {
-#                 "subject": "n00",
-#                 "object": "n01",
-#                 "predicates": ["biolink:interacts_with"],  # This is the wrong regular predicate, but it shouldn't matter
-#                 "qualifier_constraints": [
-#                     {"qualifier_set": [
-#                         {"qualifier_type_id": "biolink:qualified_predicate",
-#                          "qualifier_value": "biolink:causes"}
-#                     ]}
-#                 ]
-#             }
-#         },
-#         "nodes": {
-#             "n00": {
-#                 "ids": [CAUSES_INCREASE_CURIE]
-#             },
-#             "n01": {
-#                 "categories": ["biolink:NamedThing"]
-#             }
-#         }
-#     }
-#     response = _run_query(query)
-#     assert response["message"]["results"]
-#
-#
-# def test_25():
-#     # Test qualifiers
-#     query = {
-#         "edges": {
-#             "e00": {
-#                 "subject": "n00",
-#                 "object": "n01",
-#                 "predicates": ["biolink:interacts_with"],  # This is the wrong regular predicate
-#             }
-#         },
-#         "nodes": {
-#             "n00": {
-#                 "ids": [CAUSES_INCREASE_CURIE]
-#             },
-#             "n01": {
-#                 "categories": ["biolink:NamedThing"]
-#             }
-#         }
-#     }
-#     response = _run_query(query)
-#     assert response["message"]["results"]
-#
-#
-# def test_26():
-#     # Test qualifiers
-#     query = {
-#         "edges": {
-#             "e00": {
-#                 "subject": "n00",
-#                 "object": "n01",
-#                 "predicates": ["biolink:interacts_with"],  # This is the wrong regular predicate
-#                 "qualifier_constraints": [
-#                     {"qualifier_set": [
-#                         {"qualifier_type_id": "biolink:object_direction_qualifier",
-#                          "qualifier_value": "increased"},
-#                         {"qualifier_type_id": "biolink:object_aspect_qualifier",
-#                          "qualifier_value": "activity_or_abundance"}
-#                     ]}
-#                 ]
-#             }
-#         },
-#         "nodes": {
-#             "n00": {
-#                 "ids": [CAUSES_INCREASE_CURIE]
-#             },
-#             "n01": {
-#                 "categories": ["biolink:NamedThing"]
-#             }
-#         }
-#     }
-#     response = _run_query(query)
-#     assert response["message"]["results"]
-#
-#
-# def test_27():
-#     # Test qualifiers
-#     query = {
-#         "edges": {
-#             "e00": {
-#                 "subject": "n00",
-#                 "object": "n01",
-#                 "predicates": ["biolink:regulates"],  # This is the correct regular predicate
-#             }
-#         },
-#         "nodes": {
-#             "n00": {
-#                 "ids": [CAUSES_INCREASE_CURIE]
-#             },
-#             "n01": {
-#                 "categories": ["biolink:NamedThing"]
-#             }
-#         }
-#     }
-#     response = _run_query(query)
-#     assert response["message"]["results"]
-#
-#
-# def test_28():
-#     # Test qualifiers
-#     query = {
-#         "edges": {
-#             "e00": {
-#                 "subject": "n00",
-#                 "object": "n01",
-#                 "predicates": ["biolink:regulates"],  # This is the correct regular predicate
-#                 "qualifier_constraints": [
-#                     {"qualifier_set": [
-#                         {"qualifier_type_id": "biolink:qualified_predicate",
-#                          "qualifier_value": "biolink:causes"},
-#                         {"qualifier_type_id": "biolink:object_direction_qualifier",
-#                          "qualifier_value": "increased"},
-#                         {"qualifier_type_id": "biolink:object_aspect_qualifier",
-#                          "qualifier_value": "activity_or_abundance"}
-#                     ]}
-#                 ]
-#             }
-#         },
-#         "nodes": {
-#             "n00": {
-#                 "ids": [CAUSES_INCREASE_CURIE]
-#             },
-#             "n01": {
-#                 "categories": ["biolink:NamedThing"]
-#             }
-#         }
-#     }
-#     response = _run_query(query)
-#     assert response["message"]["results"]
-#
-#
-# def test_29():
-#     # Test qualifiers
-#     query = {
-#         "edges": {
-#             "e00": {
-#                 "subject": "n00",
-#                 "object": "n01",
-#                 "qualifier_constraints": [
-#                     {"qualifier_set": [
-#                         {"qualifier_type_id": "biolink:qualified_predicate",
-#                          "qualifier_value": "biolink:causes"},
-#                         {"qualifier_type_id": "biolink:object_direction_qualifier",
-#                          "qualifier_value": "increased"},
-#                         {"qualifier_type_id": "biolink:object_aspect_qualifier",
-#                          "qualifier_value": "activity_or_abundance"}
-#                     ]}
-#                 ]
-#             }
-#         },
-#         "nodes": {
-#             "n00": {
-#                 "ids": [CAUSES_INCREASE_CURIE]
-#             },
-#             "n01": {
-#                 "categories": ["biolink:NamedThing"]
-#             }
-#         }
-#     }
-#     response = _run_query(query)
-#     assert response["message"]["results"]
-#
-#
-# def test_30():
-#     # Test qualifiers
-#     query = {
-#         "edges": {
-#             "e00": {
-#                 "subject": "n00",
-#                 "object": "n01",
-#                 "qualifier_constraints": [
-#                     {"qualifier_set": [
-#                         {"qualifier_type_id": "biolink:object_aspect_qualifier",
-#                          "qualifier_value": "activity_or_abundance"}
-#                     ]}
-#                 ]
-#             }
-#         },
-#         "nodes": {
-#             "n00": {
-#                 "ids": [CAUSES_INCREASE_CURIE]
-#             },
-#             "n01": {
-#                 "categories": ["biolink:NamedThing"]
-#             }
-#         }
-#     }
-#     response = _run_query(query)
-#     assert response["message"]["results"]
-#
-#
-# def test_31():
-#     # Test treats
-#     query = {
-#         "edges": {
-#             "e00": {
-#                 "subject": "n01",
-#                 "object": "n00",
-#                 "predicates": ["biolink:treats"]
-#             }
-#         },
-#         "nodes": {
-#             "n00": {
-#                 "ids": [BIPOLAR_CURIE]
-#             },
-#             "n01": {
-#                 "categories": ["biolink:Drug"]
-#             }
-#         }
-#     }
-#     response = _run_query(query)
-#     assert response["message"]["results"]
+
+def test_58():
+    with open(f"{SCRIPT_DIR}/queries/58_curies.json", "r") as query_file:
+        big_query = json.load(query_file)
+    response = _run_query(big_query, "test_58")
+    assert response["message"]["results"]
+
+
+def test_569():
+    with open(f"{SCRIPT_DIR}/queries/569_curies.json", "r") as query_file:
+        big_query = json.load(query_file)
+    response = _run_query(big_query, "test_569")
+    assert response["message"]["results"]
+
+
+def test_764():
+    with open(f"{SCRIPT_DIR}/queries/764_curies.json", "r") as query_file:
+        big_query = json.load(query_file)
+    response = _run_query(big_query, "test_764")
+    assert response["message"]["results"]
+
+
+def test_867():
+    with open(f"{SCRIPT_DIR}/queries/867_curies.json", "r") as query_file:
+        big_query = json.load(query_file)
+    response = _run_query(big_query, "test_867")
+    assert response["message"]["results"]
+
+
+def test_1110():
+    with open(f"{SCRIPT_DIR}/queries/1110_curies.json", "r") as query_file:
+        big_query = json.load(query_file)
+    response = _run_query(big_query, "test_1110")
+    assert response["message"]["results"]
+
+
+def test_2068():
+    with open(f"{SCRIPT_DIR}/queries/2068_6172036.json", "r") as query_file:
+        big_query = json.load(query_file)
+    response = _run_query(big_query, "test_2068")
+    assert response["message"]["results"]
+
+
+def test_2674():
+    with open(f"{SCRIPT_DIR}/queries/2674_6174518.json", "r") as query_file:
+        big_query = json.load(query_file)
+    response = _run_query(big_query, "test_2674")
+    assert response["message"]["results"]
+
+
+def test_sec86():
+    with open(f"{SCRIPT_DIR}/queries/sec86.0_6030101.json", "r") as query_file:
+        big_query = json.load(query_file)
+    response = _run_query(big_query, "test_sec86")
+    assert response["message"]["results"]
+
 
 
 if __name__ == "__main__":
