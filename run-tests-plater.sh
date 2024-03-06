@@ -1,6 +1,5 @@
 # Meant to be run on the kg2cplover instance (or whatever instance you want to send tests FROM)
 
-screen -S test
 cd ~/plater-plover/test
 rm plater.tsv
 git pull origin main
