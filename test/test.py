@@ -46,7 +46,7 @@ def _run_query(trapi_query: Dict[str, Dict[str, Dict[str, Union[List[str], str, 
     if not os.path.exists(results_file_path):
         with open(results_file_path, "w+") as results_file:
             tsv_writer = csv.writer(results_file, delimiter="\t")
-            tsv_writer.writerow(["query_id", "date_run", "duration_client", "duration_server", "duration_db"
+            tsv_writer.writerow(["query_id", "date_run", "duration_client", "duration_server", "duration_db",
                                  "num_results", "num_nodes", "num_edges", "response_size"])
 
     # Run the query
@@ -99,15 +99,27 @@ def _run_query(trapi_query: Dict[str, Dict[str, Dict[str, Union[List[str], str, 
     return json_response
 
 
+def run_query_json_file(file_path: str):
+    with open(file_path, "r") as query_file:
+        query_obj = json.load(query_file)
+        query_canonicalized = query_obj["input_query_canonicalized"]
+
+        # Remove any 'exclude' property from edges, since that isn't relevant for KP queries (always False)
+        # Note: This property's presence can confuse Plater..
+        for edge in query_canonicalized["message"]["query_graph"]["edges"].values():
+            if "exclude" in edge:
+                del edge["exclude"]
+
+        response = _run_query(query_canonicalized, query_obj["query_id"])
+
+
 def run_query_sample(dir_name: str):
     print(f"Running {dir_name} kg2 sample queries...")
     sample_dir = f"{SCRIPT_DIR}/{dir_name}"
     for file_name in sorted(list(os.listdir(sample_dir))):
         print(f"On query {file_name}")
         if file_name.startswith("query") and file_name.endswith(".json"):
-            with open(f"{sample_dir}/{file_name}", "r") as query_file:
-                query_obj = json.load(query_file)
-                response = _run_query(query_obj["input_query_canonicalized"], query_obj["query_id"])
+            run_query_json_file(f"{sample_dir}/{file_name}")
 
 
 def test_kg2_sample_itrb_prod():
@@ -122,7 +134,11 @@ def test_kg2_sample_long():
     run_query_sample("sample_kg2_queries_LONG")
 
 
-def test_1():
+def test_one_with_no_plater_results():
+    run_query_json_file(f"{SCRIPT_DIR}/sample_kg2_queries_LONG/query_5982629.json")
+
+
+def test_simple_1():
     # Simplest one-hop
     query = {
        "edges": {
@@ -145,7 +161,7 @@ def test_1():
     assert response["message"]["results"]
 
 
-def test_2():
+def test_simple_2():
     # Output qnode is lacking a category
     query = {
        "edges": {
