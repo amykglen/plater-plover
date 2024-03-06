@@ -99,26 +99,27 @@ def _run_query(trapi_query: Dict[str, Dict[str, Dict[str, Union[List[str], str, 
     return json_response
 
 
-def test_itrb_prod_kg2_sample():
-    print(f"Running ITRB PROD kg2 sample queries...")
-    sample_dir = f"{SCRIPT_DIR}/sample_kg2_queries_ITRBPROD"
-    for file_name in os.listdir(sample_dir):
+def run_query_sample(dir_name: str):
+    print(f"Running {dir_name} kg2 sample queries...")
+    sample_dir = f"{SCRIPT_DIR}/{dir_name}"
+    for file_name in sorted(list(os.listdir(sample_dir))):
         print(f"On query {file_name}")
         if file_name.startswith("query") and file_name.endswith(".json"):
             with open(f"{sample_dir}/{file_name}", "r") as query_file:
                 query_obj = json.load(query_file)
                 response = _run_query(query_obj["input_query_canonicalized"], query_obj["query_id"])
+
+
+def test_itrb_prod_kg2_sample():
+    run_query_sample("sample_kg2_queries_ITRBPROD")
 
 
 def test_any_kg2_sample():
-    print(f"Running ANY kg2 sample queries...")
-    sample_dir = f"{SCRIPT_DIR}/sample_kg2_queries_ANYKG2"
-    for file_name in os.listdir(sample_dir):
-        print(f"On query {file_name}")
-        if file_name.startswith("query") and file_name.endswith(".json"):
-            with open(f"{sample_dir}/{file_name}", "r") as query_file:
-                query_obj = json.load(query_file)
-                response = _run_query(query_obj["input_query_canonicalized"], query_obj["query_id"])
+    run_query_sample("sample_kg2_queries_ANYKG2")
+
+
+def test_long_kg2_sample():
+    run_query_sample("sample_kg2_queries_LONG")
 
 
 def test_1():
