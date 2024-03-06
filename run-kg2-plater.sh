@@ -21,7 +21,7 @@ sudo docker run -d \
                 --name ${neo4j_container_name} \
                 --volume=$HOME/neo4j/data:/data \
                 --env NEO4J_AUTH=neo4j/${neo4j_password} \
-                --env NEO4J_dbms_transaction_timeout=1600 \
+                --env NEO4J_dbms_transaction_timeout=2400 \
                 renciorg/neo4j-4.4.10-apoc-gds:0.0.1
 
 sleep 1m  # Wait for neo4j to start up
