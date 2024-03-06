@@ -110,15 +110,15 @@ def run_query_sample(dir_name: str):
                 response = _run_query(query_obj["input_query_canonicalized"], query_obj["query_id"])
 
 
-def test_itrb_prod_kg2_sample():
+def test_kg2_sample_itrb_prod():
     run_query_sample("sample_kg2_queries_ITRBPROD")
 
 
-def test_any_kg2_sample():
+def test_kg2_sample_any():
     run_query_sample("sample_kg2_queries_ANYKG2")
 
 
-def test_long_kg2_sample():
+def test_kg2_sample_long():
     run_query_sample("sample_kg2_queries_LONG")
 
 
