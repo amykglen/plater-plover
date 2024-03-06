@@ -2,6 +2,7 @@ import csv
 import json
 import os
 import time
+import traceback
 from datetime import datetime
 
 import pytest
@@ -51,46 +52,55 @@ def _run_query(trapi_query: Dict[str, Dict[str, Dict[str, Union[List[str], str, 
 
     # Run the query
     client_start = time.time()
-    response = requests.post(f"{pytest.endpoint}/query",
-                             json={"message": {"query_graph": trapi_qg}, "submitter": "amy-test"},
-                             headers={'accept': 'application/json',
-                                      'Cache-Control': 'no-cache'})
-    client_duration = time.time() - client_start
-    print(f"Request took {response.elapsed.total_seconds()} seconds")
+    try:
+        response = requests.post(f"{pytest.endpoint}/query",
+                                 json={"message": {"query_graph": trapi_qg}, "submitter": "amy-test"},
+                                 headers={'accept': 'application/json',
+                                          'Cache-Control': 'no-cache'})
+        client_duration = time.time() - client_start
+        request_duration = response.elapsed.total_seconds()
+        print(f"Request took {request_duration} seconds")
 
-    # Process/save results
-    if response.status_code == 200:
-        json_response = response.json()
-        num_nodes = len(json_response["message"]["knowledge_graph"]["nodes"])
-        num_edges = len(json_response["message"]["knowledge_graph"]["edges"])
-        num_results = len(json_response["message"]["results"])
+        # Process/save results
+        if response.status_code == 200:
+            json_response = response.json()
+            num_nodes = len(json_response["message"]["knowledge_graph"]["nodes"])
+            num_edges = len(json_response["message"]["knowledge_graph"]["edges"])
+            num_results = len(json_response["message"]["results"])
 
-        # Save the response locally
-        os.system(f"mkdir -p {SCRIPT_DIR}/responses")
-        response_path = f"{SCRIPT_DIR}/responses/{querier}_{query_id}.json"
-        with open(response_path, "w+") as response_file:
-            json.dump(json_response, response_file)
+            # Save the response locally
+            os.system(f"mkdir -p {SCRIPT_DIR}/responses")
+            response_path = f"{SCRIPT_DIR}/responses/{querier}_{query_id}.json"
+            with open(response_path, "w+") as response_file:
+                json.dump(json_response, response_file)
 
-        # Grab the size of the response
-        response_size = os.path.getsize(response_path)
-        # TODO: Grab the backend database query time from the logs
-    else:
-        print(f"Response status code was {response.status_code}. Response was: {response.text}")
+            # Grab the size of the response
+            response_size = os.path.getsize(response_path)
+            # TODO: Grab the backend database query time from the logs
+        else:
+            print(f"Response status code was {response.status_code}. Response was: {response.text}")
+            num_nodes, num_edges, num_results, response_size = 0, 0, 0, 0
+            json_response = dict()
+
+        # Save results/data for this query run
+        db_duration = None
+        if querier == "plater":
+            db_duration = json_response["query_duration"]["neo4j"]
+        else:
+            for log_message_obj in json_response.get("logs", []):
+                log_message = log_message_obj["message"]
+                if log_message.startswith("***ploverdbduration"):
+                    db_duration = float(log_message.split(":")[-1])
+    except Exception:
+        client_duration = time.time() - client_start
+        request_duration = client_duration
+        db_duration = 0
+        print(f"Request to KP threw an exception! Traceback: {traceback.format_exc()}")
         num_nodes, num_edges, num_results, response_size = 0, 0, 0, 0
         json_response = dict()
 
-    # Save results/data for this query run
-    db_duration = None
-    if querier == "plater":
-        db_duration = json_response["query_duration"]["neo4j"]
-    else:
-        for log_message_obj in json_response.get("logs", []):
-            log_message = log_message_obj["message"]
-            if log_message.startswith("***ploverdbduration"):
-                db_duration = float(log_message.split(":")[-1])
-
     row = [query_id, datetime.now(),
-           client_duration, response.elapsed.total_seconds(), db_duration,
+           client_duration, request_duration, db_duration,
            num_results, num_nodes, num_edges, response_size]
     with open(results_file_path, "a") as results_file_append:
         tsv_appender = csv.writer(results_file_append, delimiter="\t")
