@@ -77,20 +77,20 @@ def _run_query(trapi_query: Dict[str, Dict[str, Dict[str, Union[List[str], str, 
             # Grab the size of the response
             response_size = os.path.getsize(response_path)
             # TODO: Grab the backend database query time from the logs
+
+            # Save results/data for this query run
+            db_duration = None
+            if querier == "plater":
+                db_duration = json_response["query_duration"]["neo4j"]
+            else:
+                for log_message_obj in json_response.get("logs", []):
+                    log_message = log_message_obj["message"]
+                    if log_message.startswith("***ploverdbduration"):
+                        db_duration = float(log_message.split(":")[-1])
         else:
             print(f"Response status code was {response.status_code}. Response was: {response.text}")
-            num_nodes, num_edges, num_results, response_size = 0, 0, 0, 0
+            num_nodes, num_edges, num_results, response_size, db_duration = 0, 0, 0, 0, 0
             json_response = dict()
-
-        # Save results/data for this query run
-        db_duration = None
-        if querier == "plater":
-            db_duration = json_response["query_duration"]["neo4j"]
-        else:
-            for log_message_obj in json_response.get("logs", []):
-                log_message = log_message_obj["message"]
-                if log_message.startswith("***ploverdbduration"):
-                    db_duration = float(log_message.split(":")[-1])
     except Exception:
         client_duration = time.time() - client_start
         request_duration = client_duration
@@ -142,6 +142,10 @@ def test_kg2_sample_any():
 
 def test_kg2_sample_long():
     run_query_sample("sample_kg2_queries_LONG")
+
+
+def test_kg2_sample_really_long():
+    run_query_sample("sample_kg2_queries_REALLYLONG")
 
 
 def test_one_with_no_plater_results():
