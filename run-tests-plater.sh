@@ -3,5 +3,5 @@
 cd ~/plater-plover/test
 rm plater.tsv
 git pull origin main
-pyenv activate plater-ploverenv
+. ${HOME}/.pyenv/versions/plater-ploverenv/bin/activate
 pytest -vs test.py -k test_kg2_sample --endpoint http://kg2cplover2.rtx.ai:8080/1.4
