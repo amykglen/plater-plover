@@ -152,6 +152,10 @@ def test_one_with_no_plater_results():
     run_query_json_file(f"{SCRIPT_DIR}/sample_kg2_queries_LONG/query_5982629.json")
 
 
+def test_enlarged_5921291():
+    run_query_json_file(f"{SCRIPT_DIR}/queries/query_5921291_enlarged.json")
+
+
 def test_simple_1():
     # Simplest one-hop
     query = {
@@ -251,13 +255,6 @@ def test_sec86():
     with open(f"{SCRIPT_DIR}/queries/sec86.0_6030101.json", "r") as query_file:
         big_query = json.load(query_file)
     response = _run_query(big_query, "test_sec86")
-    assert response["message"]["results"]
-
-
-def test_enlarged_5921291():
-    with open(f"{SCRIPT_DIR}/queries/query_5921291_enlarged.json", "r") as query_file:
-        big_query = json.load(query_file)
-    response = _run_query(big_query, "test_enlarged_5921291")
     assert response["message"]["results"]
 
 
