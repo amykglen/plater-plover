@@ -156,6 +156,22 @@ def test_enlarged_5921291():
     run_query_json_file(f"{SCRIPT_DIR}/queries/query_5921291_enlarged.json")
 
 
+def test_midrange_ibuprofen():
+    run_query_json_file(f"{SCRIPT_DIR}/queries/ibuprofen.json")
+
+
+def test_midrange_sodiumheparin():
+    run_query_json_file(f"{SCRIPT_DIR}/queries/sodiumheparin.json")
+
+
+def test_midrange_antibiotics():
+    run_query_json_file(f"{SCRIPT_DIR}/queries/antibiotics.json")
+
+
+def test_midrange_allergiesinflammation():
+    run_query_json_file(f"{SCRIPT_DIR}/queries/allergiesinflammation.json")
+
+
 def test_simple_1():
     # Simplest one-hop
     query = {
