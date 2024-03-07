@@ -254,6 +254,12 @@ def test_sec86():
     assert response["message"]["results"]
 
 
+def test_enlarged_5921291():
+    with open(f"{SCRIPT_DIR}/queries/query_5921291_enlarged.json", "r") as query_file:
+        big_query = json.load(query_file)
+    response = _run_query(big_query, "test_enlarged_5921291")
+    assert response["message"]["results"]
+
 
 if __name__ == "__main__":
     pytest.main(['-v', 'test.py'])
