@@ -109,7 +109,7 @@ def _run_query(trapi_query: Dict[str, Dict[str, Dict[str, Union[List[str], str, 
     return json_response
 
 
-def run_query_json_file(file_path: str):
+def run_sample_query_json_file(file_path: str):
     with open(file_path, "r") as query_file:
         query_obj = json.load(query_file)
         query_canonicalized = query_obj["input_query_canonicalized"]
@@ -129,7 +129,13 @@ def run_query_sample(dir_name: str):
     for file_name in sorted(list(os.listdir(sample_dir))):
         print(f"On query {file_name}")
         if file_name.startswith("query") and file_name.endswith(".json"):
-            run_query_json_file(f"{sample_dir}/{file_name}")
+            run_sample_query_json_file(f"{sample_dir}/{file_name}")
+
+
+def run_query_json_file(file_path: str, query_id: str):
+    with open(file_path, "r") as query_file:
+        big_query = json.load(query_file)
+    response = _run_query(big_query, query_id)
 
 
 def test_kg2_sample_itrb_prod():
@@ -149,27 +155,27 @@ def test_kg2_sample_really_long():
 
 
 def test_one_with_no_plater_results():
-    run_query_json_file(f"{SCRIPT_DIR}/sample_kg2_queries_LONG/query_5982629.json")
+    run_sample_query_json_file(f"{SCRIPT_DIR}/sample_kg2_queries_LONG/query_5982629.json")
 
 
 def test_enlarged_5921291():
-    run_query_json_file(f"{SCRIPT_DIR}/queries/query_5921291_enlarged.json")
+    run_sample_query_json_file(f"{SCRIPT_DIR}/queries/query_5921291_enlarged.json")
 
 
 def test_midrange_ibuprofen():
-    run_query_json_file(f"{SCRIPT_DIR}/queries/ibuprofen.json")
+    run_sample_query_json_file(f"{SCRIPT_DIR}/queries/ibuprofen.json")
 
 
 def test_midrange_sodiumheparin():
-    run_query_json_file(f"{SCRIPT_DIR}/queries/sodiumheparin.json")
+    run_sample_query_json_file(f"{SCRIPT_DIR}/queries/sodiumheparin.json")
 
 
 def test_midrange_antibiotics():
-    run_query_json_file(f"{SCRIPT_DIR}/queries/antibiotics.json")
+    run_sample_query_json_file(f"{SCRIPT_DIR}/queries/antibiotics.json")
 
 
 def test_midrange_allergiesinflammation():
-    run_query_json_file(f"{SCRIPT_DIR}/queries/allergiesinflammation.json")
+    run_sample_query_json_file(f"{SCRIPT_DIR}/queries/allergiesinflammation.json")
 
 
 def test_simple_1():
@@ -218,60 +224,40 @@ def test_simple_2():
     assert response["message"]["results"]
 
 
+def test_100tonamedthing():
+    run_query_json_file(f"{SCRIPT_DIR}/queries/100tonamedthing.json", "test_100tonamedthing")
+
+
 def test_58():
-    with open(f"{SCRIPT_DIR}/queries/58_curies.json", "r") as query_file:
-        big_query = json.load(query_file)
-    response = _run_query(big_query, "test_58")
-    assert response["message"]["results"]
+    run_query_json_file(f"{SCRIPT_DIR}/queries/58_curies.json", "test_58")
 
 
 def test_569():
-    with open(f"{SCRIPT_DIR}/queries/569_curies.json", "r") as query_file:
-        big_query = json.load(query_file)
-    response = _run_query(big_query, "test_569")
-    assert response["message"]["results"]
+    run_query_json_file(f"{SCRIPT_DIR}/queries/569_curies.json", "test_569")
 
 
 def test_764():
-    with open(f"{SCRIPT_DIR}/queries/764_curies.json", "r") as query_file:
-        big_query = json.load(query_file)
-    response = _run_query(big_query, "test_764")
-    assert response["message"]["results"]
+    run_query_json_file(f"{SCRIPT_DIR}/queries/764_curies.json", "test_764")
 
 
 def test_867():
-    with open(f"{SCRIPT_DIR}/queries/867_curies.json", "r") as query_file:
-        big_query = json.load(query_file)
-    response = _run_query(big_query, "test_867")
-    assert response["message"]["results"]
+    run_query_json_file(f"{SCRIPT_DIR}/queries/867_curies.json", "test_867")
 
 
 def test_1110():
-    with open(f"{SCRIPT_DIR}/queries/1110_curies.json", "r") as query_file:
-        big_query = json.load(query_file)
-    response = _run_query(big_query, "test_1110")
-    assert response["message"]["results"]
+    run_query_json_file(f"{SCRIPT_DIR}/queries/1110_curies.json", "test_1110")
 
 
 def test_2068():
-    with open(f"{SCRIPT_DIR}/queries/2068_6172036.json", "r") as query_file:
-        big_query = json.load(query_file)
-    response = _run_query(big_query, "test_2068")
-    assert response["message"]["results"]
+    run_query_json_file(f"{SCRIPT_DIR}/queries/2068_6172036.json", "test_2068")
 
 
 def test_2674():
-    with open(f"{SCRIPT_DIR}/queries/2674_6174518.json", "r") as query_file:
-        big_query = json.load(query_file)
-    response = _run_query(big_query, "test_2674")
-    assert response["message"]["results"]
+    run_query_json_file(f"{SCRIPT_DIR}/queries/2674_6174518.json", "test_2674")
 
 
 def test_sec86():
-    with open(f"{SCRIPT_DIR}/queries/sec86.0_6030101.json", "r") as query_file:
-        big_query = json.load(query_file)
-    response = _run_query(big_query, "test_sec86")
-    assert response["message"]["results"]
+    run_query_json_file(f"{SCRIPT_DIR}/queries/sec86.0_6030101.json", "test_sec86")
 
 
 if __name__ == "__main__":
