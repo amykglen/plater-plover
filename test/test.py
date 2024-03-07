@@ -232,6 +232,10 @@ def test_200tonamedthing():
     run_query_json_file(f"{SCRIPT_DIR}/queries/200tonamedthing.json", "test_200tonamedthing")
 
 
+def test_10diseasetonamedthing():
+    run_query_json_file(f"{SCRIPT_DIR}/queries/10diseasetonamedthing.json", "test_10diseasetonamedthing")
+
+
 def test_58():
     run_query_json_file(f"{SCRIPT_DIR}/queries/58_curies.json", "test_58")
 
