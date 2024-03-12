@@ -95,6 +95,8 @@ def _run_query(trapi_query: Dict[str, Dict[str, Dict[str, Union[List[str], str, 
 
 
 def run_query_json_file(file_path: str):
+    print(f"Running query {file_path}..")
+
     with open(file_path, "r") as query_file:
         query_obj = json.load(query_file)
 
@@ -116,27 +118,24 @@ def run_query_json_file(file_path: str):
     response = _run_query(trapi_qg, query_id=query_file_name)
 
 
-def run_directory_of_queries(dir_name: str):
-    print(f"Running {dir_name} kg2 sample queries...")
-    sample_dir = f"{SCRIPT_DIR}/{dir_name}"
-    for file_name in sorted(list(os.listdir(sample_dir))):
-        print(f"On query {file_name}")
-        if file_name.startswith("query") and file_name.endswith(".json"):
-            run_query_json_file(f"{sample_dir}/{file_name}")
+def run_directory_of_queries(dir_path: str):
+    print(f"Running queries in {dir_path}...")
+    for file_name in sorted(list(os.listdir(dir_path))):
+        if file_name.endswith(".json"):
+            print(f"On query {file_name}")
+            run_query_json_file(f"{dir_path}/{file_name}")
 
 
-def test_json_query():
-    # Need to use the '--queryfile <path to query file>' command line option when running this test
-    assert pytest.queryfile
-    assert os.path.isfile(pytest.queryfile)
-    run_query_json_file(pytest.queryfile)
-
-
-def test_directory_of_json_queries():
-    # Need to use the '--querydir <path to directory of queries>' command line option when running this test
-    assert pytest.querydir
-    assert os.path.isdir(pytest.querydir)
-    run_directory_of_queries(pytest.querydir)
+def test_specified():
+    # Need to use the '--querypath <path to query or directory of queries>' command line option when running this test
+    assert pytest.querypath
+    if os.path.isfile(pytest.querypath):
+        run_query_json_file(pytest.querypath)
+    elif os.path.isdir(pytest.querypath):
+        run_directory_of_queries(pytest.querypath)
+    else:
+        print(f"Invalid query path. Needs to be a path to a JSON query file or a directory of JSON queries.")
+        assert False
 
 
 def test_simple_1():
