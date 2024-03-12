@@ -12,3 +12,4 @@ plater_endpoint=http://kg2cplover2.rtx.ai:8080/1.4
 pytest -vs test.py -k test_specified --querypath sample_kg2_queries_ITRBPROD ${is_set_flag} --endpoint ${plater_endpoint}
 pytest -vs test.py -k test_specified --querypath sample_kg2_queries_ANYKG2 ${is_set_flag} --endpoint ${plater_endpoint}
 pytest -vs test.py -k test_specified --querypath sample_kg2_queries_LONG ${is_set_flag} --endpoint ${plater_endpoint}
+pytest -vs test.py -k test_specified --querypath sample_hand_crafted ${is_set_flag} --endpoint ${plater_endpoint}

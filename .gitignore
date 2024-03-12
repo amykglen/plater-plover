@@ -14,6 +14,6 @@ biolink_helper.py
 /test/*.tsv
 /test/responses/*
 /test/queries/*
-/test/sample_kg2_queries*
+/test/sample_*
 
 /test/results/*
