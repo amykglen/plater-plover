@@ -4,4 +4,9 @@ cd ~/plater-plover/test
 rm plater.tsv
 git pull origin main
 . ${HOME}/.pyenv/versions/plater-ploverenv/bin/activate
-pytest -vs test.py -k test_kg2_sample --endpoint http://kg2cplover2.rtx.ai:8080/1.4
+
+plater_endpoint=http://kg2cplover2.rtx.ai:8080/1.4
+
+pytest -vs test.py -k test_directory_of_json_queries --querydir sample_kg2_queries_ITRBPROD --endpoint ${plater_endpoint}
+pytest -vs test.py -k test_directory_of_json_queries --querydir sample_kg2_queries_ANYKG2 --endpoint ${plater_endpoint}
+pytest -vs test.py -k test_directory_of_json_queries --querydir sample_kg2_queries_LONG --endpoint ${plater_endpoint}
