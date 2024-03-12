@@ -30,7 +30,7 @@ def _send_query(trapi_query: Dict[str, Dict[str, Dict[str, Union[List[str], str,
                                  "num_results", "num_nodes", "num_edges", "response_size"])
 
     # Run the query
-    print(f"Sending query to KP..")
+    print(f"Sending query {query_id} to KP..")
     client_start = time.time()
     try:
         response = requests.post(f"{pytest.endpoint}/query",
@@ -50,7 +50,7 @@ def _send_query(trapi_query: Dict[str, Dict[str, Dict[str, Union[List[str], str,
 
             # Save the response locally
             os.system(f"mkdir -p {SCRIPT_DIR}/responses")
-            response_path = f"{SCRIPT_DIR}/responses/{querier}_{query_id}.json"
+            response_path = f"{SCRIPT_DIR}/responses/{querier}_{query_id}"
             with open(response_path, "w+") as response_file:
                 json.dump(json_response, response_file)
 
@@ -90,7 +90,7 @@ def _send_query(trapi_query: Dict[str, Dict[str, Dict[str, Union[List[str], str,
 
 
 def _run_query_json_file(file_path: str):
-    print(f"Running query {file_path}..")
+    print(f"Loading query at {file_path}..")
 
     # First load the JSON query from its file
     with open(file_path, "r") as query_file:
@@ -124,8 +124,8 @@ def _run_query_json_file(file_path: str):
                     qnode["is_set"] = True
 
     # Then actually run the query
-    query_file_name = file_path.strip("/").split("/")[-1]
-    query_identifier = f"{is_set_flag_name}_{query_file_name}" if is_set_flag_name else query_file_name
+    query_name = ":".join(file_path.strip("/").split("/")[-2:])  # Includes immediate parent dir
+    query_identifier = f"{is_set_flag_name}--{query_name}" if is_set_flag_name else query_name
     response = _send_query(trapi_qg, query_id=query_identifier)
 
 
