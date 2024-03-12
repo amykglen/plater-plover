@@ -7,22 +7,16 @@ from datetime import datetime
 
 import pytest
 import requests
-from typing import Dict, Union, List
+from typing import Dict, Union, List, Optional
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
-def _print_kg(kg: Dict[str, Dict[str, Dict[str, Dict[str, Union[List[str], str, None]]]]]):
-    nodes_by_qg_id = kg["nodes"]
-    edges_by_qg_id = kg["edges"]
-    for qnode_key, node_ids in sorted(nodes_by_qg_id.items()):
-        print(f"{qnode_key}: {node_ids}")
-    for qedge_key, edge_ids in sorted(edges_by_qg_id.items()):
-        print(f"{qedge_key}: {edge_ids}")
+# ----------------------------------- Helper functions ----------------------------------------- #
 
 
-def _run_query(trapi_query: Dict[str, Dict[str, Dict[str, Union[List[str], str, None]]]],
-               query_id: str):
+def _send_query(trapi_query: Dict[str, Dict[str, Dict[str, Union[List[str], str, None]]]],
+                query_id: str):
     # Grab the query graph (might be nested under 'message')
     trapi_qg = trapi_query if "nodes" in trapi_query else trapi_query["message"]["query_graph"]
 
@@ -36,6 +30,7 @@ def _run_query(trapi_query: Dict[str, Dict[str, Dict[str, Union[List[str], str, 
                                  "num_results", "num_nodes", "num_edges", "response_size"])
 
     # Run the query
+    print(f"Sending query to KP..")
     client_start = time.time()
     try:
         response = requests.post(f"{pytest.endpoint}/query",
@@ -94,9 +89,10 @@ def _run_query(trapi_query: Dict[str, Dict[str, Dict[str, Union[List[str], str, 
     return json_response
 
 
-def run_query_json_file(file_path: str):
+def _run_query_json_file(file_path: str):
     print(f"Running query {file_path}..")
 
+    # First load the JSON query from its file
     with open(file_path, "r") as query_file:
         query_obj = json.load(query_file)
 
@@ -113,26 +109,43 @@ def run_query_json_file(file_path: str):
         else:
             trapi_qg = query_obj["message"]["query_graph"]
 
+    # Force is_set values as requested
+    if pytest.issettrue or pytest.issetfalse or pytest.issetunpinned:  # Only one of these can be True
+        print(f"Overriding is_set values ({'issettrue' if pytest.issettrue else ''}"
+              f"{'issetfalse' if pytest.issetfalse else ''}{'issetunpinned' if pytest.issetunpinned else ''})")
+        for qnode in trapi_qg["nodes"].values():
+            if pytest.issettrue:
+                qnode["is_set"] = True
+            elif pytest.issetfalse:
+                qnode["is_set"] = False
+            elif pytest.issetunpinned:
+                if not qnode.get("ids"):
+                    qnode["is_set"] = True
+
+    # Then actually run the query
     query_file_name = file_path.strip("/").split("/")[-1]
+    response = _send_query(trapi_qg, query_id=query_file_name)
 
-    response = _run_query(trapi_qg, query_id=query_file_name)
 
-
-def run_directory_of_queries(dir_path: str):
-    print(f"Running queries in {dir_path}...")
-    for file_name in sorted(list(os.listdir(dir_path))):
-        if file_name.endswith(".json"):
-            print(f"On query {file_name}")
-            run_query_json_file(f"{dir_path}/{file_name}")
+# ------------------------ Actual pytests that can be run via command line ------------------------ #
 
 
 def test_specified():
     # Need to use the '--querypath <path to query or directory of queries>' command line option when running this test
     assert pytest.querypath
+    # Make sure only one value was specified to force is_set to
+    is_set_flags = [pytest.issetfalse, pytest.issettrue, pytest.issetunpinned]
+    num_is_set_flags = sum([1 for flag in is_set_flags if flag])
+    assert num_is_set_flags <= 1
+
     if os.path.isfile(pytest.querypath):
-        run_query_json_file(pytest.querypath)
+        # Run the specified query
+        _run_query_json_file(pytest.querypath)
     elif os.path.isdir(pytest.querypath):
-        run_directory_of_queries(pytest.querypath)
+        # Run each query in the specified directory
+        for file_name in sorted(list(os.listdir(pytest.querypath))):
+            if file_name.endswith(".json"):
+                _run_query_json_file(f"{pytest.querypath}/{file_name}")
     else:
         print(f"Invalid query path. Needs to be a path to a JSON query file or a directory of JSON queries.")
         assert False
@@ -157,7 +170,7 @@ def test_simple_1():
           }
        }
     }
-    response = _run_query(query, "test_1")
+    response = _send_query(query, "test_1")
     assert response["message"]["results"]
 
 
@@ -180,7 +193,7 @@ def test_simple_2():
           }
        }
     }
-    response = _run_query(query, "test_2")
+    response = _send_query(query, "test_2")
     assert response["message"]["results"]
 
 
