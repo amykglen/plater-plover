@@ -110,9 +110,10 @@ def _run_query_json_file(file_path: str):
             trapi_qg = query_obj["message"]["query_graph"]
 
     # Force is_set values as requested
+    is_set_flag_name = f"{'issettrue' if pytest.issettrue else ''}{'issetfalse' if pytest.issetfalse else ''}" \
+                       f"{'issetunpinned' if pytest.issetunpinned else ''}"
     if pytest.issettrue or pytest.issetfalse or pytest.issetunpinned:  # Only one of these can be True
-        print(f"Overriding is_set values ({'issettrue' if pytest.issettrue else ''}"
-              f"{'issetfalse' if pytest.issetfalse else ''}{'issetunpinned' if pytest.issetunpinned else ''})")
+        print(f"Overriding is_set values ({is_set_flag_name})")
         for qnode in trapi_qg["nodes"].values():
             if pytest.issettrue:
                 qnode["is_set"] = True
@@ -124,7 +125,8 @@ def _run_query_json_file(file_path: str):
 
     # Then actually run the query
     query_file_name = file_path.strip("/").split("/")[-1]
-    response = _send_query(trapi_qg, query_id=query_file_name)
+    query_identifier = f"{is_set_flag_name}_{query_file_name}" if is_set_flag_name else query_file_name
+    response = _send_query(trapi_qg, query_id=query_identifier)
 
 
 # ------------------------ Actual pytests that can be run via command line ------------------------ #
