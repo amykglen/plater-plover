@@ -15,3 +15,5 @@ biolink_helper.py
 /test/responses/*
 /test/queries/*
 /test/sample_kg2_queries*
+
+/test/results/*
