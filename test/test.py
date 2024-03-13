@@ -1,6 +1,7 @@
 import csv
 import json
 import os
+import random
 import time
 import traceback
 from datetime import datetime
@@ -144,8 +145,10 @@ def test_specified():
         # Run the specified query
         _run_query_json_file(pytest.querypath)
     elif os.path.isdir(pytest.querypath):
-        # Run each query in the specified directory
-        for file_name in sorted(list(os.listdir(pytest.querypath))):
+        # Run each query in the specified directory (random order)
+        query_file_names = list(os.listdir(pytest.querypath))
+        random.shuffle(query_file_names)
+        for file_name in query_file_names:
             if file_name.endswith(".json"):
                 _run_query_json_file(f"{pytest.querypath}/{file_name}")
     else:
