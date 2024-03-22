@@ -105,6 +105,7 @@ def materialize_direct_subclass_edges(child_to_parents_map: defaultdict[str, Set
                     "id": f"materialized_subclass_relationship:{child_id}-->{ancestor_id}"
                 }
                 direct_subclass_edges.append(edge)
+        logging.info(f"Adding a total of {len(direct_subclass_edges)} direct inferred subclass_of edges..")
         # Note: We only need to add these edges to the file that's imported into Plater
         write_rows_to_jsonl_file(direct_subclass_edges, edges_jsonl_file_path_plater)
 
@@ -184,17 +185,18 @@ def convert_to_plater_format(row_obj: dict,
         row_obj_for_plater["predicate"] = "biolink:related_to_at_concept_level"
 
     # Skip 'weak' edges (semmeddb edges with < 4 publications and domain_range_exclusion=True edges)
-    row_obj_for_plater = None if should_filter_out(row_obj_for_plater) else row_obj_for_plater
-
-    # Fill out our concept parent map as appropriate (used later to materialize direct subclass edges)
-    if row_obj_for_plater and predicate:  # If it has a predicate it must be an edge, not a node
-        predicate = row_obj_for_plater["predicate"]
-        edge_subject = row_obj_for_plater["subject"]
-        edge_object = row_obj_for_plater["object"]
-        if predicate in {"biolink:subclass_of", "biolink:superclass_of"}:
-            child = edge_subject if predicate == "biolink:subclass_of" else edge_object
-            parent = edge_object if predicate == "biolink:subclass_of" else edge_subject
-            child_to_parents_map[child].add(parent)
+    if should_filter_out(row_obj):
+        row_obj_for_plater = None
+    else:
+        # Fill out our concept parent map as appropriate (used later to materialize direct subclass edges)
+        if predicate:  # If it has a predicate it must be an edge, not a node
+            predicate = row_obj_for_plater["predicate"]
+            edge_subject = row_obj_for_plater["subject"]
+            edge_object = row_obj_for_plater["object"]
+            if predicate in {"biolink:subclass_of", "biolink:superclass_of"}:
+                child = edge_subject if predicate == "biolink:subclass_of" else edge_object
+                parent = edge_object if predicate == "biolink:subclass_of" else edge_subject
+                child_to_parents_map[child].add(parent)
 
     return row_obj_for_plater
 
@@ -238,6 +240,7 @@ def convert_tsv_to_jsonl(tsv_path: str, header_tsv_path: str, bh: any, kind: str
         batch_lite = []
         batch_plater = []
         num_rows_processed = 0
+        num_edges_excluded = 0
         child_to_parents_map = defaultdict(set)
         tsv_reader = csv.reader(input_tsv_file, delimiter="\t")
         for line in tsv_reader:
@@ -251,6 +254,8 @@ def convert_tsv_to_jsonl(tsv_path: str, header_tsv_path: str, bh: any, kind: str
                                if property_name in LITE_PROPERTIES})
             if row_obj_for_plater:
                 batch_plater.append(row_obj_for_plater)
+            else:
+                num_edges_excluded += 1
 
             # Write this batch of rows to the jsonl files if it's time
             if len(batch) == 1000000:
@@ -259,7 +264,7 @@ def convert_tsv_to_jsonl(tsv_path: str, header_tsv_path: str, bh: any, kind: str
                 write_rows_to_jsonl_file(batch_plater, jsonl_output_file_path_plater)
                 num_rows_processed += len(batch)
                 batch, batch_lite, batch_plater = [], [], []
-                logging.info(f"Have processed {num_rows_processed} rows...")
+                logging.info(f"Have processed {num_rows_processed} rows... ({num_edges_excluded} excluded)")
 
         # Take care of writing the (potential) final partial batch
         write_rows_to_jsonl_file(batch, jsonl_output_file_path)
@@ -270,7 +275,7 @@ def convert_tsv_to_jsonl(tsv_path: str, header_tsv_path: str, bh: any, kind: str
     if kind == "edges":
         materialize_direct_subclass_edges(child_to_parents_map, jsonl_output_file_path_plater)
 
-    logging.info(f"Done converting rows in {tsv_path} to json lines.")
+    logging.info(f"Done converting rows in {tsv_path} to json lines. ({num_edges_excluded} rows excluded)")
     logging.info(f"Line counts of output files:")
     logging.info(os.system(f"wc -l {jsonl_output_file_path}"))
     logging.info(os.system(f"wc -l {jsonl_output_file_path_lite}"))
