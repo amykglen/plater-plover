@@ -26,8 +26,7 @@ PLATER_COL_NAME_REMAPPINGS = {
 }
 LITE_PROPERTIES = {"id", "name", "category", "all_categories",
                    "subject", "object", "predicate", "primary_knowledge_source",
-                   "qualified_predicate", "qualified_object_aspect", "qualified_object_direction",
-                   "domain_range_exclusion"}
+                   "qualified_predicate", "qualified_object_aspect", "qualified_object_direction"}
 TRUSTED_SUBCLASS_SOURCES = {"infores:mondo", "infores:chebi"}  # These are the same as Plover uses for now
 
 csv.field_size_limit(sys.maxsize)  # Required because some KG2c fields are massive
@@ -165,37 +164,38 @@ def convert_to_json_format(line: list,
 def convert_to_plater_format(row_obj: dict,
                              bh: any,
                              child_to_parents_map: defaultdict[str, Set[str]]) -> Optional[dict]:
-    row_obj_for_plater = dict()
-    # Go through and add each item in the original object to our copy for Plater, modifying as necessary
-    for col_name, parsed_value in row_obj.items():
-        # Add this item into our copy of the object for Plater (renaming column as needed)
-        plater_col_name = PLATER_COL_NAME_REMAPPINGS.get(col_name, col_name)
-        row_obj_for_plater[plater_col_name] = parsed_value
-
-        # Pre-materialize category ancestors for Plater
-        if col_name == "all_categories":
-            row_obj_for_plater["category"] = bh.get_ancestors(parsed_value,
-                                                              include_mixins=False,
-                                                              include_conflations=False)
-
-    # Raise the predicate of subclass_of edges from sources we don't want used for subclass reasoning
-    predicate = row_obj.get("predicate")  # Will be None if this is a Node object
-    primary_knowledge_source = row_obj.get("primary_knowledge_source")
-    if predicate == "biolink:subclass_of" and primary_knowledge_source not in TRUSTED_SUBCLASS_SOURCES:
-        row_obj_for_plater["predicate"] = "biolink:related_to_at_concept_level"
-
-    # Skip 'weak' edges (semmeddb edges with < 4 publications and domain_range_exclusion=True edges)
+    # Exclude 'weak' edges (semmeddb edges with < 4 publications and domain_range_exclusion=True edges)
     if should_filter_out(row_obj):
         row_obj_for_plater = None
     else:
+        # Go through and add each item in the original object to a copy for Plater, modifying as necessary
+        row_obj_for_plater = dict()
+        for col_name, parsed_value in row_obj.items():
+            if col_name != "domain_range_exclusion":  # Skip this column since all such edges are excluded for Plater
+                # Add this item into our copy of the object for Plater (renaming column as needed)
+                plater_col_name = PLATER_COL_NAME_REMAPPINGS.get(col_name, col_name)
+                row_obj_for_plater[plater_col_name] = parsed_value
+
+                # Pre-materialize category ancestors for Plater
+                if col_name == "all_categories":
+                    row_obj_for_plater["category"] = bh.get_ancestors(parsed_value,
+                                                                      include_mixins=False,
+                                                                      include_conflations=False)
+
+        # Raise the predicate of subclass_of edges from sources we don't want used for subclass reasoning
+        predicate = row_obj.get("predicate")  # Will be None if this is a Node object
+        primary_knowledge_source = row_obj.get("primary_knowledge_source")
+        if predicate == "biolink:subclass_of" and primary_knowledge_source not in TRUSTED_SUBCLASS_SOURCES:
+            row_obj_for_plater["predicate"] = "biolink:related_to_at_concept_level"
+
         # Fill out our concept parent map as appropriate (used later to materialize direct subclass edges)
         if predicate:  # If it has a predicate it must be an edge, not a node
-            predicate = row_obj_for_plater["predicate"]
+            predicate_plater = row_obj_for_plater["predicate"]
             edge_subject = row_obj_for_plater["subject"]
             edge_object = row_obj_for_plater["object"]
-            if predicate in {"biolink:subclass_of", "biolink:superclass_of"}:
-                child = edge_subject if predicate == "biolink:subclass_of" else edge_object
-                parent = edge_object if predicate == "biolink:subclass_of" else edge_subject
+            if predicate_plater in {"biolink:subclass_of", "biolink:superclass_of"}:
+                child = edge_subject if predicate_plater == "biolink:subclass_of" else edge_object
+                parent = edge_object if predicate_plater == "biolink:subclass_of" else edge_subject
                 child_to_parents_map[child].add(parent)
 
     return row_obj_for_plater
