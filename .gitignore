@@ -17,3 +17,5 @@ biolink_helper.py
 /test/sample_*
 
 /test/results/*
+
+*report.json
