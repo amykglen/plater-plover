@@ -30,8 +30,8 @@ tar -xvzf ${local_kg2c_tarball_name}
 
 # Move the JSON lines files into the ORION directory
 mkdir -p -m 777 ${orion_kg2_subdir_path}
-mv nodes_c.jsonl ${orion_kg2_subdir_path}
-mv edges_c.jsonl ${orion_kg2_subdir_path}
+mv nodes_c-plater.jsonl ${orion_kg2_subdir_path}
+mv edges_c-plater.jsonl ${orion_kg2_subdir_path}
 
 # Clear out old images/containers
 set +e  # Temporarily don't exit on errors, in case an image doesn't already exist by this name
@@ -58,7 +58,7 @@ printenv
 # Use ORION to create a fresh Neo4j dump based on our json lines files
 sudo -E docker-compose run --rm data_services \
          python /Data_services/cli/neo4j_dump.py \
-         /Data_services_graphs/${orion_kg2_subdir_name}/ nodes_c.jsonl edges_c.jsonl
+         /Data_services_graphs/${orion_kg2_subdir_name}/ nodes_c-plater.jsonl edges_c-plater.jsonl
 
 # Load the ORION Neo4j dump into a Neo4j database (goes into /home/ubuntu/neo4j/data area..)
 # WARNING: If you don't want /home/ubuntu/neo4j/data to be deleted, move it before running this part..
