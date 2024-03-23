@@ -199,8 +199,8 @@ def main():
     bh = BiolinkHelper(biolink_version=args.biolink_version)
 
     # Then actually create the JSON lines files
-    convert_tsv_to_jsonl(args.nodes_tsv_path, args.nodes_header_tsv_path, bh, "nodes")
-    convert_tsv_to_jsonl(args.edges_tsv_path, args.edges_header_tsv_path, bh, "edges")
+    convert_tsv_to_jsonl(args.nodes_tsv_path, args.nodes_header_tsv_path, bh)
+    convert_tsv_to_jsonl(args.edges_tsv_path, args.edges_header_tsv_path, bh)
 
     logging.info(f"\n\nDone converting KG2c nodes/edges TSVs to KGX JSON lines format.")
 
