@@ -22,7 +22,7 @@ def _send_query(trapi_query: Dict[str, Dict[str, Dict[str, Union[List[str], str,
     trapi_qg = trapi_query if "nodes" in trapi_query else trapi_query["message"]["query_graph"]
 
     # Get set up to store query results
-    querier = "plover" if "rtxkg2" in pytest.endpoint else "plater"
+    querier = "plater" if "8080/1.4" in pytest.endpoint else "plover"
     results_file_path = f"{SCRIPT_DIR}/{querier}.tsv"
     if not os.path.exists(results_file_path):
         with open(results_file_path, "w+") as results_file:
