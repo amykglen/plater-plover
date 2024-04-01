@@ -67,6 +67,7 @@ def get_ancestors(node_id: str, child_to_parents_map: Dict[str, Set[str]],
                   child_to_ancestors_map: Dict[str, Set[str]], recursion_depth: int,
                   problem_nodes: Set[str]):
     # Adapted from the PloverDB code for building the concept descendant index
+    # NOTE: Really didn't need to switch from descendants approach to ancestors approach (could change back..)
     if node_id not in child_to_ancestors_map:
         if recursion_depth > 20:
             logging.info(f"Hit recursion depth of 20 for node {node_id}; discarding this "
