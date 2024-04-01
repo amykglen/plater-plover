@@ -63,93 +63,6 @@ def write_rows_to_jsonl_file(rows: list, jsonl_file_path: Optional[str]):
             jsonl_writer.write_all(rows)
 
 
-def get_ancestors(node_id: str, child_to_parents_map: Dict[str, Set[str]],
-                  child_to_ancestors_map: Dict[str, Set[str]], recursion_depth: int,
-                  problem_nodes: Set[str]):
-    # Adapted from the PloverDB code for building the concept descendant index
-    if node_id not in child_to_ancestors_map:
-        if recursion_depth > 20:
-            logging.info(f"Hit recursion depth of 20 for node {node_id}; discarding this "
-                         f"lineage (will write to problem file)")
-            problem_nodes.add(node_id)
-        else:
-            for parent_id in child_to_parents_map.get(node_id, set()):
-                parent_ancestors = get_ancestors(parent_id, child_to_parents_map, child_to_ancestors_map,
-                                                 recursion_depth + 1, problem_nodes)
-                child_to_ancestors_map[node_id] = child_to_ancestors_map[node_id].union({parent_id}, parent_ancestors)
-    return child_to_ancestors_map.get(node_id, set())
-
-
-def materialize_direct_subclass_edges(child_to_parents_map: defaultdict[str, Set[str]],
-                                      edges_jsonl_file_path_plater: str):
-    # Adapted from the PloverDB code for building the concept descendant index
-    # Maybe later don't create another copy of already existing direct edges? (superclass complicates a little)
-    logging.info(f"Materializing direct subclass_of edges for all indirect concept --> ancestor relationships")
-    if child_to_parents_map:
-        # Recursively derive all ancestors for each concept
-        child_to_ancestors_map = defaultdict(set)
-        problem_nodes = set()
-        for child_node_id in child_to_parents_map:
-            _ = get_ancestors(child_node_id, child_to_parents_map, child_to_ancestors_map, 0, problem_nodes)
-
-        # Create direct edges for each child --> ancestor relationship (tack onto jsonl edges file)
-        direct_subclass_edges = []
-        for child_id, ancestor_ids in child_to_ancestors_map.items():
-            for ancestor_id in ancestor_ids:
-                edge = {
-                    "subject": child_id,
-                    "object": ancestor_id,
-                    "predicate": "biolink:subclass_of",
-                    "primary_knowledge_source": "infores:rtx-kg2",  # Maybe a better way of doing this? Not a great situation..
-                    "id": f"materialized_subclass_relationship:{child_id}-->{ancestor_id}"
-                }
-                direct_subclass_edges.append(edge)
-        logging.info(f"Adding a total of {len(direct_subclass_edges)} direct inferred subclass_of edges..")
-        # Note: We only need to add these edges to the file that's imported into Plater
-        write_rows_to_jsonl_file(direct_subclass_edges, edges_jsonl_file_path_plater)
-
-        # Print out/save some useful stats
-        logging.info(f"Calculating report stats..")
-        node_to_num_ancestors = {node_id: len(ancestors) for node_id, ancestors in child_to_ancestors_map.items()}
-        ancestor_counts = list(node_to_num_ancestors.values())
-        prefix_counts = defaultdict(int)
-        top_50_biggest_nodes = sorted(node_to_num_ancestors.items(), key=lambda x: x[1], reverse=True)[:50]
-        for node_id in child_to_ancestors_map:
-            prefix = node_id.split(":")[0]
-            prefix_counts[prefix] += 1
-        sorted_prefix_counts = dict(sorted(prefix_counts.items(), key=lambda count: count[1], reverse=True))
-        report_path = f"{SCRIPT_DIR}/subclass_report.json"
-        with open(report_path, "w+") as report_file:
-            report = {
-                "num_nodes_with_ancestors": {
-                    "total": len(child_to_ancestors_map),
-                    "by_prefix": sorted_prefix_counts
-                },
-                "num_ancestors_per_node": {
-                    "mean": round(statistics.mean(ancestor_counts), 3),
-                    "max": max(ancestor_counts),
-                    "median": statistics.median(ancestor_counts),
-                    "mode": statistics.mode(ancestor_counts)
-                      },
-                "problem_nodes": {
-                    "count": len(problem_nodes),
-                    "curies": list(problem_nodes)
-                },
-                "top_50_nodes_with_most_ancestors": {
-                    "counts": {item[0]: item[1] for item in top_50_biggest_nodes},
-                    "curies": [item[0] for item in top_50_biggest_nodes]
-                },
-                "example_mappings": {
-                    "Diabetes mellitus (MONDO:0005015)": list(child_to_ancestors_map.get("MONDO:0005015", [])),
-                    "Adams-Oliver syndrome (MONDO:0007034)": list(child_to_ancestors_map.get("MONDO:0007034", []))
-                }
-            }
-            json.dump(report, report_file, indent=2)
-        logging.info(f"Done with materializing direct subclass_of edges. Report is at {report_path}")
-    else:
-        logging.error(f"No child_to_parent map - cannot proceed with materializing direct subclass_of edges.")
-
-
 def convert_to_json_format(line: list,
                            columns_to_keep: List[str],
                            node_column_indeces: Dict[str, int]) -> dict:
@@ -161,9 +74,7 @@ def convert_to_json_format(line: list,
     return row_obj
 
 
-def convert_to_plater_format(row_obj: dict,
-                             bh: any,
-                             child_to_parents_map: defaultdict[str, Set[str]]) -> Optional[dict]:
+def convert_to_plater_format(row_obj: dict, bh: any) -> Optional[dict]:
     # Exclude 'weak' edges (semmeddb edges with < 4 publications and domain_range_exclusion=True edges)
     if should_filter_out(row_obj):
         row_obj_for_plater = None
@@ -188,20 +99,10 @@ def convert_to_plater_format(row_obj: dict,
         if predicate == "biolink:subclass_of" and primary_knowledge_source not in TRUSTED_SUBCLASS_SOURCES:
             row_obj_for_plater["predicate"] = "biolink:related_to_at_concept_level"
 
-        # Fill out our concept parent map as appropriate (used later to materialize direct subclass edges)
-        if predicate:  # If it has a predicate it must be an edge, not a node
-            predicate_plater = row_obj_for_plater["predicate"]
-            edge_subject = row_obj_for_plater["subject"]
-            edge_object = row_obj_for_plater["object"]
-            if predicate_plater in {"biolink:subclass_of", "biolink:superclass_of"}:
-                child = edge_subject if predicate_plater == "biolink:subclass_of" else edge_object
-                parent = edge_object if predicate_plater == "biolink:subclass_of" else edge_subject
-                child_to_parents_map[child].add(parent)
-
     return row_obj_for_plater
 
 
-def convert_tsv_to_jsonl(tsv_path: str, header_tsv_path: str, bh: any, kind: str):
+def convert_tsv_to_jsonl(tsv_path: str, header_tsv_path: str, bh: any):
     """
     This method assumes the input TSV file names are in KG2c format (e.g., like nodes_c.tsv and nodes_c_header.tsv)
     """
@@ -241,12 +142,11 @@ def convert_tsv_to_jsonl(tsv_path: str, header_tsv_path: str, bh: any, kind: str
         batch_plater = []
         num_rows_processed = 0
         num_edges_excluded = 0
-        child_to_parents_map = defaultdict(set)
         tsv_reader = csv.reader(input_tsv_file, delimiter="\t")
         for line in tsv_reader:
             # Convert this TSV row into a json object (both in regular format and in Plater format)
             row_obj = convert_to_json_format(line, columns_to_keep, node_column_indeces)
-            row_obj_for_plater = convert_to_plater_format(row_obj, bh, child_to_parents_map)
+            row_obj_for_plater = convert_to_plater_format(row_obj, bh)
 
             # Save the row as applicable; create both the 'lite', 'full', and 'plater' files at the same time
             batch.append(row_obj)
@@ -271,9 +171,6 @@ def convert_tsv_to_jsonl(tsv_path: str, header_tsv_path: str, bh: any, kind: str
         write_rows_to_jsonl_file(batch_lite, jsonl_output_file_path_lite)
         write_rows_to_jsonl_file(batch_plater, jsonl_output_file_path_plater)
         logging.info(f"Done writing final partial batch.")
-
-    if kind == "edges":
-        materialize_direct_subclass_edges(child_to_parents_map, jsonl_output_file_path_plater)
 
     logging.info(f"Done converting rows in {tsv_path} to json lines. ({num_edges_excluded} rows excluded)")
     logging.info(f"Line counts of output files:")
@@ -302,8 +199,8 @@ def main():
     bh = BiolinkHelper(biolink_version=args.biolink_version)
 
     # Then actually create the JSON lines files
-    convert_tsv_to_jsonl(args.nodes_tsv_path, args.nodes_header_tsv_path, bh, "nodes")
-    convert_tsv_to_jsonl(args.edges_tsv_path, args.edges_header_tsv_path, bh, "edges")
+    convert_tsv_to_jsonl(args.nodes_tsv_path, args.nodes_header_tsv_path, bh)
+    convert_tsv_to_jsonl(args.edges_tsv_path, args.edges_header_tsv_path, bh)
 
     logging.info(f"\n\nDone converting KG2c nodes/edges TSVs to KGX JSON lines format.")
 
