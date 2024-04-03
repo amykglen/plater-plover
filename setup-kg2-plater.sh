@@ -27,10 +27,10 @@ if [ ! -d "Plater" ]; then
   git clone https://github.com/amykglen/Plater.git  # This is a fork of Plater v1.5.0, with a slight logging addition
 fi
 cd Plater
+git checkout subclasscypher
+git pull origin subclasscypher
 cp .env-template .env
 echo "NEO4J_PASSWORD=${neo4j_password}" >> .env
-echo "RESULTS_LIMIT=1000000" >> .env
-echo "SUBCLASS_DEPTH=21" >> .env
 set +e  # Temporarily don't stop on error, in case this pyenv already exists
 pyenv virtualenv 3.10.6 platerenv
 set -e
