@@ -26,15 +26,15 @@ cd ~
 if [ ! -d "Plater" ]; then
   git clone https://github.com/amykglen/Plater.git  # This is a fork of Plater v1.5.0, with a slight logging addition
 fi
+git checkout results-limit
+git pull origin results-limit
 cd Plater
 cp .env-template .env
 echo "NEO4J_PASSWORD=${neo4j_password}" >> .env
-echo "RESULTS_LIMIT=1000000" >> .env
-echo "SUBCLASS_DEPTH=21" >> .env
 set +e  # Temporarily don't stop on error, in case this pyenv already exists
-pyenv virtualenv 3.10.6 platerenv
+pyenv virtualenv 3.10.6 platerenv2
 set -e
-"${HOME}/.pyenv/versions/platerenv/bin/pip" install -r PLATER/requirements.txt
+"${HOME}/.pyenv/versions/platerenv2/bin/pip" install -r PLATER/requirements.txt
 
 
 

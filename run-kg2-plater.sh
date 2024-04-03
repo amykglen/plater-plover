@@ -28,5 +28,5 @@ sleep 1m  # Wait for neo4j to start up
 
 # Start up Plater
 cd ~/Plater
-. ${HOME}/.pyenv/versions/platerenv/bin/activate
+. ${HOME}/.pyenv/versions/platerenv2/bin/activate
 ./main.sh
