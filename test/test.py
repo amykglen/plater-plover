@@ -28,7 +28,7 @@ def _send_query(trapi_query: Dict[str, Dict[str, Dict[str, Union[List[str], str,
         with open(results_file_path, "w+") as results_file:
             tsv_writer = csv.writer(results_file, delimiter="\t")
             tsv_writer.writerow(["query_id", "date_run", "duration_client", "duration_server", "duration_db",
-                                 "num_results", "num_nodes", "num_edges", "response_size"])
+                                 "response_status", "num_results", "num_nodes", "num_edges", "response_size"])
 
     # Run the query
     print(f"Sending query {query_id} to KP..")
@@ -41,7 +41,8 @@ def _send_query(trapi_query: Dict[str, Dict[str, Dict[str, Union[List[str], str,
                                           'Cache-Control': 'no-cache'})
         client_duration = time.time() - client_start
         request_duration = response.elapsed.total_seconds()
-        print(f"Request took {request_duration} seconds")
+        response_status = response.status_code
+        print(f"Request took {request_duration} seconds, status {response_status}")
 
         # Process/save results
         if response.status_code == 200:
@@ -60,7 +61,7 @@ def _send_query(trapi_query: Dict[str, Dict[str, Dict[str, Union[List[str], str,
                 # Grab the size of the response
                 response_size = os.path.getsize(response_path)
             else:
-                response_size = 0
+                response_size = None
 
             # Save results/data for this query run
             db_duration = None
@@ -73,18 +74,17 @@ def _send_query(trapi_query: Dict[str, Dict[str, Dict[str, Union[List[str], str,
                         db_duration = float(log_message.split(":")[-1])
         else:
             print(f"Response status code was {response.status_code}. Response was: {response.text}")
-            num_nodes, num_edges, num_results, response_size, db_duration = 0, 0, 0, 0, 0
+            num_nodes, num_edges, num_results, response_size, db_duration = 0, 0, 0, None, None
             json_response = dict()
     except Exception:
         client_duration = time.time() - client_start
         request_duration = client_duration
-        db_duration = 0
         print(f"Request to KP threw an exception! Traceback: {traceback.format_exc()}")
-        num_nodes, num_edges, num_results, response_size = 0, 0, 0, 0
+        num_nodes, num_edges, num_results, response_size, db_duration, response_status = 0, 0, 0, None, None, 599
         json_response = dict()
 
     row = [query_id, datetime.now(),
-           client_duration, request_duration, db_duration,
+           client_duration, request_duration, db_duration, response_status,
            num_results, num_nodes, num_edges, response_size]
     with open(results_file_path, "a") as results_file_append:
         tsv_appender = csv.writer(results_file_append, delimiter="\t")
