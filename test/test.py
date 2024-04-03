@@ -36,6 +36,7 @@ def _send_query(trapi_query: Dict[str, Dict[str, Dict[str, Union[List[str], str,
     try:
         response = requests.post(f"{pytest.endpoint}/query",
                                  json={"message": {"query_graph": trapi_qg}, "submitter": "amy-test"},
+                                 timeout=(600, 600),  # Important to up the read timeout due to large response
                                  headers={'accept': 'application/json',
                                           'Cache-Control': 'no-cache'})
         client_duration = time.time() - client_start
@@ -50,14 +51,16 @@ def _send_query(trapi_query: Dict[str, Dict[str, Dict[str, Union[List[str], str,
             num_results = len(json_response["message"]["results"])
 
             # Save the response locally
-            os.system(f"mkdir -p {SCRIPT_DIR}/responses")
-            response_path = f"{SCRIPT_DIR}/responses/{querier}_{query_id}"
-            with open(response_path, "w+") as response_file:
-                json.dump(json_response, response_file)
-
-            # Grab the size of the response
-            response_size = os.path.getsize(response_path)
-            # TODO: Grab the backend database query time from the logs
+            if pytest.saveresponse:
+                print(f"Saving response for query {query_id}")
+                os.system(f"mkdir -p {SCRIPT_DIR}/responses")
+                response_path = f"{SCRIPT_DIR}/responses/{querier}_{query_id}"
+                with open(response_path, "w+") as response_file:
+                    json.dump(json_response, response_file)
+                # Grab the size of the response
+                response_size = os.path.getsize(response_path)
+            else:
+                response_size = 0
 
             # Save results/data for this query run
             db_duration = None
