@@ -20,6 +20,7 @@ if [ ! -d "ORION" ]; then
   git clone https://github.com/RobokopU24/ORION.git --branch litcoin-test-6  # This is a release from Jan. 2024
 fi
 
+# TODO: check out specific branch? or merge my eventual final branch into master?
 # Set up for Plater
 cd ~
 if [ ! -d "Plater" ]; then
@@ -28,6 +29,8 @@ fi
 cd Plater
 cp .env-template .env
 echo "NEO4J_PASSWORD=${neo4j_password}" >> .env
+echo "RESULTS_LIMIT=1000000" >> .env
+echo "SUBCLASS_DEPTH=21" >> .env
 set +e  # Temporarily don't stop on error, in case this pyenv already exists
 pyenv virtualenv 3.10.6 platerenv
 set -e

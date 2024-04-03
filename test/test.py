@@ -36,7 +36,7 @@ def _send_query(trapi_query: Dict[str, Dict[str, Dict[str, Union[List[str], str,
     try:
         response = requests.post(f"{pytest.endpoint}/query",
                                  json={"message": {"query_graph": trapi_qg}, "submitter": "amy-test"},
-                                 timeout=(3600, 3600),  # Important to up the read timeout due to large response
+                                 timeout=(600, 600),  # Important to up the read timeout due to large response
                                  headers={'accept': 'application/json',
                                           'Cache-Control': 'no-cache'})
         client_duration = time.time() - client_start
