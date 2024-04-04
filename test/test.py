@@ -178,7 +178,7 @@ def test_simple_1():
           }
        }
     }
-    response = _send_query(query, "test_1")
+    response = _send_query(query, "test_simple_1")
     assert response["message"]["results"]
 
 
@@ -201,7 +201,7 @@ def test_simple_2():
           }
        }
     }
-    response = _send_query(query, "test_2")
+    response = _send_query(query, "test_simple_2")
     assert response["message"]["results"]
 
 
