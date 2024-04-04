@@ -8,30 +8,33 @@ Usage: bash -x build-kg2-plater.sh <kg2_version, e.g., 2.8.4> <biolink_version, 
 kg2_version="$1"
 biolink_version="$2"
 neo4j_password="$3"
+create_jsonl_files="$4"
 set -e  # Stop on error
 
 orion_kg2_subdir_name=rtx-kg${kg2_version}c
 orion_kg2_subdir_path=~/ORION_parent_dir/Data_services_graphs/${orion_kg2_subdir_name}
 neo4j_container_name=neo4j-kg${kg2_version}c
 
-# Download the proper KG2c TSVs
-cd "$(dirname "$0")"  # This is the directory containing this script ('plater-plover')
-local_kg2c_tarball_name=kg${kg2_version}c-tsv.tar.gz
-scp rtxconfig@arax-databases.rtx.ai:/home/rtxconfig/KG${kg2_version}/extra_files/kg2c-tsv.tar.gz ${local_kg2c_tarball_name}
-tar -xvzf ${local_kg2c_tarball_name}
+if [create_jsonl_files]; then
+  # Download the proper KG2c TSVs
+  cd "$(dirname "$0")"  # This is the directory containing this script ('plater-plover')
+  local_kg2c_tarball_name=kg${kg2_version}c-tsv.tar.gz
+  scp rtxconfig@arax-databases.rtx.ai:/home/rtxconfig/KG${kg2_version}/extra_files/kg2c-tsv.tar.gz ${local_kg2c_tarball_name}
+  tar -xvzf ${local_kg2c_tarball_name}
 
-# Convert the TSVs to JSON lines format
-"${HOME}/.pyenv/versions/plater-ploverenv/bin/python" convert_kg2c_tsvs_to_jsonl.py \
-                                                                  nodes_c.tsv \
-                                                                  edges_c.tsv \
-                                                                  nodes_c_header.tsv \
-                                                                  edges_c_header.tsv \
-                                                                  ${biolink_version}
+  # Convert the TSVs to JSON lines format
+  "${HOME}/.pyenv/versions/plater-ploverenv/bin/python" convert_kg2c_tsvs_to_jsonl.py \
+                                                                    nodes_c.tsv \
+                                                                    edges_c.tsv \
+                                                                    nodes_c_header.tsv \
+                                                                    edges_c_header.tsv \
+                                                                    ${biolink_version}
 
-# Move the JSON lines files into the ORION directory
-mkdir -p -m 777 ${orion_kg2_subdir_path}
-mv nodes_c-plater.jsonl ${orion_kg2_subdir_path}
-mv edges_c-plater.jsonl ${orion_kg2_subdir_path}
+  # Move the JSON lines files into the ORION directory
+  mkdir -p -m 777 ${orion_kg2_subdir_path}
+  mv nodes_c-plater.jsonl ${orion_kg2_subdir_path}
+  mv edges_c-plater.jsonl ${orion_kg2_subdir_path}
+fi
 
 # Clear out old images/containers
 set +e  # Temporarily don't exit on errors, in case an image doesn't already exist by this name
