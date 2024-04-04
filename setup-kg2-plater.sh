@@ -24,10 +24,10 @@ fi
 # Set up for Plater
 cd ~
 if [ ! -d "Plater" ]; then
-  git clone https://github.com/amykglen/Plater.git  # This is a fork of Plater v1.5.0, with a slight logging addition
+  git clone https://github.com/amykglen/Plater.git
 fi
 cd Plater
-git checkout subclasscypher
+git checkout subclasscypher  # Runs Plater 1.5.0 with slight modifications
 git pull origin subclasscypher
 cp .env-template .env
 echo "NEO4J_PASSWORD=${neo4j_password}" >> .env
