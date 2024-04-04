@@ -1,5 +1,7 @@
 
 cd ~/RTX_amyfork/RTX
+git checkout master
+git pull origin master
 
 # First delete any potential duplicate containers/images
 set +e  # Temporarily don't stop on error, in case this container doesn't already exist

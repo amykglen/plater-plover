@@ -2,7 +2,7 @@
 the KG2c TSV files from arax-databases.rtx.ai, so your RSA key must already be on that instance. Prior to running
 this script you need to run the setup-kg2-plater.sh script to get your environment ready (only needs
 to be done once).
-Usage: bash -x build-kg2-plater.sh <kg2_version, e.g., 2.8.4> <biolink_version, e.g., 3.1.2> <neo4j_password>
+Usage: bash -x build-plater-kg2.sh <kg2_version, e.g., 2.8.4> <biolink_version, e.g., 3.1.2> <neo4j_password>
 '
 
 kg2_version="$1"

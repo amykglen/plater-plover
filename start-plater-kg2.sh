@@ -1,7 +1,7 @@
 : ' This script runs Plater for a given KG2c version. Prior to running this script you need to have run the
 build-kg2-plater.sh script for the given KG2c version (to prep the Neo4j database that Plater will query behind
 the scenes).
-Usage: bash -x run-kg2-plater.sh <kg2_version, e.g., 2.8.4> <neo4j_password>
+Usage: bash -x start-plater-kg2.sh <kg2_version, e.g., 2.8.4> <neo4j_password>
 '
 
 kg2_version="$1"
