@@ -24,17 +24,16 @@ def main():
     stacks = ["araxkg2", "plater", "plover"]
     runs = [1, 2, 3]
 
-    table_cols = ["platform", "query_id"] + [f"{base_col_name}_{run_num}" for run_num in runs
-                                             for base_col_name in BASE_COLS]
+    table_cols = ["query_id"] + [f"{base_col_name}_{run_num}" for run_num in runs
+                                 for base_col_name in BASE_COLS]
     print(table_cols)
 
     for kind in is_set_kinds:
         print(f"\nStarting kind: {kind}")
-        results_table = []
 
         for stack in stacks:
             print(f"  Starting stack: {stack}")
-            stack_results = defaultdict(list)  # Maps query IDs for this platform to its merged data for all 3 runs
+            results = defaultdict(list)  # Maps query IDs for this platform to its merged data for all 3 runs
 
             for run in runs:
                 print(f"    Starting run: {run}")
@@ -49,15 +48,13 @@ def main():
                         query_id = row[0]
                         row_relevant = row[3:-1]
                         row_preprocessed = [convert_to_right_type(value) for value in row_relevant]
-                        stack_results[query_id] += row_preprocessed
+                        results[query_id] += row_preprocessed
 
-            for query_id, results in stack_results.items():
-                row = [stack, query_id] + results
-                results_table.append(row)
+            results_table = [[query_id] + results for query_id, results in results.items()]
 
-        results_df_for_kind = pd.DataFrame(results_table, columns=table_cols)
-        print(results_df_for_kind)
-        results_df_for_kind.to_csv(f"results_{kind}.tsv", sep="\t")
+            results_df = pd.DataFrame(results_table, columns=table_cols)
+            print(results_df)
+            results_df.to_csv(f"results_{stack}_{kind}.tsv", sep="\t")
 
 
 if __name__ == "__main__":
