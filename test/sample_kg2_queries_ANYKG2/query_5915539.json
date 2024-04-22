@@ -1,0 +1,90 @@
+{
+  "query_id": 5915539,
+  "query_hash_key": "(NCBIGene:64102; biolink:Gene,biolink:Protein)--[biolink:physically_interacts_with; ]-->(; biolink:Gene,biolink:Protein)",
+  "start_datetime": "2023-12-12 06:31:04",
+  "submitter": "infores:aragorn",
+  "instance_name": "kg2",
+  "domain": "arax.ncats.io",
+  "elapsed": 3.0,
+  "message_code": "OK",
+  "input_query": {
+    "message": {
+      "query_graph": {
+        "nodes": {
+          "n0": {
+            "ids": [
+              "OMIM:300459"
+            ],
+            "categories": [
+              "biolink:Gene",
+              "biolink:Protein"
+            ],
+            "is_set": false,
+            "constraints": []
+          },
+          "n1": {
+            "categories": [
+              "biolink:Gene",
+              "biolink:Protein"
+            ],
+            "is_set": false,
+            "constraints": []
+          }
+        },
+        "edges": {
+          "e1": {
+            "subject": "n0",
+            "object": "n1",
+            "predicates": [
+              "biolink:physically_interacts_with"
+            ],
+            "attribute_constraints": [],
+            "qualifier_constraints": []
+          }
+        }
+      }
+    },
+    "submitter": "infores:aragorn",
+    "remote_address": "3.233.20.128"
+  },
+  "input_query_canonicalized": {
+    "message": {
+      "query_graph": {
+        "nodes": {
+          "n0": {
+            "ids": [
+              "NCBIGene:64102"
+            ],
+            "categories": [
+              "biolink:Gene",
+              "biolink:Protein"
+            ],
+            "is_set": false,
+            "constraints": []
+          },
+          "n1": {
+            "categories": [
+              "biolink:Gene",
+              "biolink:Protein"
+            ],
+            "is_set": false,
+            "constraints": []
+          }
+        },
+        "edges": {
+          "e1": {
+            "subject": "n0",
+            "object": "n1",
+            "predicates": [
+              "biolink:physically_interacts_with"
+            ],
+            "attribute_constraints": [],
+            "qualifier_constraints": []
+          }
+        }
+      }
+    },
+    "submitter": "infores:aragorn",
+    "remote_address": "3.233.20.128"
+  }
+}

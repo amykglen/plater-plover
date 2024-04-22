@@ -1,0 +1,44 @@
+{
+     "edges":{
+        "edge_2":{
+           "attribute_constraints":[
+
+           ],
+           "object":"e",
+           "predicates":[
+              "biolink:related_to"
+           ],
+           "qualifier_constraints":[
+
+           ],
+           "subject":"i"
+        }
+     },
+     "nodes":{
+        "e":{
+           "constraints":[
+
+           ],
+           "ids": ["MONDO:0005046",
+              "MONDO:0005015",
+              "MONDO:0005154",
+              "UMLS:C0013922",
+              "MONDO:0001243",
+              "MONDO:0004948",
+              "MONDO:0019956",
+              "MONDO:0007256",
+              "MONDO:0005129",
+              "HP:0002140"],
+           "is_set":false
+        },
+        "i":{
+           "categories":[
+              "biolink:NamedThing"
+           ],
+           "constraints":[
+
+           ],
+           "is_set":false
+        }
+     }
+  }

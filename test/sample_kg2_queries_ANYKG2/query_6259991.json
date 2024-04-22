@@ -1,0 +1,114 @@
+{
+  "query_id": 6259991,
+  "query_hash_key": "(GTOPDB:4872; biolink:SmallMolecule)--[biolink:affects; --decreased--molecular_interaction]-->(; biolink:Gene,biolink:Protein)",
+  "start_datetime": "2024-02-29 15:58:39",
+  "submitter": "infores:aragorn",
+  "instance_name": "kg2",
+  "domain": "arax.ncats.io",
+  "elapsed": 3.0,
+  "message_code": "OK",
+  "input_query": {
+    "message": {
+      "query_graph": {
+        "nodes": {
+          "sn": {
+            "ids": [
+              "GTOPDB:4872"
+            ],
+            "categories": [
+              "biolink:SmallMolecule"
+            ],
+            "is_set": false,
+            "constraints": []
+          },
+          "on": {
+            "categories": [
+              "biolink:Gene",
+              "biolink:Protein"
+            ],
+            "is_set": false,
+            "constraints": []
+          }
+        },
+        "edges": {
+          "edge_0": {
+            "subject": "sn",
+            "object": "on",
+            "predicates": [
+              "biolink:affects"
+            ],
+            "attribute_constraints": [],
+            "qualifier_constraints": [
+              {
+                "qualifier_set": [
+                  {
+                    "qualifier_type_id": "biolink:object_aspect_qualifier",
+                    "qualifier_value": "molecular_interaction"
+                  },
+                  {
+                    "qualifier_type_id": "biolink:object_direction_qualifier",
+                    "qualifier_value": "decreased"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      }
+    },
+    "submitter": "infores:aragorn",
+    "remote_address": "3.233.20.128"
+  },
+  "input_query_canonicalized": {
+    "message": {
+      "query_graph": {
+        "nodes": {
+          "sn": {
+            "ids": [
+              "GTOPDB:4872"
+            ],
+            "categories": [
+              "biolink:SmallMolecule"
+            ],
+            "is_set": false,
+            "constraints": []
+          },
+          "on": {
+            "categories": [
+              "biolink:Gene",
+              "biolink:Protein"
+            ],
+            "is_set": false,
+            "constraints": []
+          }
+        },
+        "edges": {
+          "edge_0": {
+            "subject": "sn",
+            "object": "on",
+            "predicates": [
+              "biolink:affects"
+            ],
+            "attribute_constraints": [],
+            "qualifier_constraints": [
+              {
+                "qualifier_set": [
+                  {
+                    "qualifier_type_id": "biolink:object_aspect_qualifier",
+                    "qualifier_value": "molecular_interaction"
+                  },
+                  {
+                    "qualifier_type_id": "biolink:object_direction_qualifier",
+                    "qualifier_value": "decreased"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      }
+    },
+    "submitter": "infores:aragorn",
+    "remote_address": "3.233.20.128"
+  }
+}

@@ -1,0 +1,92 @@
+{
+  "query_id": 6499562,
+  "query_hash_key": "(; biolink:ChemicalEntity)--[biolink:treats; ]-->(MONDO:0005009,MONDO:0005231,MONDO:0005240,MONDO:0013209; biolink:Disease)",
+  "start_datetime": "2024-03-03 06:55:21",
+  "submitter": "infores:aragorn",
+  "instance_name": "kg2",
+  "domain": "kg2.ci.transltr.io",
+  "elapsed": 31.0,
+  "message_code": "OK",
+  "input_query": {
+    "message": {
+      "query_graph": {
+        "nodes": {
+          "sn": {
+            "categories": [
+              "biolink:ChemicalEntity"
+            ],
+            "is_set": false,
+            "constraints": []
+          },
+          "f": {
+            "ids": [
+              "MONDO:0005231",
+              "MONDO:0005009",
+              "MONDO:0005240",
+              "MONDO:0013209"
+            ],
+            "categories": [
+              "biolink:Disease"
+            ],
+            "is_set": false,
+            "constraints": []
+          }
+        },
+        "edges": {
+          "edge_1": {
+            "subject": "sn",
+            "object": "f",
+            "predicates": [
+              "biolink:treats"
+            ],
+            "attribute_constraints": [],
+            "qualifier_constraints": []
+          }
+        }
+      }
+    },
+    "submitter": "infores:aragorn",
+    "remote_address": "52.4.10.150, 10.11.4.102"
+  },
+  "input_query_canonicalized": {
+    "message": {
+      "query_graph": {
+        "nodes": {
+          "sn": {
+            "categories": [
+              "biolink:ChemicalEntity"
+            ],
+            "is_set": false,
+            "constraints": []
+          },
+          "f": {
+            "ids": [
+              "MONDO:0013209",
+              "MONDO:0005009",
+              "MONDO:0005231",
+              "MONDO:0005240"
+            ],
+            "categories": [
+              "biolink:Disease"
+            ],
+            "is_set": false,
+            "constraints": []
+          }
+        },
+        "edges": {
+          "edge_1": {
+            "subject": "sn",
+            "object": "f",
+            "predicates": [
+              "biolink:treats"
+            ],
+            "attribute_constraints": [],
+            "qualifier_constraints": []
+          }
+        }
+      }
+    },
+    "submitter": "infores:aragorn",
+    "remote_address": "52.4.10.150, 10.11.4.102"
+  }
+}

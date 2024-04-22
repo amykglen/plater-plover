@@ -1,0 +1,221 @@
+{
+  "query_id": 5947674,
+  "query_hash_key": "(PUBCHEM.COMPOUND:2244; biolink:SmallMolecule)--[biolink:affects; --decreased--molecular_interaction]-->(CHEMBL.TARGET:CHEMBL3467,MESH:D051545,MESH:D051546,NCBIGene:10864,NCBIGene:1557,NCBIGene:1558,NCBIGene:1559,NCBIGene:1645,NCBIGene:1909,NCBIGene:213,NCBIGene:3309,NCBIGene:3551,NCBIGene:3674,NCBIGene:3690,NCBIGene:4792,NCBIGene:5243,NCBIGene:5742,NCBIGene:5743,NCBIGene:6197,NCBIGene:7157,NCBIGene:8288,NCBIGene:9311,NCBIGene:9356,PR:000003252,PR:000003293,PR:000003903,PR:000006118,PR:000006119,PR:000006120,PR:000014284,PR:000014993,PR:000014994,PR:000016261,UniProtKB:O14920-1,UniProtKB:P02788-1,UniProtKB:P04637-1,UniProtKB:P05164-1,UniProtKB:P22079-1,UniProtKB:P23219-1,UniProtKB:P25101-1,UniProtKB:Q00653-1,UniProtKB:Q13131-2; biolink:Gene,biolink:Protein)",
+  "start_datetime": "2024-01-11 16:56:22",
+  "submitter": "infores:aragorn",
+  "instance_name": "kg2",
+  "domain": "arax.ncats.io",
+  "elapsed": 3.0,
+  "message_code": "OK",
+  "input_query": {
+    "message": {
+      "query_graph": {
+        "nodes": {
+          "sn": {
+            "ids": [
+              "INCHIKEY:BSYNRYMUTXBXSQ-UHFFFAOYSA-N"
+            ],
+            "categories": [
+              "biolink:SmallMolecule"
+            ],
+            "is_set": false,
+            "constraints": []
+          },
+          "on": {
+            "ids": [
+              "ENSEMBL:ENSP00000315011",
+              "ENSEMBL:ENSP00000315011.5",
+              "ENSEMBL:ENSP00000498969",
+              "ENSEMBL:ENSP00000498969.1",
+              "CHEMBL.TARGET:CHEMBL221",
+              "CHEMBL.TARGET:CHEMBL1950",
+              "CHEMBL.TARGET:CHEMBL4102",
+              "ENSEMBL:ENSP00000262290",
+              "ENSEMBL:ENSP00000262290.4",
+              "ENSEMBL:ENSP00000231751",
+              "ENSEMBL:ENSP00000231751.4",
+              "OMIM:131243",
+              "OMIM:600262",
+              "CHEMBL.TARGET:CHEMBL4865",
+              "OMIM:600449",
+              "ENSEMBL:ENSP00000430684",
+              "ENSEMBL:ENSP00000430684.1",
+              "ENSEMBL:ENSP00000358983",
+              "ENSEMBL:ENSP00000358983.3",
+              "ENSEMBL:ENSP00000499294",
+              "ENSEMBL:ENSP00000499294.1",
+              "ENSEMBL:ENSP00000269305",
+              "ENSEMBL:ENSP00000269305.4",
+              "ENSEMBL:ENSP00000391478",
+              "ENSEMBL:ENSP00000391478.2",
+              "CHEMBL.TARGET:CHEMBL2860",
+              "OMIM:176805",
+              "CHEMBL.TARGET:CHEMBL5905",
+              "OMIM:138120",
+              "OMIM:604995",
+              "CHEMBL.TARGET:CHEMBL2949",
+              "OMIM:300075",
+              "CHEMBL.TARGET:CHEMBL2898",
+              "CHEMBL.TARGET:CHEMBL3397",
+              "OMIM:164008",
+              "OMIM:173470",
+              "OMIM:191170",
+              "OMIM:124020",
+              "CHEMBL.TARGET:CHEMBL3721",
+              "CHEMBL.TARGET:CHEMBL1955711",
+              "OMIM:603258",
+              "OMIM:607759",
+              "OMIM:601130",
+              "CHEMBL.TARGET:CHEMBL230",
+              "ENSEMBL:ENSP00000346148",
+              "ENSEMBL:ENSP00000346148.3",
+              "CHEMBL.TARGET:CHEMBL2345",
+              "OMIM:171050",
+              "OMIM:611741",
+              "OMIM:607582",
+              "OMIM:601129",
+              "CHEMBL.TARGET:CHEMBL4302",
+              "CHEMBL.TARGET:CHEMBL3622",
+              "ENSEMBL:ENSP00000225275",
+              "ENSEMBL:ENSP00000225275.3",
+              "ENSEMBL:ENSP00000354612",
+              "ENSEMBL:ENSP00000354612.2",
+              "OMIM:103600",
+              "CHEMBL.TARGET:CHEMBL1781865",
+              "CHEMBL.TARGET:CHEMBL1641347",
+              "OMIM:131399"
+            ],
+            "categories": [
+              "biolink:Gene",
+              "biolink:Protein"
+            ],
+            "is_set": false,
+            "constraints": []
+          }
+        },
+        "edges": {
+          "edge_1": {
+            "subject": "sn",
+            "object": "on",
+            "predicates": [
+              "biolink:affects"
+            ],
+            "attribute_constraints": [],
+            "qualifier_constraints": [
+              {
+                "qualifier_set": [
+                  {
+                    "qualifier_type_id": "biolink:object_aspect_qualifier",
+                    "qualifier_value": "molecular_interaction"
+                  },
+                  {
+                    "qualifier_type_id": "biolink:object_direction_qualifier",
+                    "qualifier_value": "decreased"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      }
+    },
+    "submitter": "infores:aragorn",
+    "remote_address": "3.233.20.128"
+  },
+  "input_query_canonicalized": {
+    "message": {
+      "query_graph": {
+        "nodes": {
+          "sn": {
+            "ids": [
+              "PUBCHEM.COMPOUND:2244"
+            ],
+            "categories": [
+              "biolink:SmallMolecule"
+            ],
+            "is_set": false,
+            "constraints": []
+          },
+          "on": {
+            "ids": [
+              "PR:000003293",
+              "NCBIGene:1645",
+              "NCBIGene:8288",
+              "PR:000014993",
+              "UniProtKB:Q13131-2",
+              "NCBIGene:9311",
+              "UniProtKB:P22079-1",
+              "NCBIGene:3674",
+              "UniProtKB:P23219-1",
+              "PR:000006120",
+              "CHEMBL.TARGET:CHEMBL3467",
+              "UniProtKB:O14920-1",
+              "NCBIGene:7157",
+              "PR:000014994",
+              "NCBIGene:5743",
+              "NCBIGene:1559",
+              "NCBIGene:1909",
+              "MESH:D051545",
+              "NCBIGene:10864",
+              "NCBIGene:5243",
+              "NCBIGene:6197",
+              "NCBIGene:4792",
+              "UniProtKB:Q00653-1",
+              "NCBIGene:9356",
+              "UniProtKB:P05164-1",
+              "PR:000003252",
+              "PR:000014284",
+              "NCBIGene:3551",
+              "PR:000003903",
+              "NCBIGene:5742",
+              "PR:000006118",
+              "NCBIGene:3690",
+              "NCBIGene:1557",
+              "UniProtKB:P25101-1",
+              "UniProtKB:P04637-1",
+              "NCBIGene:3309",
+              "UniProtKB:P02788-1",
+              "NCBIGene:1558",
+              "PR:000016261",
+              "MESH:D051546",
+              "NCBIGene:213",
+              "PR:000006119"
+            ],
+            "categories": [
+              "biolink:Gene",
+              "biolink:Protein"
+            ],
+            "is_set": false,
+            "constraints": []
+          }
+        },
+        "edges": {
+          "edge_1": {
+            "subject": "sn",
+            "object": "on",
+            "predicates": [
+              "biolink:affects"
+            ],
+            "attribute_constraints": [],
+            "qualifier_constraints": [
+              {
+                "qualifier_set": [
+                  {
+                    "qualifier_type_id": "biolink:object_aspect_qualifier",
+                    "qualifier_value": "molecular_interaction"
+                  },
+                  {
+                    "qualifier_type_id": "biolink:object_direction_qualifier",
+                    "qualifier_value": "decreased"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      }
+    },
+    "submitter": "infores:aragorn",
+    "remote_address": "3.233.20.128"
+  }
+}

@@ -1,0 +1,88 @@
+{
+  "query_id": 6278373,
+  "query_hash_key": "(NCBIGene:1281; biolink:Gene,biolink:Protein)--[biolink:contributes_to; ]-->(; biolink:BiologicalEntity)",
+  "start_datetime": "2024-02-29 20:08:42",
+  "submitter": "infores:aragorn",
+  "instance_name": "kg2",
+  "domain": "arax.ncats.io",
+  "elapsed": 3.0,
+  "message_code": "OK",
+  "input_query": {
+    "message": {
+      "query_graph": {
+        "nodes": {
+          "on": {
+            "ids": [
+              "NCBIGene:1281"
+            ],
+            "categories": [
+              "biolink:Gene",
+              "biolink:Protein"
+            ],
+            "is_set": false,
+            "constraints": []
+          },
+          "f": {
+            "categories": [
+              "biolink:BiologicalEntity"
+            ],
+            "is_set": false,
+            "constraints": []
+          }
+        },
+        "edges": {
+          "edge_0": {
+            "subject": "on",
+            "object": "f",
+            "predicates": [
+              "biolink:contributes_to"
+            ],
+            "attribute_constraints": [],
+            "qualifier_constraints": []
+          }
+        }
+      }
+    },
+    "submitter": "infores:aragorn",
+    "remote_address": "3.233.20.128"
+  },
+  "input_query_canonicalized": {
+    "message": {
+      "query_graph": {
+        "nodes": {
+          "on": {
+            "ids": [
+              "NCBIGene:1281"
+            ],
+            "categories": [
+              "biolink:Gene",
+              "biolink:Protein"
+            ],
+            "is_set": false,
+            "constraints": []
+          },
+          "f": {
+            "categories": [
+              "biolink:BiologicalEntity"
+            ],
+            "is_set": false,
+            "constraints": []
+          }
+        },
+        "edges": {
+          "edge_0": {
+            "subject": "on",
+            "object": "f",
+            "predicates": [
+              "biolink:contributes_to"
+            ],
+            "attribute_constraints": [],
+            "qualifier_constraints": []
+          }
+        }
+      }
+    },
+    "submitter": "infores:aragorn",
+    "remote_address": "3.233.20.128"
+  }
+}

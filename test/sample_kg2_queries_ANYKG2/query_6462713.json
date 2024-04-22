@@ -1,0 +1,112 @@
+{
+  "query_id": 6462713,
+  "query_hash_key": "(NCBIGene:5706; biolink:Gene)--[biolink:affects; --decreased--abundance]-->(; biolink:NamedThing)",
+  "start_datetime": "2024-03-02 19:13:28",
+  "submitter": "infores:aragorn",
+  "instance_name": "kg2",
+  "domain": "arax.ncats.io",
+  "elapsed": 3.0,
+  "message_code": "OK",
+  "input_query": {
+    "message": {
+      "query_graph": {
+        "nodes": {
+          "on": {
+            "ids": [
+              "NCBIGene:5706"
+            ],
+            "categories": [
+              "biolink:Gene"
+            ],
+            "is_set": false,
+            "constraints": []
+          },
+          "f": {
+            "categories": [
+              "biolink:NamedThing"
+            ],
+            "is_set": false,
+            "constraints": []
+          }
+        },
+        "edges": {
+          "edge_1": {
+            "subject": "on",
+            "object": "f",
+            "predicates": [
+              "biolink:affects"
+            ],
+            "attribute_constraints": [],
+            "qualifier_constraints": [
+              {
+                "qualifier_set": [
+                  {
+                    "qualifier_type_id": "biolink:object_aspect_qualifier",
+                    "qualifier_value": "abundance"
+                  },
+                  {
+                    "qualifier_type_id": "biolink:object_direction_qualifier",
+                    "qualifier_value": "decreased"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      }
+    },
+    "submitter": "infores:aragorn",
+    "remote_address": "3.233.20.128"
+  },
+  "input_query_canonicalized": {
+    "message": {
+      "query_graph": {
+        "nodes": {
+          "on": {
+            "ids": [
+              "NCBIGene:5706"
+            ],
+            "categories": [
+              "biolink:Gene"
+            ],
+            "is_set": false,
+            "constraints": []
+          },
+          "f": {
+            "categories": [
+              "biolink:NamedThing"
+            ],
+            "is_set": false,
+            "constraints": []
+          }
+        },
+        "edges": {
+          "edge_1": {
+            "subject": "on",
+            "object": "f",
+            "predicates": [
+              "biolink:affects"
+            ],
+            "attribute_constraints": [],
+            "qualifier_constraints": [
+              {
+                "qualifier_set": [
+                  {
+                    "qualifier_type_id": "biolink:object_aspect_qualifier",
+                    "qualifier_value": "abundance"
+                  },
+                  {
+                    "qualifier_type_id": "biolink:object_direction_qualifier",
+                    "qualifier_value": "decreased"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      }
+    },
+    "submitter": "infores:aragorn",
+    "remote_address": "3.233.20.128"
+  }
+}

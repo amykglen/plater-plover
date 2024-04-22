@@ -1,0 +1,86 @@
+{
+  "query_id": 6574304,
+  "query_hash_key": "(; biolink:ChemicalEntity)--[biolink:ameliorates; ]-->(MONDO:0005093; biolink:Disease)",
+  "start_datetime": "2024-03-04 06:09:30",
+  "submitter": "infores:aragorn",
+  "instance_name": "kg2",
+  "domain": "kg2.ci.transltr.io",
+  "elapsed": 43.0,
+  "message_code": "OK",
+  "input_query": {
+    "message": {
+      "query_graph": {
+        "nodes": {
+          "sn": {
+            "categories": [
+              "biolink:ChemicalEntity"
+            ],
+            "is_set": false,
+            "constraints": []
+          },
+          "on": {
+            "ids": [
+              "MONDO:0005093"
+            ],
+            "categories": [
+              "biolink:Disease"
+            ],
+            "is_set": false,
+            "constraints": []
+          }
+        },
+        "edges": {
+          "edge_0": {
+            "subject": "sn",
+            "object": "on",
+            "predicates": [
+              "biolink:ameliorates"
+            ],
+            "attribute_constraints": [],
+            "qualifier_constraints": []
+          }
+        }
+      }
+    },
+    "submitter": "infores:aragorn",
+    "remote_address": "52.4.10.150, 10.11.0.216"
+  },
+  "input_query_canonicalized": {
+    "message": {
+      "query_graph": {
+        "nodes": {
+          "sn": {
+            "categories": [
+              "biolink:ChemicalEntity"
+            ],
+            "is_set": false,
+            "constraints": []
+          },
+          "on": {
+            "ids": [
+              "MONDO:0005093"
+            ],
+            "categories": [
+              "biolink:Disease"
+            ],
+            "is_set": false,
+            "constraints": []
+          }
+        },
+        "edges": {
+          "edge_0": {
+            "subject": "sn",
+            "object": "on",
+            "predicates": [
+              "biolink:ameliorates"
+            ],
+            "attribute_constraints": [],
+            "qualifier_constraints": []
+          }
+        }
+      }
+    },
+    "submitter": "infores:aragorn",
+    "remote_address": "52.4.10.150, 10.11.0.216"
+  }
+}

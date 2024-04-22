@@ -1,0 +1,86 @@
+{
+  "query_id": 5925662,
+  "query_hash_key": "(; biolink:ChemicalEntity)--[biolink:directly_physically_interacts_with; ]-->(NCBIGene:5832; biolink:Gene)",
+  "start_datetime": "2023-12-19 15:40:33",
+  "submitter": "infores:aragorn",
+  "instance_name": "kg2",
+  "domain": "arax.ncats.io",
+  "elapsed": 3.0,
+  "message_code": "OK",
+  "input_query": {
+    "message": {
+      "query_graph": {
+        "nodes": {
+          "sn": {
+            "categories": [
+              "biolink:ChemicalEntity"
+            ],
+            "is_set": false,
+            "constraints": []
+          },
+          "on": {
+            "ids": [
+              "OMIM:138250"
+            ],
+            "categories": [
+              "biolink:Gene"
+            ],
+            "is_set": false,
+            "constraints": []
+          }
+        },
+        "edges": {
+          "edge_0": {
+            "subject": "sn",
+            "object": "on",
+            "predicates": [
+              "biolink:directly_physically_interacts_with"
+            ],
+            "attribute_constraints": [],
+            "qualifier_constraints": []
+          }
+        }
+      }
+    },
+    "submitter": "infores:aragorn",
+    "remote_address": "3.233.20.128"
+  },
+  "input_query_canonicalized": {
+    "message": {
+      "query_graph": {
+        "nodes": {
+          "sn": {
+            "categories": [
+              "biolink:ChemicalEntity"
+            ],
+            "is_set": false,
+            "constraints": []
+          },
+          "on": {
+            "ids": [
+              "NCBIGene:5832"
+            ],
+            "categories": [
+              "biolink:Gene"
+            ],
+            "is_set": false,
+            "constraints": []
+          }
+        },
+        "edges": {
+          "edge_0": {
+            "subject": "sn",
+            "object": "on",
+            "predicates": [
+              "biolink:directly_physically_interacts_with"
+            ],
+            "attribute_constraints": [],
+            "qualifier_constraints": []
+          }
+        }
+      }
+    },
+    "submitter": "infores:aragorn",
+    "remote_address": "3.233.20.128"
+  }
+}

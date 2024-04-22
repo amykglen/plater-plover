@@ -1,0 +1,86 @@
+{
+  "query_id": 5921291,
+  "query_hash_key": "(MONDO:0004993; biolink:Disease,biolink:DiseaseOrPhenotypicFeature,biolink:PhenotypicFeature)--[biolink:related_to; ]-->(; biolink:NamedThing)",
+  "start_datetime": "2023-12-15 07:18:38",
+  "submitter": "infores:arax",
+  "instance_name": "kg2",
+  "domain": "arax.ncats.io",
+  "elapsed": 293.0,
+  "message_code": "OK",
+  "input_query": {
+    "message": {
+      "query_graph": {
+        "nodes": {
+          "n0": {
+            "ids": [
+              "MONDO:0004993"
+            ],
+            "categories": [
+              "biolink:DiseaseOrPhenotypicFeature",
+              "biolink:PhenotypicFeature",
+              "biolink:Disease"
+            ],
+            "is_set": false
+          },
+          "arax_connect_node_1": {
+            "categories": [
+              "biolink:NamedThing"
+            ],
+            "is_set": true
+          }
+        },
+        "edges": {
+          "connected_edge_2": {
+            "predicates": [
+              "biolink:related_to"
+            ],
+            "subject": "n0",
+            "object": "arax_connect_node_1",
+            "exclude": false
+          }
+        }
+      }
+    },
+    "submitter": "infores:arax",
+    "return_minimal_metadata": true,
+    "remote_address": "35.81.149.105"
+  },
+  "input_query_canonicalized": {
+    "message": {
+      "query_graph": {
+        "nodes": {
+          "n0": {
+            "ids": [
+              "MONDO:0004993"
+            ],
+            "categories": [
+              "biolink:DiseaseOrPhenotypicFeature",
+              "biolink:PhenotypicFeature",
+              "biolink:Disease"
+            ],
+            "is_set": false
+          },
+          "arax_connect_node_1": {
+            "categories": [
+              "biolink:NamedThing"
+            ],
+            "is_set": true
+          }
+        },
+        "edges": {
+          "connected_edge_2": {
+            "predicates": [
+              "biolink:related_to"
+            ],
+            "subject": "n0",
+            "object": "arax_connect_node_1",
+            "exclude": false
+          }
+        }
+      }
+    },
+    "submitter": "infores:arax",
+    "return_minimal_metadata": true,
+    "remote_address": "35.81.149.105"
+  }
+}

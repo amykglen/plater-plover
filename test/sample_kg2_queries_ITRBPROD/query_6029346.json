@@ -1,0 +1,78 @@
+{
+  "query_id": 6029346,
+  "query_hash_key": "(PUBCHEM.COMPOUND:1983; )--[biolink:physically_interacts_with; ]-->(; biolink:Protein)",
+  "start_datetime": "2024-02-15 02:45:17",
+  "submitter": "ARAX GUI",
+  "instance_name": "kg2",
+  "domain": "kg2.transltr.io",
+  "elapsed": 5.0,
+  "message_code": "OK",
+  "input_query": {
+    "message": {
+      "query_graph": {
+        "edges": {
+          "e00": {
+            "subject": "n00",
+            "object": "n01",
+            "predicates": [
+              "biolink:physically_interacts_with"
+            ]
+          }
+        },
+        "nodes": {
+          "n00": {
+            "ids": [
+              "CHEMBL.COMPOUND:CHEMBL112"
+            ]
+          },
+          "n01": {
+            "categories": [
+              "biolink:Protein"
+            ]
+          }
+        }
+      }
+    },
+    "submitter": "ARAX GUI",
+    "stream_progress": true,
+    "query_options": {
+      "kp_timeout": "30",
+      "prune_threshold": "50"
+    },
+    "remote_address": "128.231.234.3, 10.13.1.52"
+  },
+  "input_query_canonicalized": {
+    "message": {
+      "query_graph": {
+        "edges": {
+          "e00": {
+            "subject": "n00",
+            "object": "n01",
+            "predicates": [
+              "biolink:physically_interacts_with"
+            ]
+          }
+        },
+        "nodes": {
+          "n00": {
+            "ids": [
+              "PUBCHEM.COMPOUND:1983"
+            ]
+          },
+          "n01": {
+            "categories": [
+              "biolink:Protein"
+            ]
+          }
+        }
+      }
+    },
+    "submitter": "ARAX GUI",
+    "stream_progress": true,
+    "query_options": {
+      "kp_timeout": "30",
+      "prune_threshold": "50"
+    },
+    "remote_address": "128.231.234.3, 10.13.1.52"
+  }
+}

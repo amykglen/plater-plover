@@ -1,0 +1,98 @@
+{
+  "query_id": 6180900,
+  "query_hash_key": "(; biolink:NamedThing)--[biolink:has_part; ]-->(PUBCHEM.COMPOUND:2756,PUBCHEM.COMPOUND:28417,PUBCHEM.COMPOUND:35370,PUBCHEM.COMPOUND:5284373,PUBCHEM.COMPOUND:5865,PUBCHEM.COMPOUND:6099,PUBCHEM.COMPOUND:9902; biolink:ChemicalEntity)",
+  "start_datetime": "2024-02-28 14:11:59",
+  "submitter": "infores:aragorn",
+  "instance_name": "kg2",
+  "domain": "arax.ncats.io",
+  "elapsed": 4.0,
+  "message_code": "OK",
+  "input_query": {
+    "message": {
+      "query_graph": {
+        "nodes": {
+          "e": {
+            "ids": [
+              "PUBCHEM.COMPOUND:5865",
+              "PUBCHEM.COMPOUND:2756",
+              "PUBCHEM.COMPOUND:6099",
+              "PUBCHEM.COMPOUND:5284373",
+              "PUBCHEM.COMPOUND:28417",
+              "PUBCHEM.COMPOUND:9902",
+              "PUBCHEM.COMPOUND:35370"
+            ],
+            "categories": [
+              "biolink:ChemicalEntity"
+            ],
+            "is_set": false,
+            "constraints": []
+          },
+          "i": {
+            "categories": [
+              "biolink:NamedThing"
+            ],
+            "is_set": false,
+            "constraints": []
+          }
+        },
+        "edges": {
+          "edge_2": {
+            "subject": "i",
+            "object": "e",
+            "predicates": [
+              "biolink:has_part"
+            ],
+            "attribute_constraints": [],
+            "qualifier_constraints": []
+          }
+        }
+      }
+    },
+    "submitter": "infores:aragorn",
+    "remote_address": "3.233.20.128"
+  },
+  "input_query_canonicalized": {
+    "message": {
+      "query_graph": {
+        "nodes": {
+          "e": {
+            "ids": [
+              "PUBCHEM.COMPOUND:28417",
+              "PUBCHEM.COMPOUND:5284373",
+              "PUBCHEM.COMPOUND:2756",
+              "PUBCHEM.COMPOUND:9902",
+              "PUBCHEM.COMPOUND:35370",
+              "PUBCHEM.COMPOUND:6099",
+              "PUBCHEM.COMPOUND:5865"
+            ],
+            "categories": [
+              "biolink:ChemicalEntity"
+            ],
+            "is_set": false,
+            "constraints": []
+          },
+          "i": {
+            "categories": [
+              "biolink:NamedThing"
+            ],
+            "is_set": false,
+            "constraints": []
+          }
+        },
+        "edges": {
+          "edge_2": {
+            "subject": "i",
+            "object": "e",
+            "predicates": [
+              "biolink:has_part"
+            ],
+            "attribute_constraints": [],
+            "qualifier_constraints": []
+          }
+        }
+      }
+    },
+    "submitter": "infores:aragorn",
+    "remote_address": "3.233.20.128"
+  }
+}

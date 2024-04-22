@@ -1,0 +1,88 @@
+{
+  "query_id": 6215179,
+  "query_hash_key": "(; biolink:Gene,biolink:Protein)--[biolink:genetic_association; ]-->(MONDO:0024634; biolink:Disease)",
+  "start_datetime": "2024-02-29 02:26:07",
+  "submitter": "infores:aragorn",
+  "instance_name": "kg2",
+  "domain": "kg2.ci.transltr.io",
+  "elapsed": 34.0,
+  "message_code": "OK",
+  "input_query": {
+    "message": {
+      "query_graph": {
+        "nodes": {
+          "on": {
+            "ids": [
+              "MONDO:0024634"
+            ],
+            "categories": [
+              "biolink:Disease"
+            ],
+            "is_set": false,
+            "constraints": []
+          },
+          "g": {
+            "categories": [
+              "biolink:Gene",
+              "biolink:Protein"
+            ],
+            "is_set": false,
+            "constraints": []
+          }
+        },
+        "edges": {
+          "edge_2": {
+            "subject": "g",
+            "object": "on",
+            "predicates": [
+              "biolink:genetic_association"
+            ],
+            "attribute_constraints": [],
+            "qualifier_constraints": []
+          }
+        }
+      }
+    },
+    "submitter": "infores:aragorn",
+    "remote_address": "52.4.10.150, 10.11.1.253"
+  },
+  "input_query_canonicalized": {
+    "message": {
+      "query_graph": {
+        "nodes": {
+          "on": {
+            "ids": [
+              "MONDO:0024634"
+            ],
+            "categories": [
+              "biolink:Disease"
+            ],
+            "is_set": false,
+            "constraints": []
+          },
+          "g": {
+            "categories": [
+              "biolink:Gene",
+              "biolink:Protein"
+            ],
+            "is_set": false,
+            "constraints": []
+          }
+        },
+        "edges": {
+          "edge_2": {
+            "subject": "g",
+            "object": "on",
+            "predicates": [
+              "biolink:genetic_association"
+            ],
+            "attribute_constraints": [],
+            "qualifier_constraints": []
+          }
+        }
+      }
+    },
+    "submitter": "infores:aragorn",
+    "remote_address": "52.4.10.150, 10.11.1.253"
+  }
+}

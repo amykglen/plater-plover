@@ -1,0 +1,94 @@
+{
+  "query_id": 6124870,
+  "query_hash_key": "(NCBIGene:7422; biolink:Gene,biolink:Protein)--[biolink:genetic_association; ]-->(MONDO:0007354; biolink:Disease)",
+  "start_datetime": "2024-02-27 16:06:40",
+  "submitter": "infores:aragorn",
+  "instance_name": "kg2",
+  "domain": "kg2.ci.transltr.io",
+  "elapsed": 14342.0,
+  "message_code": "Reset",
+  "input_query": {
+    "message": {
+      "query_graph": {
+        "nodes": {
+          "on": {
+            "ids": [
+              "MONDO:0007354"
+            ],
+            "categories": [
+              "biolink:Disease"
+            ],
+            "is_set": false,
+            "constraints": []
+          },
+          "g": {
+            "ids": [
+              "NCBIGene:7422"
+            ],
+            "categories": [
+              "biolink:Gene",
+              "biolink:Protein"
+            ],
+            "is_set": false,
+            "constraints": []
+          }
+        },
+        "edges": {
+          "edge_2": {
+            "subject": "g",
+            "object": "on",
+            "predicates": [
+              "biolink:genetic_association"
+            ],
+            "attribute_constraints": [],
+            "qualifier_constraints": []
+          }
+        }
+      }
+    },
+    "submitter": "infores:aragorn",
+    "remote_address": "52.4.10.150, 10.11.0.97"
+  },
+  "input_query_canonicalized": {
+    "message": {
+      "query_graph": {
+        "nodes": {
+          "on": {
+            "ids": [
+              "MONDO:0007354"
+            ],
+            "categories": [
+              "biolink:Disease"
+            ],
+            "is_set": false,
+            "constraints": []
+          },
+          "g": {
+            "ids": [
+              "NCBIGene:7422"
+            ],
+            "categories": [
+              "biolink:Gene",
+              "biolink:Protein"
+            ],
+            "is_set": false,
+            "constraints": []
+          }
+        },
+        "edges": {
+          "edge_2": {
+            "subject": "g",
+            "object": "on",
+            "predicates": [
+              "biolink:genetic_association"
+            ],
+            "attribute_constraints": [],
+            "qualifier_constraints": []
+          }
+        }
+      }
+    },
+    "submitter": "infores:aragorn",
+    "remote_address": "52.4.10.150, 10.11.0.97"
+  }
+}

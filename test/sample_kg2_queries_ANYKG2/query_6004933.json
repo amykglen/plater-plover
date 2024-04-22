@@ -1,0 +1,176 @@
+{
+  "query_id": 6004933,
+  "query_hash_key": "(MONDO:0007390,NCBIGene:10864,NCBIGene:1544,NCBIGene:1555,NCBIGene:1557,NCBIGene:1558,NCBIGene:1559,NCBIGene:1562,NCBIGene:1576,NCBIGene:1577,NCBIGene:18,NCBIGene:3066,NCBIGene:36,NCBIGene:4967,NCBIGene:54575,NCBIGene:54576,NCBIGene:54578,NCBIGene:54600,NCBIGene:54657,NCBIGene:54659,NCBIGene:5742,NCBIGene:6566,NCBIGene:6584,NCBIGene:7364,NCBIGene:7366,NCBIGene:7915,NCBIGene:9356,NCBIGene:9376,NCBIGene:9734; biolink:Gene,biolink:Protein)--[biolink:affects; --decreased--metabolic_processing]-->(PUBCHEM.COMPOUND:3121; biolink:SmallMolecule)",
+  "start_datetime": "2024-02-05 16:53:42",
+  "submitter": "infores:aragorn",
+  "instance_name": "kg2",
+  "domain": "arax.ncats.io",
+  "elapsed": 3.0,
+  "message_code": "OK",
+  "input_query": {
+    "message": {
+      "query_graph": {
+        "nodes": {
+          "sn": {
+            "ids": [
+              "INCHIKEY:NIJJYAXOARWZEE-UHFFFAOYSA-N"
+            ],
+            "categories": [
+              "biolink:SmallMolecule"
+            ],
+            "is_set": false,
+            "constraints": []
+          },
+          "on": {
+            "ids": [
+              "OMIM:600068",
+              "OMIM:122720",
+              "OMIM:606431",
+              "OMIM:600069",
+              "OMIM:137150",
+              "OMIM:606543",
+              "OMIM:606429",
+              "OMIM:124060",
+              "OMIM:607581",
+              "OMIM:176805",
+              "OMIM:606434",
+              "OMIM:613022",
+              "OMIM:604995",
+              "OMIM:123930",
+              "OMIM:606435",
+              "OMIM:605164",
+              "OMIM:124020",
+              "OMIM:605325",
+              "OMIM:606428",
+              "OMIM:606433",
+              "OMIM:610045",
+              "OMIM:600682",
+              "OMIM:601130",
+              "OMIM:601131",
+              "OMIM:603377",
+              "OMIM:607582",
+              "OMIM:601129",
+              "OMIM:124010",
+              "OMIM:600301"
+            ],
+            "categories": [
+              "biolink:Gene",
+              "biolink:Protein"
+            ],
+            "is_set": false,
+            "constraints": []
+          }
+        },
+        "edges": {
+          "edge_1": {
+            "subject": "on",
+            "object": "sn",
+            "predicates": [
+              "biolink:affects"
+            ],
+            "attribute_constraints": [],
+            "qualifier_constraints": [
+              {
+                "qualifier_set": [
+                  {
+                    "qualifier_type_id": "biolink:object_aspect_qualifier",
+                    "qualifier_value": "metabolic_processing"
+                  },
+                  {
+                    "qualifier_type_id": "biolink:object_direction_qualifier",
+                    "qualifier_value": "decreased"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      }
+    },
+    "submitter": "infores:aragorn",
+    "remote_address": "3.233.20.128"
+  },
+  "input_query_canonicalized": {
+    "message": {
+      "query_graph": {
+        "nodes": {
+          "sn": {
+            "ids": [
+              "PUBCHEM.COMPOUND:3121"
+            ],
+            "categories": [
+              "biolink:SmallMolecule"
+            ],
+            "is_set": false,
+            "constraints": []
+          },
+          "on": {
+            "ids": [
+              "NCBIGene:1562",
+              "NCBIGene:54657",
+              "NCBIGene:54578",
+              "NCBIGene:18",
+              "NCBIGene:6566",
+              "NCBIGene:1576",
+              "NCBIGene:54575",
+              "NCBIGene:36",
+              "NCBIGene:54659",
+              "NCBIGene:4967",
+              "NCBIGene:3066",
+              "NCBIGene:1559",
+              "NCBIGene:10864",
+              "MONDO:0007390",
+              "NCBIGene:9356",
+              "NCBIGene:54576",
+              "NCBIGene:5742",
+              "NCBIGene:54600",
+              "NCBIGene:7364",
+              "NCBIGene:7366",
+              "NCBIGene:9734",
+              "NCBIGene:1557",
+              "NCBIGene:7915",
+              "NCBIGene:9376",
+              "NCBIGene:6584",
+              "NCBIGene:1544",
+              "NCBIGene:1558",
+              "NCBIGene:1577",
+              "NCBIGene:1555"
+            ],
+            "categories": [
+              "biolink:Gene",
+              "biolink:Protein"
+            ],
+            "is_set": false,
+            "constraints": []
+          }
+        },
+        "edges": {
+          "edge_1": {
+            "subject": "on",
+            "object": "sn",
+            "predicates": [
+              "biolink:affects"
+            ],
+            "attribute_constraints": [],
+            "qualifier_constraints": [
+              {
+                "qualifier_set": [
+                  {
+                    "qualifier_type_id": "biolink:object_aspect_qualifier",
+                    "qualifier_value": "metabolic_processing"
+                  },
+                  {
+                    "qualifier_type_id": "biolink:object_direction_qualifier",
+                    "qualifier_value": "decreased"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      }
+    },
+    "submitter": "infores:aragorn",
+    "remote_address": "3.233.20.128"
+  }
+}

@@ -1,0 +1,146 @@
+{
+  "query_id": 6084007,
+  "query_hash_key": "(; biolink:ChemicalEntity)--[biolink:has_part; ]-->(CHEBI:136849,CHEBI:23906,CHEBI:25213,CHEBI:25414,CHEBI:26712,CHEBI:29785,CHEBI:33296,CHEBI:33504,CHEBI:33521,CHEBI:37246,CHEBI:51144,CHEBI:60242,GTOPDB:3731,GTOPDB:3733,MESH:D006219,MESH:D008672,MESH:D011401,MESH:D019901,MESH:D020218,MESH:D024363,MESH:D024506,PUBCHEM.COMPOUND:24526,PUBCHEM.COMPOUND:5360525,PUBCHEM.COMPOUND:5360545,PUBCHEM.COMPOUND:5362487,PUBCHEM.COMPOUND:5362549,PUBCHEM.COMPOUND:5462309,PUBCHEM.COMPOUND:5462310,PUBCHEM.COMPOUND:923,PUBCHEM.COMPOUND:947,PUBCHEM.COMPOUND:977; biolink:ChemicalEntity)",
+  "start_datetime": "2024-02-26 17:32:59",
+  "submitter": "infores:aragorn",
+  "instance_name": "kg2",
+  "domain": "kg2.ci.transltr.io",
+  "elapsed": 4.0,
+  "message_code": "OK",
+  "input_query": {
+    "message": {
+      "query_graph": {
+        "nodes": {
+          "chemical": {
+            "categories": [
+              "biolink:ChemicalEntity"
+            ],
+            "is_set": false,
+            "constraints": []
+          },
+          "f": {
+            "ids": [
+              "CHEBI:25414",
+              "MESH:D011401",
+              "PUBCHEM.COMPOUND:977",
+              "CHEBI:49637",
+              "PUBCHEM.COMPOUND:923",
+              "CHEBI:26712",
+              "MESH:D019901",
+              "CHEBI:33504",
+              "MESH:D024506",
+              "PUBCHEM.COMPOUND:5362487",
+              "CHEBI:51144",
+              "GTOPDB:3731",
+              "CHEBI:33296",
+              "CHEBI:33521",
+              "GTOPDB:3733",
+              "PUBCHEM.COMPOUND:5360545",
+              "CHEBI:136849",
+              "PUBCHEM.COMPOUND:5462309",
+              "CHEBI:22314",
+              "PUBCHEM.COMPOUND:24526",
+              "CHEBI:60242",
+              "CHEBI:37246",
+              "MESH:D020218",
+              "CHEBI:23906",
+              "PUBCHEM.COMPOUND:947",
+              "CHEBI:24061",
+              "CHEBI:24473",
+              "PUBCHEM.COMPOUND:5462310",
+              "MESH:D024363",
+              "CHEBI:29785",
+              "CHEBI:25213"
+            ],
+            "categories": [
+              "biolink:ChemicalEntity"
+            ],
+            "is_set": false,
+            "constraints": []
+          }
+        },
+        "edges": {
+          "edge_1": {
+            "subject": "chemical",
+            "object": "f",
+            "predicates": [
+              "biolink:has_part"
+            ],
+            "attribute_constraints": [],
+            "qualifier_constraints": []
+          }
+        }
+      }
+    },
+    "submitter": "infores:aragorn",
+    "remote_address": "52.4.10.150, 10.11.1.171"
+  },
+  "input_query_canonicalized": {
+    "message": {
+      "query_graph": {
+        "nodes": {
+          "chemical": {
+            "categories": [
+              "biolink:ChemicalEntity"
+            ],
+            "is_set": false,
+            "constraints": []
+          },
+          "f": {
+            "ids": [
+              "PUBCHEM.COMPOUND:24526",
+              "MESH:D020218",
+              "CHEBI:26712",
+              "GTOPDB:3733",
+              "MESH:D006219",
+              "CHEBI:60242",
+              "CHEBI:29785",
+              "MESH:D019901",
+              "CHEBI:37246",
+              "MESH:D024506",
+              "CHEBI:33504",
+              "PUBCHEM.COMPOUND:5362487",
+              "CHEBI:33296",
+              "CHEBI:25213",
+              "PUBCHEM.COMPOUND:5362549",
+              "CHEBI:23906",
+              "PUBCHEM.COMPOUND:947",
+              "CHEBI:25414",
+              "CHEBI:136849",
+              "MESH:D011401",
+              "PUBCHEM.COMPOUND:5360525",
+              "MESH:D008672",
+              "PUBCHEM.COMPOUND:5360545",
+              "PUBCHEM.COMPOUND:5462309",
+              "PUBCHEM.COMPOUND:923",
+              "PUBCHEM.COMPOUND:977",
+              "GTOPDB:3731",
+              "CHEBI:33521",
+              "CHEBI:51144",
+              "PUBCHEM.COMPOUND:5462310",
+              "MESH:D024363"
+            ],
+            "categories": [
+              "biolink:ChemicalEntity"
+            ],
+            "is_set": false,
+            "constraints": []
+          }
+        },
+        "edges": {
+          "edge_1": {
+            "subject": "chemical",
+            "object": "f",
+            "predicates": [
+              "biolink:has_part"
+            ],
+            "attribute_constraints": [],
+            "qualifier_constraints": []
+          }
+        }
+      }
+    },
+    "submitter": "infores:aragorn",
+    "remote_address": "52.4.10.150, 10.11.1.171"
+  }
+}

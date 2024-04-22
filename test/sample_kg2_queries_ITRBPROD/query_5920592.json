@@ -1,0 +1,222 @@
+{
+  "query_id": 5920592,
+  "query_hash_key": "(CL:0000000,CL:0000148,CL:0000451,GO:0005488,GO:0005694,GO:0005737,GO:0008083,GO:0030154,GO:0040007,GO:0042571,GO:0097324,HP:0200036,MONDO:0000930,MONDO:0004992,MONDO:0005070,MONDO:0005105,MONDO:0005191,MONDO:0006500,MONDO:0006749,MONDO:0006905,MONDO:0019290,MONDO:0020664,MONDO:0021079,MONDO:0021143,MONDO:0044794,MONDO:0044795,MONDO:0044796,MONDO:0044797,MONDO:0044800,NCBIGene:673,NCBITaxon:9606,NCIT:C12591,NCIT:C12907,NCIT:C35894,NCIT:C36003,NCIT:C36122,NCIT:C39570,NCIT:C39690,NCIT:C40993,NCIT:C43268,NCIT:C45321,PUBCHEM.COMPOUND:23985,PUBCHEM.COMPOUND:34755,UBERON:0000014,UBERON:0000055,UBERON:0001457,UBERON:0001711,UBERON:0001713,UBERON:0002049,UBERON:0002067,UBERON:0002097,UBERON:0007021,UBERON:0007023,UBERON:0007376,UBERON:0007798,UMLS:C0431085,UMLS:C1514022,UMLS:C1516949,UMLS:C1518311,UMLS:C1519467,UMLS:C4288627,UMLS:C4520859,UMLS:C4682500,UMLS:C4763808,UMLS:C5239016,UMLS:C5239017,UMLS:C5239018,UMLS:C5239019,UMLS:C5239022,UMLS:C5239023,UMLS:C5447840; biolink:NamedThing)--[biolink:related_to; ]-->(; biolink:NamedThing)",
+  "start_datetime": "2023-12-14 20:56:18",
+  "submitter": "infores:arax",
+  "instance_name": "kg2",
+  "domain": "kg2.transltr.io",
+  "elapsed": 72.0,
+  "message_code": "OK",
+  "input_query": {
+    "message": {
+      "query_graph": {
+        "nodes": {
+          "arax_connect_node_9": {
+            "ids": [
+              "UMLS:C5239022",
+              "MONDO:0005105",
+              "NCIT:C40993",
+              "NCBIGene:673",
+              "NCIT:C45321",
+              "PUBCHEM.COMPOUND:23985",
+              "UBERON:0007798",
+              "MONDO:0006905",
+              "UBERON:0007023",
+              "NCIT:C39570",
+              "CL:0000148",
+              "NCIT:C36003",
+              "UBERON:0000014",
+              "UMLS:C4288627",
+              "GO:0005737",
+              "MONDO:0005070",
+              "GO:0097324",
+              "NCIT:C43268",
+              "MONDO:0044795",
+              "NCIT:C12907",
+              "MONDO:0006749",
+              "NCIT:C12591",
+              "NCIT:C35894",
+              "UMLS:C4763808",
+              "CL:0000451",
+              "PUBCHEM.COMPOUND:34755",
+              "MONDO:0006500",
+              "GO:0040007",
+              "UMLS:C5447840",
+              "UMLS:C5239023",
+              "GO:0042571",
+              "NCIT:C39690",
+              "CL:0000000",
+              "MONDO:0019290",
+              "MONDO:0005191",
+              "GO:0008083",
+              "GO:0005488",
+              "UMLS:C4520859",
+              "MONDO:0021079",
+              "MONDO:0044796",
+              "MONDO:0044800",
+              "UMLS:C4682500",
+              "UMLS:C5239019",
+              "UBERON:0001711",
+              "MONDO:0004992",
+              "GO:0005694",
+              "UMLS:C1518311",
+              "UBERON:0002097",
+              "UBERON:0007021",
+              "UMLS:C1519467",
+              "MONDO:0044794",
+              "UBERON:0007376",
+              "UBERON:0002049",
+              "UMLS:C5239016",
+              "UMLS:C1514022",
+              "UBERON:0002067",
+              "NCIT:C36122",
+              "UBERON:0000055",
+              "MONDO:0044797",
+              "UMLS:C1516949",
+              "UBERON:0001713",
+              "GO:0030154",
+              "UMLS:C0431085",
+              "MONDO:0000930",
+              "UMLS:C5239017",
+              "UMLS:C5239018",
+              "MONDO:0020664",
+              "UBERON:0001457",
+              "MONDO:0021143",
+              "NCBITaxon:9606",
+              "HP:0200036"
+            ],
+            "categories": [
+              "biolink:NamedThing"
+            ],
+            "is_set": true
+          },
+          "arax_connect_node_10": {
+            "categories": [
+              "biolink:NamedThing"
+            ],
+            "is_set": true
+          }
+        },
+        "edges": {
+          "connected_edge_28": {
+            "predicates": [
+              "biolink:related_to"
+            ],
+            "subject": "arax_connect_node_9",
+            "object": "arax_connect_node_10",
+            "exclude": false
+          }
+        }
+      }
+    },
+    "submitter": "infores:arax",
+    "return_minimal_metadata": true,
+    "remote_address": "3.233.20.128, 10.13.4.211"
+  },
+  "input_query_canonicalized": {
+    "message": {
+      "query_graph": {
+        "nodes": {
+          "arax_connect_node_9": {
+            "ids": [
+              "NCBIGene:673",
+              "GO:0030154",
+              "MONDO:0021079",
+              "MONDO:0000930",
+              "MONDO:0006749",
+              "MONDO:0044796",
+              "UMLS:C5239022",
+              "NCBITaxon:9606",
+              "PUBCHEM.COMPOUND:23985",
+              "UBERON:0007023",
+              "MONDO:0044794",
+              "MONDO:0005191",
+              "UMLS:C4763808",
+              "GO:0042571",
+              "GO:0008083",
+              "UBERON:0001713",
+              "UMLS:C1516949",
+              "HP:0200036",
+              "UBERON:0000014",
+              "UMLS:C5239017",
+              "NCIT:C39690",
+              "CL:0000451",
+              "MONDO:0005070",
+              "UBERON:0001457",
+              "UMLS:C5239023",
+              "MONDO:0006905",
+              "GO:0005488",
+              "UBERON:0007021",
+              "NCIT:C39570",
+              "NCIT:C12591",
+              "CL:0000000",
+              "UBERON:0000055",
+              "MONDO:0020664",
+              "MONDO:0006500",
+              "GO:0005737",
+              "NCIT:C43268",
+              "CL:0000148",
+              "MONDO:0004992",
+              "UMLS:C4520859",
+              "MONDO:0044795",
+              "PUBCHEM.COMPOUND:34755",
+              "NCIT:C36122",
+              "UMLS:C1514022",
+              "MONDO:0005105",
+              "UMLS:C4288627",
+              "UBERON:0007798",
+              "UMLS:C4682500",
+              "UMLS:C1518311",
+              "NCIT:C45321",
+              "UMLS:C5239016",
+              "UMLS:C1519467",
+              "MONDO:0044797",
+              "UMLS:C5239018",
+              "NCIT:C35894",
+              "MONDO:0021143",
+              "UBERON:0007376",
+              "NCIT:C40993",
+              "NCIT:C12907",
+              "UBERON:0002049",
+              "UBERON:0002067",
+              "UBERON:0002097",
+              "GO:0097324",
+              "UMLS:C5447840",
+              "UMLS:C0431085",
+              "UMLS:C5239019",
+              "UBERON:0001711",
+              "GO:0040007",
+              "MONDO:0019290",
+              "MONDO:0044800",
+              "GO:0005694",
+              "NCIT:C36003"
+            ],
+            "categories": [
+              "biolink:NamedThing"
+            ],
+            "is_set": true
+          },
+          "arax_connect_node_10": {
+            "categories": [
+              "biolink:NamedThing"
+            ],
+            "is_set": true
+          }
+        },
+        "edges": {
+          "connected_edge_28": {
+            "predicates": [
+              "biolink:related_to"
+            ],
+            "subject": "arax_connect_node_9",
+            "object": "arax_connect_node_10",
+            "exclude": false
+          }
+        }
+      }
+    },
+    "submitter": "infores:arax",
+    "return_minimal_metadata": true,
+    "remote_address": "3.233.20.128, 10.13.4.211"
+  }
+}

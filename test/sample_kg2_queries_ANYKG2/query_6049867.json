@@ -1,0 +1,132 @@
+{
+  "query_id": 6049867,
+  "query_hash_key": "(; biolink:ChemicalEntity)--[biolink:affects; --increased--activity_or_abundance]-->(NCBIGene:1460,NCBIGene:1808,NCBIGene:23410,NCBIGene:3479,NCBIGene:351,NCBIGene:3611,NCBIGene:407050,NCBIGene:5444,NCBIGene:7157,NCBIGene:8528; biolink:Gene,biolink:Protein)",
+  "start_datetime": "2024-02-23 18:37:28",
+  "submitter": "infores:aragorn",
+  "instance_name": "kg2",
+  "domain": "arax.ncats.io",
+  "elapsed": 3.0,
+  "message_code": "OK",
+  "input_query": {
+    "message": {
+      "query_graph": {
+        "nodes": {
+          "sn": {
+            "categories": [
+              "biolink:ChemicalEntity"
+            ],
+            "is_set": false,
+            "constraints": []
+          },
+          "f": {
+            "ids": [
+              "NCBIGene:7157",
+              "NCBIGene:407050",
+              "NCBIGene:8528",
+              "NCBIGene:3479",
+              "NCBIGene:351",
+              "NCBIGene:3611",
+              "NCBIGene:1460",
+              "NCBIGene:1808",
+              "NCBIGene:5444",
+              "NCBIGene:23410"
+            ],
+            "categories": [
+              "biolink:Gene",
+              "biolink:Protein"
+            ],
+            "is_set": false,
+            "constraints": []
+          }
+        },
+        "edges": {
+          "edge_1": {
+            "subject": "sn",
+            "object": "f",
+            "predicates": [
+              "biolink:affects"
+            ],
+            "attribute_constraints": [],
+            "qualifier_constraints": [
+              {
+                "qualifier_set": [
+                  {
+                    "qualifier_type_id": "biolink:object_aspect_qualifier",
+                    "qualifier_value": "activity_or_abundance"
+                  },
+                  {
+                    "qualifier_type_id": "biolink:object_direction_qualifier",
+                    "qualifier_value": "increased"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      }
+    },
+    "submitter": "infores:aragorn",
+    "remote_address": "3.233.20.128"
+  },
+  "input_query_canonicalized": {
+    "message": {
+      "query_graph": {
+        "nodes": {
+          "sn": {
+            "categories": [
+              "biolink:ChemicalEntity"
+            ],
+            "is_set": false,
+            "constraints": []
+          },
+          "f": {
+            "ids": [
+              "NCBIGene:407050",
+              "NCBIGene:351",
+              "NCBIGene:5444",
+              "NCBIGene:7157",
+              "NCBIGene:8528",
+              "NCBIGene:1808",
+              "NCBIGene:3479",
+              "NCBIGene:23410",
+              "NCBIGene:1460",
+              "NCBIGene:3611"
+            ],
+            "categories": [
+              "biolink:Gene",
+              "biolink:Protein"
+            ],
+            "is_set": false,
+            "constraints": []
+          }
+        },
+        "edges": {
+          "edge_1": {
+            "subject": "sn",
+            "object": "f",
+            "predicates": [
+              "biolink:affects"
+            ],
+            "attribute_constraints": [],
+            "qualifier_constraints": [
+              {
+                "qualifier_set": [
+                  {
+                    "qualifier_type_id": "biolink:object_aspect_qualifier",
+                    "qualifier_value": "activity_or_abundance"
+                  },
+                  {
+                    "qualifier_type_id": "biolink:object_direction_qualifier",
+                    "qualifier_value": "increased"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      }
+    },
+    "submitter": "infores:aragorn",
+    "remote_address": "3.233.20.128"
+  }
+}

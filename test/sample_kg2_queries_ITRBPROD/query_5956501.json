@@ -1,0 +1,86 @@
+{
+  "query_id": 5956501,
+  "query_hash_key": "(; biolink:ChemicalEntity)--[biolink:treats; ]-->(MONDO:0005709; biolink:Disease,biolink:DiseaseOrPhenotypicFeature,biolink:PhenotypicFeature)",
+  "start_datetime": "2024-01-19 15:03:23",
+  "submitter": "infores:arax",
+  "instance_name": "kg2",
+  "domain": "kg2.transltr.io",
+  "elapsed": 6.0,
+  "message_code": "OK",
+  "input_query": {
+    "message": {
+      "query_graph": {
+        "nodes": {
+          "sn": {
+            "categories": [
+              "biolink:ChemicalEntity"
+            ],
+            "is_set": true
+          },
+          "on": {
+            "ids": [
+              "MONDO:0005709"
+            ],
+            "categories": [
+              "biolink:PhenotypicFeature",
+              "biolink:Disease",
+              "biolink:DiseaseOrPhenotypicFeature"
+            ],
+            "is_set": false
+          }
+        },
+        "edges": {
+          "t_edge": {
+            "knowledge_type": "lookup",
+            "predicates": [
+              "biolink:treats"
+            ],
+            "subject": "sn",
+            "object": "on"
+          }
+        }
+      }
+    },
+    "submitter": "infores:arax",
+    "return_minimal_metadata": true,
+    "remote_address": "3.233.20.128, 10.13.1.133"
+  },
+  "input_query_canonicalized": {
+    "message": {
+      "query_graph": {
+        "nodes": {
+          "sn": {
+            "categories": [
+              "biolink:ChemicalEntity"
+            ],
+            "is_set": true
+          },
+          "on": {
+            "ids": [
+              "MONDO:0005709"
+            ],
+            "categories": [
+              "biolink:PhenotypicFeature",
+              "biolink:Disease",
+              "biolink:DiseaseOrPhenotypicFeature"
+            ],
+            "is_set": false
+          }
+        },
+        "edges": {
+          "t_edge": {
+            "knowledge_type": "lookup",
+            "predicates": [
+              "biolink:treats"
+            ],
+            "subject": "sn",
+            "object": "on"
+          }
+        }
+      }
+    },
+    "submitter": "infores:arax",
+    "return_minimal_metadata": true,
+    "remote_address": "3.233.20.128, 10.13.1.133"
+  }
+}

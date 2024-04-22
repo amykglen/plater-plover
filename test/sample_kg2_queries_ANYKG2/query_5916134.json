@@ -1,0 +1,207 @@
+{
+  "query_id": 5916134,
+  "query_hash_key": "(CHEMBL.TARGET:CHEMBL4977,ENSEMBL:ENSP00000260433,ENSEMBL:ENSP00000260630,MESH:D013482,MESH:D014968,MESH:D051546,MESH:D051571,PR:000005265,PR:000010491,PR:000012289,PR:000012804,PR:000025635,UniProtKB:O14746-1,UniProtKB:P00533-1,UniProtKB:P01100-1,UniProtKB:P03372-1,UniProtKB:P04798-1,UniProtKB:P14679-1,UniProtKB:P15559-1,UniProtKB:P16949-2,UniProtKB:P17676-1,UniProtKB:P19224-1,UniProtKB:P20813-1,UniProtKB:P22309-1,UniProtKB:P22310-1,UniProtKB:P27361-1,UniProtKB:P28482-1,UniProtKB:P31749-1,UniProtKB:P35503-1,UniProtKB:P38398-7,UniProtKB:P45983-5,UniProtKB:Q02750-1,UniProtKB:Q04759-1,UniProtKB:Q13822-2,UniProtKB:Q16698-1; biolink:Gene,biolink:Protein)--[biolink:biomarker_for; ]-->(; biolink:Gene,biolink:Protein)",
+  "start_datetime": "2023-12-12 22:03:41",
+  "submitter": "infores:aragorn",
+  "instance_name": "kg2",
+  "domain": "arax.ncats.io",
+  "elapsed": 3.0,
+  "message_code": "OK",
+  "input_query": {
+    "message": {
+      "query_graph": {
+        "nodes": {
+          "on": {
+            "categories": [
+              "biolink:Gene",
+              "biolink:Protein"
+            ],
+            "is_set": false,
+            "constraints": []
+          },
+          "f": {
+            "ids": [
+              "ENSEMBL:ENSP00000260630",
+              "CHEMBL.TARGET:CHEMBL3105",
+              "ENSEMBL:ENSP00000215832",
+              "ENSEMBL:ENSP00000215832.7",
+              "ENSEMBL:ENSP00000381803",
+              "ENSEMBL:ENSP00000381803.3",
+              "CHEMBL.TARGET:CHEMBL2189163",
+              "ENSEMBL:ENSP00000410452",
+              "ENSEMBL:ENSP00000410452.2",
+              "ENSEMBL:ENSP00000305422",
+              "ENSEMBL:ENSP00000305422.3",
+              "CHEMBL.TARGET:CHEMBL321",
+              "CHEMBL.TARGET:CHEMBL3816",
+              "ENSEMBL:ENSP00000206249",
+              "ENSEMBL:ENSP00000206249.3",
+              "ENSEMBL:ENSP00000342630",
+              "ENSEMBL:ENSP00000342630.5",
+              "ENSEMBL:ENSP00000387500",
+              "ENSEMBL:ENSP00000387500.1",
+              "ENSEMBL:ENSP00000405330",
+              "ENSEMBL:ENSP00000405330.1",
+              "CHEMBL.TARGET:CHEMBL3055",
+              "CHEMBL.TARGET:CHEMBL1929",
+              "ENSEMBL:ENSP00000263025",
+              "ENSEMBL:ENSP00000263025.4",
+              "ENSEMBL:ENSP00000319788",
+              "ENSEMBL:ENSP00000319788.5",
+              "ENSEMBL:ENSP00000259486",
+              "ENSEMBL:ENSP00000259486.6",
+              "ENSEMBL:ENSP00000353483",
+              "ENSEMBL:ENSP00000353483.4",
+              "ENSEMBL:ENSP00000220764",
+              "ENSEMBL:ENSP00000220764.2",
+              "ENSEMBL:ENSP00000309572",
+              "ENSEMBL:ENSP00000309572.5",
+              "ENSEMBL:ENSP00000418960",
+              "ENSEMBL:ENSP00000418960.2",
+              "ENSEMBL:ENSP00000324648",
+              "ENSEMBL:ENSP00000324648.2",
+              "ENSEMBL:ENSP00000306245",
+              "ENSEMBL:ENSP00000306245.4",
+              "ENSEMBL:ENSP00000303174",
+              "ENSEMBL:ENSP00000303174.6",
+              "ENSEMBL:ENSP00000275493",
+              "ENSEMBL:ENSP00000275493.2",
+              "CHEMBL.TARGET:CHEMBL299",
+              "ENSEMBL:ENSP00000362508",
+              "ENSEMBL:ENSP00000362508.4",
+              "ENSEMBL:ENSP00000369050",
+              "ENSEMBL:ENSP00000369050.3",
+              "ENSEMBL:ENSP00000378488",
+              "ENSEMBL:ENSP00000378488.2",
+              "ENSEMBL:ENSP00000456585",
+              "ENSEMBL:ENSP00000456585.1",
+              "CHEMBL.TARGET:CHEMBL230",
+              "ENSEMBL:ENSP00000418532",
+              "ENSEMBL:ENSP00000418532.1",
+              "CHEMBL.TARGET:CHEMBL4977",
+              "ENSEMBL:ENSP00000270202",
+              "ENSEMBL:ENSP00000270202.4",
+              "ENSEMBL:ENSP00000384293",
+              "ENSEMBL:ENSP00000384293.2",
+              "ENSEMBL:ENSP00000385326",
+              "ENSEMBL:ENSP00000385326.2",
+              "ENSEMBL:ENSP00000450688",
+              "ENSEMBL:ENSP00000450688.1",
+              "ENSEMBL:ENSP00000451166",
+              "ENSEMBL:ENSP00000451166.1",
+              "ENSEMBL:ENSP00000451828",
+              "ENSEMBL:ENSP00000451828.1",
+              "ENSEMBL:ENSP00000497822",
+              "ENSEMBL:ENSP00000497822.1",
+              "ENSEMBL:ENSP00000507879",
+              "ENSEMBL:ENSP00000507879.1",
+              "ENSEMBL:ENSP00000302486",
+              "ENSEMBL:ENSP00000302486.5",
+              "ENSEMBL:ENSP00000260433",
+              "CHEMBL.TARGET:CHEMBL2354",
+              "ENSEMBL:ENSP00000263321",
+              "ENSEMBL:ENSP00000263321.4",
+              "ENSEMBL:ENSP00000263125",
+              "ENSEMBL:ENSP00000263125.5",
+              "ENSEMBL:ENSP00000304845",
+              "ENSEMBL:ENSP00000304845.5"
+            ],
+            "categories": [
+              "biolink:Gene",
+              "biolink:Protein"
+            ],
+            "is_set": false,
+            "constraints": []
+          }
+        },
+        "edges": {
+          "edge_0": {
+            "subject": "f",
+            "object": "on",
+            "predicates": [
+              "biolink:biomarker_for"
+            ],
+            "attribute_constraints": [],
+            "qualifier_constraints": []
+          }
+        }
+      }
+    },
+    "submitter": "infores:aragorn",
+    "remote_address": "3.233.20.128"
+  },
+  "input_query_canonicalized": {
+    "message": {
+      "query_graph": {
+        "nodes": {
+          "on": {
+            "categories": [
+              "biolink:Gene",
+              "biolink:Protein"
+            ],
+            "is_set": false,
+            "constraints": []
+          },
+          "f": {
+            "ids": [
+              "UniProtKB:P20813-1",
+              "UniProtKB:P01100-1",
+              "MESH:D051571",
+              "UniProtKB:P31749-1",
+              "UniProtKB:P00533-1",
+              "UniProtKB:P22310-1",
+              "UniProtKB:P04798-1",
+              "UniProtKB:P22309-1",
+              "UniProtKB:Q02750-1",
+              "UniProtKB:P38398-7",
+              "UniProtKB:Q13822-2",
+              "MESH:D014968",
+              "UniProtKB:P27361-1",
+              "PR:000025635",
+              "UniProtKB:P15559-1",
+              "UniProtKB:P14679-1",
+              "UniProtKB:P17676-1",
+              "UniProtKB:P45983-5",
+              "PR:000010491",
+              "ENSEMBL:ENSP00000260630",
+              "ENSEMBL:ENSP00000260433",
+              "UniProtKB:P03372-1",
+              "MESH:D013482",
+              "CHEMBL.TARGET:CHEMBL4977",
+              "PR:000012289",
+              "UniProtKB:P28482-1",
+              "PR:000012804",
+              "UniProtKB:P16949-2",
+              "UniProtKB:P35503-1",
+              "UniProtKB:O14746-1",
+              "MESH:D051546",
+              "UniProtKB:Q16698-1",
+              "UniProtKB:P19224-1",
+              "UniProtKB:Q04759-1",
+              "PR:000005265"
+            ],
+            "categories": [
+              "biolink:Gene",
+              "biolink:Protein"
+            ],
+            "is_set": false,
+            "constraints": []
+          }
+        },
+        "edges": {
+          "edge_0": {
+            "subject": "f",
+            "object": "on",
+            "predicates": [
+              "biolink:biomarker_for"
+            ],
+            "attribute_constraints": [],
+            "qualifier_constraints": []
+          }
+        }
+      }
+    },
+    "submitter": "infores:aragorn",
+    "remote_address": "3.233.20.128"
+  }
+}

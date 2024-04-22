@@ -1,0 +1,112 @@
+{
+  "query_id": 5912815,
+  "query_hash_key": "(; biolink:ChemicalEntity)--[biolink:affects; --increased--activity_or_abundance]-->(NCBIGene:1654; biolink:Gene,biolink:Protein)",
+  "start_datetime": "2023-12-10 23:37:53",
+  "submitter": "infores:arax",
+  "instance_name": "kg2",
+  "domain": "kg2.transltr.io",
+  "elapsed": 11.0,
+  "message_code": "OK",
+  "input_query": {
+    "message": {
+      "query_graph": {
+        "nodes": {
+          "sn": {
+            "categories": [
+              "biolink:ChemicalEntity"
+            ],
+            "is_set": true
+          },
+          "on": {
+            "ids": [
+              "NCBIGene:1654"
+            ],
+            "categories": [
+              "biolink:Protein",
+              "biolink:Gene"
+            ],
+            "is_set": false
+          }
+        },
+        "edges": {
+          "t_edge": {
+            "knowledge_type": "lookup",
+            "predicates": [
+              "biolink:affects"
+            ],
+            "subject": "sn",
+            "object": "on",
+            "qualifier_constraints": [
+              {
+                "qualifier_set": [
+                  {
+                    "qualifier_type_id": "biolink:object_aspect_qualifier",
+                    "qualifier_value": "activity_or_abundance"
+                  },
+                  {
+                    "qualifier_type_id": "biolink:object_direction_qualifier",
+                    "qualifier_value": "increased"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      }
+    },
+    "submitter": "infores:arax",
+    "return_minimal_metadata": true,
+    "remote_address": "3.233.20.128, 10.13.0.244"
+  },
+  "input_query_canonicalized": {
+    "message": {
+      "query_graph": {
+        "nodes": {
+          "sn": {
+            "categories": [
+              "biolink:ChemicalEntity"
+            ],
+            "is_set": true
+          },
+          "on": {
+            "ids": [
+              "NCBIGene:1654"
+            ],
+            "categories": [
+              "biolink:Protein",
+              "biolink:Gene"
+            ],
+            "is_set": false
+          }
+        },
+        "edges": {
+          "t_edge": {
+            "knowledge_type": "lookup",
+            "predicates": [
+              "biolink:affects"
+            ],
+            "subject": "sn",
+            "object": "on",
+            "qualifier_constraints": [
+              {
+                "qualifier_set": [
+                  {
+                    "qualifier_type_id": "biolink:object_aspect_qualifier",
+                    "qualifier_value": "activity_or_abundance"
+                  },
+                  {
+                    "qualifier_type_id": "biolink:object_direction_qualifier",
+                    "qualifier_value": "increased"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      }
+    },
+    "submitter": "infores:arax",
+    "return_minimal_metadata": true,
+    "remote_address": "3.233.20.128, 10.13.0.244"
+  }
+}
