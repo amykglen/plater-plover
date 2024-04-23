@@ -4,3 +4,4 @@ pytest
 requests
 pyyaml
 treelib
+psutil
