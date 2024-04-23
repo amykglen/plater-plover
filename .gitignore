@@ -18,4 +18,4 @@ biolink_helper.py
 /test/results/*
 
 *report.json
-mem_history.tsv
+*.tsv
