@@ -183,8 +183,8 @@ def test_batching():
         batch_qg["nodes"]["i"]["ids"] = batch
         print(batch_qg)
         query_name = f"{query_id}__{pytest.batchsize}__{counter}"
-        _send_query(batch_qg, query_name, endpoint_override="https://arax.ncats.io/api/rtxkg2/v1.4/")
-
+        _send_query(batch_qg, query_name, endpoint_override="http://amyplater.rtx.ai:8080/1.4")
+        _send_query(batch_qg, query_name, endpoint_override="http://amyplover.rtx.ai:9990")
         counter += 1
 
 
