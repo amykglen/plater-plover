@@ -8,7 +8,7 @@ from datetime import datetime
 
 import pytest
 import requests
-from typing import Dict, Union, List, Optional
+from typing import Dict, Union, List, Optional, Tuple
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -17,14 +17,16 @@ SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
 def _send_query(trapi_query: Dict[str, Dict[str, Dict[str, Union[List[str], str, None]]]],
-                query_id: str):
+                query_id: str, endpoint_override: Optional[str] = None):
     # Grab the query graph (might be nested under 'message')
     trapi_qg = trapi_query if "nodes" in trapi_query else trapi_query["message"]["query_graph"]
+    # Override conf endpoint with input endpoint, if provided
+    endpoint = endpoint_override if endpoint_override else pytest.endpoint
 
     # Get set up to store query results
-    if "8080/1.4" in pytest.endpoint:
+    if "8080/1.4" in endpoint:
         querier = "plater"
-    elif "api/rtxkg2" in pytest.endpoint:
+    elif "api/rtxkg2" in endpoint:
         querier = "araxkg2"
     else:
         querier = "plover"
@@ -36,10 +38,10 @@ def _send_query(trapi_query: Dict[str, Dict[str, Dict[str, Union[List[str], str,
                                  "response_status", "num_results", "num_nodes", "num_edges", "response_size"])
 
     # Run the query
-    print(f"Sending query {query_id} to KP..")
+    print(f"Sending query {query_id} to {endpoint}..")
     client_start = time.time()
     try:
-        response = requests.post(f"{pytest.endpoint}/query",
+        response = requests.post(f"{endpoint}/query",
                                  json={"message": {"query_graph": trapi_qg}, "submitter": "amy-test"},
                                  timeout=(600, 600),  # Important to up the read timeout due to large response
                                  headers={'accept': 'application/json',
@@ -98,7 +100,7 @@ def _send_query(trapi_query: Dict[str, Dict[str, Dict[str, Union[List[str], str,
     return json_response
 
 
-def _run_query_json_file(file_path: str):
+def _load_query_json_file(file_path: str) -> Tuple[str, dict]:
     print(f"Loading query at {file_path}..")
 
     # First load the JSON query from its file
@@ -132,13 +134,58 @@ def _run_query_json_file(file_path: str):
                 if not qnode.get("ids"):
                     qnode["is_set"] = True
 
-    # Then actually run the query
     query_name = ":".join(file_path.strip("/").split("/")[-2:])  # Includes immediate parent dir
     query_identifier = f"{is_set_flag_name}--{query_name}" if is_set_flag_name else query_name
+
+    return query_identifier, trapi_qg
+
+
+def _run_query_json_file(file_path: str):
+    query_identifier, trapi_qg = _load_query_json_file(file_path)
     response = _send_query(trapi_qg, query_id=query_identifier)
 
 
+def _divide_list_into_chunks(input_list: List[any], chunk_size: int) -> List[List[any]]:
+    num_chunks = len(input_list) // chunk_size if len(input_list) % chunk_size == 0 else (len(input_list) // chunk_size) + 1
+    start_index = 0
+    stop_index = chunk_size
+    all_chunks = []
+    for num in range(num_chunks):
+        chunk = input_list[start_index:stop_index] if stop_index <= len(input_list) else input_list[start_index:]
+        all_chunks.append(chunk)
+        start_index += chunk_size
+        stop_index += chunk_size
+    return all_chunks
+
+
 # ------------------------ Actual pytests that can be run via command line ------------------------ #
+
+def test_batching():
+    query_id = "query_5909943.json"
+    _, qg = _load_query_json_file(f"{SCRIPT_DIR}/sample_kg2_queries_LONG/{query_id}")
+    pinned_qnode = qg["nodes"]["i"]
+    pinned_ids = pinned_qnode["ids"]
+    print(f"Query has {len(pinned_ids)} pinned IDs")
+    print(f"Batch size is {pytest.batchsize}")
+
+    # Divide into batches (random assignment)
+    random.shuffle(pinned_ids)
+    batches = _divide_list_into_chunks(pinned_ids, chunk_size=int(pytest.batchsize))
+    print(f"Have {len(batches)} batches to send")
+    if len(batches) > 1:
+        assert len(batches[0]) == int(pytest.batchsize)
+    assert len(pinned_ids) == sum([len(batch) for batch in batches])
+
+    # Send each batch to Plater, then Plover
+    counter = 1
+    for batch in batches:
+        batch_qg = qg
+        batch_qg["nodes"]["i"]["ids"] = batch
+        print(batch_qg)
+        query_name = f"{query_id}__{pytest.batchsize}__{counter}"
+        _send_query(batch_qg, query_name, endpoint_override="https://arax.ncats.io/api/rtxkg2/v1.4/")
+
+        counter += 1
 
 
 def test_specified():
