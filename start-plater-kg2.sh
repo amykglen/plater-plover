@@ -26,6 +26,10 @@ sudo docker run -d \
 
 sleep 1m  # Wait for neo4j to start up
 
+# Record time at end of build
+echo end_of_plater_build: >> buildtime.txt
+date +%s >> buildtime.txt
+
 # Start up Plater
 cd ~/Plater
 . ${HOME}/.pyenv/versions/platerenv/bin/activate

@@ -5,6 +5,10 @@ to be done once).
 Usage: bash -x build-plater-kg2.sh <kg2_version, e.g., 2.8.4> <biolink_version, e.g., 3.1.2> <neo4j_password>
 '
 
+# Record time at start of build
+echo start_of_plater_build: >> buildtime.txt
+date +%s >> buildtime.txt
+
 kg2_version="$1"
 biolink_version="$2"
 neo4j_password="$3"
