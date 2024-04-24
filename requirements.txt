@@ -5,3 +5,4 @@ requests
 pyyaml
 treelib
 psutil
+locust

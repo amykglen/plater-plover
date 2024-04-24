@@ -20,3 +20,4 @@ biolink_helper.py
 *report.json
 *.tsv
 *.txt
+*.csv
