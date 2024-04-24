@@ -1,8 +1,9 @@
 import json
 import os
 from collections import namedtuple
+import random
 
-from locust import HttpUser, task
+from locust import HttpUser, task, between
 
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -35,8 +36,11 @@ ONLY_ITRB_PROD_QUERY_IDS = ['query_5912817.json', 'query_5909705.json', 'query_5
 class KG2User(HttpUser):
     @task
     def run_random_query(self):
-        trapi_query = load_query_json_file(f"{SCRIPT_DIR}/sample_kg2_queries_LONG/query_5909943.json")
+        random_query_id = random.choice(ONLY_ITRB_PROD_QUERY_IDS)
+        trapi_query = load_query_json_file(f"{SCRIPT_DIR}/sample_kg2_queries_ITRBPROD/{random_query_id}")
         self.client.post("/query", data=json.dumps(trapi_query), headers={'content-type': 'application/json'})
+
+    wait_time = between(5, 30)
 
 
 def load_query_json_file(file_path: str) -> dict:
