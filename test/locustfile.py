@@ -24,23 +24,30 @@ ALL_68_QUERY_IDS = ['query_5912817.json', 'query_6387284.json', 'query_6107787.j
                     'query_6609700.json', 'query_5909943.json', 'query_5912816.json', 'query_5943977.json',
                     'query_6356405.json', 'query_6634894.json', 'query_6024715.json', 'query_5912819.json',
                     'query_5911879.json', 'query_5921291.json', 'query_6124870.json', 'query_6024677.json']
-ONLY_ITRB_PROD_QUERY_IDS = ['query_5912817.json', 'query_5909705.json', 'query_5944391.json', 'query_5942047.json',
-                            'query_5920568.json', 'query_5912820.json', 'query_5924867.json', 'query_5924377.json',
-                            'query_5956501.json', 'query_5912801.json', 'query_5912815.json', 'query_5908480.json',
-                            'query_5912814.json', 'query_5912818.json', 'query_5981388.json', 'query_5948361.json',
-                            'query_5947222.json', 'query_6050807.json', 'query_5942775.json', 'query_5926327.json',
-                            'query_6609700.json', 'query_6356405.json', 'query_5912816.json', 'query_5943977.json',
-                            'query_5912819.json', 'query_5911879.json', 'query_6024677.json']  # 27 that match <1%
+ITRB_PROD_MATCHING_QUERY_IDS = ['query_5912817.json', 'query_5909705.json', 'query_5944391.json', 'query_5942047.json',
+                                'query_5920568.json', 'query_5912820.json', 'query_5924867.json', 'query_5924377.json',
+                                'query_5956501.json', 'query_5912801.json', 'query_5912815.json', 'query_5908480.json',
+                                'query_5912814.json', 'query_5912818.json', 'query_5981388.json', 'query_5948361.json',
+                                'query_5947222.json', 'query_6050807.json', 'query_5942775.json', 'query_5926327.json',
+                                'query_6609700.json', 'query_6356405.json', 'query_5912816.json', 'query_5943977.json',
+                                'query_5912819.json', 'query_5911879.json', 'query_6024677.json']
+ITRB_PROD_MATCHING_OK_QUERY_IDS = ["query_5908480.json", "query_5909705.json", "query_5912801.json",
+                                   "query_5912818.json", "query_5920568.json", "query_5924867.json",
+                                   "query_5926327.json", "query_5942047.json", "query_5942775.json",
+                                   "query_5943977.json", "query_5944391.json", "query_5947222.json",
+                                   "query_5948361.json", "query_5956501.json", "query_5981388.json",
+                                   "query_6024677.json", "query_6050807.json", "query_6356405.json",
+                                   "query_6609700.json"]
 
 
 class KG2User(HttpUser):
     @task
     def run_random_query(self):
-        random_query_id = random.choice(ONLY_ITRB_PROD_QUERY_IDS)
+        random_query_id = random.choice(ITRB_PROD_MATCHING_OK_QUERY_IDS)
         trapi_query = load_query_json_file(f"{SCRIPT_DIR}/sample_kg2_queries_ITRBPROD/{random_query_id}")
         self.client.post("/query", data=json.dumps(trapi_query), headers={'content-type': 'application/json'})
 
-    wait_time = between(5, 30)
+    wait_time = between(5, 20)
 
 
 def load_query_json_file(file_path: str) -> dict:
