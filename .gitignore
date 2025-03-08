@@ -15,9 +15,9 @@ biolink_helper.py
 /test/responses/*
 /test/queries/*
 
-/test/results/*
+/test/other_results
 
 *report.json
-*.tsv
+/*.tsv
 *.txt
 *.csv
